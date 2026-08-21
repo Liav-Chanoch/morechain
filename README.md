@@ -35,7 +35,8 @@ The parts that are load-bearing and easy to break:
 | Concern | Rule |
 | --- | --- |
 | State | One `current` integer. One `goTo(i)`. One `render()`. No second code path decides what is showing. |
-| Wheel | Fires the instant the delta threshold is crossed. Locks afterwards, and **returns before touching `lockUntil`** while locked so events can't extend it. Lock length scales with gesture speed. |
+| Wheel | Fires the instant the delta threshold is crossed, then locks, and **returns before touching `lockUntil`** while locked so events can't extend it. Lock floor sits above the 700ms transition; a gesture that cleared the threshold in one event is a discrete notch and gets the floor rather than being scaled by its ~0ms duration. |
+| Momentum | A separate settling gate, because the lock alone expires mid-tail on a trackpad and the leftover deltas trip the threshold again — one flick, two panels. It releases on a quiet stream, on rising deltas (a real second gesture), or on a hard deadline that is never renewed. Discrete notches skip it; they have no momentum. |
 | Touch | Checks the current panel's own scroller for remaining room in that direction *before* treating a swipe as panel navigation. |
 | Reduced motion | Same `render()`, same classes; CSS branches transform → opacity. |
 | Mobile chrome | Below `860px` the floating dots/arrows/label are replaced by an opaque bottom bar, themed per panel via CSS custom properties set from a JS theme table. |

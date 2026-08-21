@@ -727,30 +727,91 @@ p{ margin:0; }
   function overlayOpen(){ return ov1.classList.contains('open') || ov2.classList.contains('open'); }
 
   /* ---------- Wheel ----------
-     Fire the moment the threshold is crossed. Then lock — and while
-     locked, return BEFORE touching lockUntil, so incoming events can
-     never extend it (that feedback loop is what feels "stuck").
-     Lock length scales with how fast the gesture accumulated. */
-  var TH = 46, acc = 0, lockUntil = 0, lastEvt = 0, gestStart = 0;
+     Fire the moment the threshold is crossed, then lock. While locked we
+     return BEFORE touching lockUntil, so incoming events can never extend
+     it — that feedback loop is what makes a deck feel stuck. Lock length
+     scales with how fast the gesture accumulated.
+
+     The lock alone is not enough on a trackpad: momentum keeps delivering
+     events for ~1s after the fingers lift, so the lock expires mid-tail,
+     `acc` restarts from zero and the leftover deltas trip the threshold a
+     second time — one flick, two panels. So there is a SEPARATE settling
+     gate: after a fire, wheel input is ignored until either the stream
+     goes quiet (momentum died) or the deltas start rising again (the user
+     deliberately pushed a second time). It gates accumulation; it never
+     touches lockUntil, and a real second gesture escapes it immediately,
+     so it cannot produce the stuck feeling the lock rule guards against.
+
+     Momentum decays monotonically, which is what separates it from a real
+     gesture. A mouse wheel has no momentum at all and emits near-constant
+     notch deltas, so two consecutive non-decaying large deltas count as
+     deliberate and release the gate on the second notch. */
+  /* LOCK_MIN sits just above the 700ms panel transition so a second advance
+     can never begin while the first is still animating. */
+  var TH = 50, QUIET = 110, LOCK_MIN = 520, LOCK_MAX = 900;
+  var acc = 0, lockUntil = 0, lastEvt = 0, gestStart = 0, gestEvents = 0;
+  var settling = false, settleUntil = 0, prevAbs = 0, riseCount = 0;
 
   window.addEventListener('wheel', function(e){
     if(overlayOpen()) return;
     var now = (window.performance && performance.now) ? performance.now() : Date.now();
-    if(now < lockUntil) return;
+    var abs = Math.abs(e.deltaY);
+
+    /* Hard floor. Swallow everything, record nothing that could extend it. */
+    if(now < lockUntil){
+      lastEvt = now; prevAbs = abs; riseCount = 0;
+      if(e.cancelable) e.preventDefault();
+      return;
+    }
+
+    /* Settling gate: is this still the tail of the gesture that just fired?
+       Three ways out, and the hard deadline is the important one — without
+       it, continuous low-amplitude input after a flick never goes quiet and
+       never rises, so the gate would hold forever and the deck would feel
+       exactly as stuck as a self-renewing lock. */
+    if(settling){
+      if(abs > prevAbs + 8){ riseCount++; } else { riseCount = 0; }
+      var quiet    = (now - lastEvt) > QUIET;   // momentum died
+      var pushed   = riseCount >= 2;            // deltas rising: a real second gesture
+      var expired  = now > settleUntil;         // hard deadline, never renewed
+      if(quiet || pushed || expired){
+        settling = false; acc = 0; gestStart = now;
+      } else {
+        lastEvt = now; prevAbs = abs;
+        if(e.cancelable) e.preventDefault();
+        return;
+      }
+    }
 
     var dir = e.deltaY > 0 ? 1 : -1;
     if(canConsume(dir)){ acc = 0; return; }
     if(e.cancelable) e.preventDefault();
 
-    if(now - lastEvt > 180){ acc = 0; gestStart = now; }
+    if(now - lastEvt > 180){ acc = 0; gestStart = now; gestEvents = 0; }
     lastEvt = now;
+    prevAbs = abs;
     acc += e.deltaY;
+    gestEvents++;
 
     if(Math.abs(acc) >= TH){
-      var elapsed = Math.max(1, now - gestStart);
-      var speed = Math.abs(acc) / elapsed;
-      var lock = Math.min(1100, Math.max(340, 340 + speed * 230));
+      /* A gesture that cleared the threshold in a single event is a discrete
+         mouse-wheel notch, not a hard flick: it has no momentum to outrun and
+         dividing by its ~0ms duration would pin it to the maximum lock, which
+         is backwards. Discrete input gets the floor; only a gesture built from
+         several events gets scaled by how fast it accumulated. */
+      var lock = LOCK_MIN;
+      if(gestEvents > 1){
+        var elapsed = Math.max(40, now - gestStart);
+        var speed = Math.abs(acc) / elapsed;
+        lock = Math.min(LOCK_MAX, Math.max(LOCK_MIN, LOCK_MIN + speed * 170));
+      }
       lockUntil = now + lock;
+      /* Only continuous gestures leave a momentum tail to gate against. A
+         discrete notch has none, so gating it would just make a mouse wheel
+         feel sluggish for no benefit. */
+      settling = gestEvents > 1;
+      settleUntil = now + lock + 700;
+      riseCount = 0;
       goTo(current + (acc > 0 ? 1 : -1));
       acc = 0;
     }
