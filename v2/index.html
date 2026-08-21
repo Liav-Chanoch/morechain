@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MoreChain — Systems that pay for themselves</title>
+<meta name="description" content="MoreChain finds the cost bleeding out of your operation, builds the system that stops it, and prices itself as a share of what it saves.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0C1116">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MoreChain">
+<meta property="og:title" content="MoreChain — Systems that pay for themselves">
+<meta property="og:description" content="We find the cost bleeding out of your operation, build the system that stops it, and price ourselves as a share of what it saves.">
+<meta property="og:url" content="https://liav-chanoch.github.io/morechain/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root{
+  --ink:#0C1116;
+  --ink-2:#151D25;
+  --ink-3:#26313C;
+  --paper:#F2EEE6;
+  --paper-2:#E5DFD3;
+  --accent:#E2643A;
+  --accent-2:#5E9EA0;
+
+  --f-display:"Bricolage Grotesque","Space Grotesk",system-ui,sans-serif;
+  --f-body:"Space Grotesk",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --ease:cubic-bezier(.22,1,.36,1);
+  --dur:700ms;
+  --dur-fast:340ms;
+
+  --pad:clamp(22px,5vw,80px);
+  --bar-h:66px;
+  --bp:860px;
+
+  --chrome-fg:var(--paper);
+}
+@media (prefers-reduced-motion: reduce){
+  :root{ --dur:1ms; --dur-fast:1ms; }
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family:var(--f-body);
+  background:var(--ink);
+  color:var(--paper);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+  overscroll-behavior:none;
+}
+body.is-locked{ overflow:hidden; }
+img{ max-width:100%; display:block; }
+button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
+a{ color:inherit; }
+
+.skip{
+  position:fixed; top:-100px; left:12px; z-index:999;
+  background:var(--accent); color:#fff; padding:10px 16px; border-radius:6px;
+  font-family:var(--f-mono); font-size:12px; text-decoration:none;
+}
+.skip:focus{ top:12px; }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:3px; }
+
+/* ============================================================
+   DECK + PANELS
+   Static defaults below MUST match the initial JS state
+   (panel 0 visible, all others hidden) so nothing flashes
+   between first paint and script execution.
+   ============================================================ */
+.deck{ position:fixed; inset:0; overflow:hidden; }
+
+.panel{
+  position:absolute; inset:0;
+  background:var(--bg); color:var(--fg);
+  transform:translate3d(0,100%,0);
+  visibility:hidden;
+  transition:
+    transform var(--dur) var(--ease),
+    opacity var(--dur) var(--ease),
+    visibility 0s linear var(--dur);
+  will-change:transform;
+}
+.panel:first-child{ transform:none; visibility:visible; z-index:2; transition-delay:0s; }
+
+.panel.is-current{ transform:none; visibility:visible; z-index:2; transition-delay:0s,0s,0s; }
+.panel.is-above{ transform:translate3d(0,-100%,0); visibility:hidden; z-index:1; }
+.panel.is-below{ transform:translate3d(0,100%,0); visibility:hidden; z-index:1; }
+
+@media (prefers-reduced-motion: reduce){
+  .panel{ transform:none !important; opacity:0; }
+  .panel.is-current{ opacity:1; }
+  .panel:first-child{ opacity:1; }
+  .panel.is-above,.panel.is-below{ opacity:0; }
+}
+
+.panel[data-theme="ink"]{
+  --bg:var(--ink); --fg:var(--paper); --muted:#8A97A3; --rule:#27323D; --chip:#151D25;
+}
+.panel[data-theme="paper"]{
+  --bg:var(--paper); --fg:var(--ink); --muted:#6B7078; --rule:#D6CFC1; --chip:#E5DFD3;
+}
+
+.panel__scroll{
+  height:100%;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  display:flex; flex-direction:column;
+  padding:var(--pad);
+  scrollbar-width:none;
+}
+.panel__scroll::-webkit-scrollbar{ display:none; }
+.panel__inner{ width:min(1180px,100%); margin-inline:auto; margin-block:auto; }
+
+/* ============================================================
+   TYPE
+   ============================================================ */
+.eyebrow{
+  font-family:var(--f-mono); font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--accent);
+  margin:0 0 22px;
+}
+.eyebrow span{ color:var(--muted); }
+h1,h2,h3{ font-family:var(--f-display); font-weight:600; margin:0; letter-spacing:-.028em; line-height:.98; }
+h1{ font-size:clamp(2.9rem,7.4vw,6rem); font-weight:800; }
+h2{ font-size:clamp(2.1rem,4.6vw,3.6rem); }
+h3{ font-size:clamp(1.15rem,1.7vw,1.4rem); letter-spacing:-.015em; line-height:1.15; }
+p{ margin:0; }
+.lead{
+  font-size:clamp(1.02rem,1.35vw,1.22rem); line-height:1.6; color:var(--muted);
+  max-width:60ch;
+}
+.body{ font-size:clamp(.95rem,1.1vw,1.03rem); line-height:1.68; color:var(--muted); max-width:64ch; }
+.rule{ height:1px; background:var(--rule); border:0; margin:0; }
+
+/* ============================================================
+   SIGNATURE ELEMENT — the chain
+   ============================================================ */
+.chain{ display:block; overflow:visible; }
+/* .lk is used by the hero chain AND the per-step glyphs, so it must not be
+   scoped to .chain — an unscoped SVG rect would otherwise paint solid black. */
+.lk{ fill:none; stroke:currentColor; stroke-width:7; }
+.lk--hot{ stroke:var(--accent); }
+@media (prefers-reduced-motion: no-preference){
+  .chain--hero .lk{ animation:drift 7s var(--ease) infinite alternate; }
+  .chain--hero .lk:nth-child(2){ animation-delay:.35s; }
+  .chain--hero .lk:nth-child(3){ animation-delay:.7s; }
+  .chain--hero .lk:nth-child(4){ animation-delay:1.05s; }
+}
+@keyframes drift{ from{ transform:translateY(0) } to{ transform:translateY(-6px) } }
+
+/* ============================================================
+   PANEL 1 — HERO
+   ============================================================ */
+.hero{ display:grid; gap:clamp(28px,4vw,56px); }
+.hero__mark{ display:flex; align-items:center; gap:18px; }
+.hero__mark .chain{ width:clamp(150px,17vw,230px); color:var(--fg); }
+.hero h1 em{ font-style:normal; color:var(--accent); }
+.hero__foot{ display:flex; flex-wrap:wrap; gap:14px; align-items:center; }
+
+.btn{
+  display:inline-flex; align-items:center; gap:10px;
+  font-family:var(--f-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+  padding:15px 24px; border-radius:999px; text-decoration:none;
+  background:var(--accent); color:#fff;
+  transition:transform var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.btn:hover{ transform:translateY(-2px); background:#C9542C; }
+.btn--ghost{ background:transparent; color:var(--fg); border:1px solid var(--rule); }
+.btn--ghost:hover{ background:var(--chip); }
+
+/* ============================================================
+   PANEL 2 — FOUNDERS / WHO
+   ============================================================ */
+.split{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(30px,5vw,72px); align-items:start; }
+.stack{ display:grid; gap:26px; }
+.pairs{ display:grid; gap:0; border-top:1px solid var(--rule); }
+.pair{
+  display:grid; grid-template-columns:auto 1fr; gap:20px;
+  padding:20px 0; border-bottom:1px solid var(--rule); align-items:baseline;
+}
+.pair__k{ font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:var(--accent); }
+.pair__v{ font-size:.98rem; line-height:1.55; color:var(--muted); }
+.pair__v strong{ color:var(--fg); font-weight:500; }
+
+/* ============================================================
+   PANEL 3 — WHAT WE BUILD
+   ============================================================ */
+.cards{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--rule); border:1px solid var(--rule); }
+.card{ background:var(--bg); padding:clamp(22px,2.4vw,34px); display:grid; gap:14px; align-content:start; min-height:230px; }
+.card__n{ font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:var(--accent); }
+.card p{ font-size:.92rem; line-height:1.6; color:var(--muted); }
+
+/* ============================================================
+   PANEL 4 — THE MODEL (4 links = 4 steps)
+   ============================================================ */
+.steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(18px,2.4vw,34px); }
+.step{ display:grid; gap:16px; align-content:start; position:relative; padding-top:26px; }
+.step::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:2px; background:var(--rule);
+}
+.step--live::before{ background:var(--accent); }
+.step__n{ font-family:var(--f-mono); font-size:11px; letter-spacing:.18em; color:var(--accent); }
+.step__link{ width:52px; color:var(--fg); opacity:.55; }
+.step--live .step__link{ opacity:1; color:var(--accent); }
+.step p{ font-size:.92rem; line-height:1.62; color:var(--muted); }
+.model__note{
+  margin-top:clamp(28px,3.4vw,46px); padding:20px 24px; border-left:2px solid var(--accent);
+  background:var(--chip); font-size:.94rem; line-height:1.6; color:var(--muted); max-width:70ch;
+}
+
+/* ============================================================
+   PANEL 5 — WORK
+   ============================================================ */
+.worklist{ border-top:1px solid var(--rule); }
+.work{
+  width:100%; text-align:left; display:grid;
+  grid-template-columns:auto 1fr auto auto; gap:clamp(16px,3vw,44px);
+  align-items:center; padding:clamp(20px,2.4vw,30px) 6px;
+  border-bottom:1px solid var(--rule);
+  transition:padding-left var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.work:hover{ padding-left:20px; background:var(--chip); }
+.work__n{ font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:var(--accent); }
+.work__t{ font-family:var(--f-display); font-size:clamp(1.1rem,2vw,1.65rem); font-weight:600; letter-spacing:-.02em; }
+.work__tag{ font-family:var(--f-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); border:1px solid var(--rule); padding:6px 11px; border-radius:999px; white-space:nowrap; }
+.work__go{ font-family:var(--f-mono); font-size:15px; color:var(--muted); }
+.work:hover .work__go{ color:var(--accent); }
+
+/* ============================================================
+   PANEL 6 — CONTACT
+   ============================================================ */
+.contact{ display:grid; gap:clamp(26px,3.4vw,48px); }
+.contact__grid{ display:grid; grid-template-columns:1.3fr 1fr; gap:clamp(28px,5vw,70px); align-items:start; }
+.big-link{
+  font-family:var(--f-display); font-weight:600; letter-spacing:-.03em;
+  font-size:clamp(1.6rem,3.6vw,2.9rem); text-decoration:none; line-height:1.1;
+  display:inline-block; border-bottom:2px solid var(--rule); padding-bottom:6px;
+  transition:border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.big-link:hover{ color:var(--accent); border-color:var(--accent); }
+.colophon{ margin-top:clamp(30px,4vw,60px); display:flex; flex-wrap:wrap; gap:18px; justify-content:space-between;
+  font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; color:var(--muted); text-transform:uppercase; }
+
+/* ============================================================
+   DESKTOP CHROME — dots, arrows, rotated label
+   ============================================================ */
+.chrome{ position:fixed; z-index:40; color:var(--chrome-fg); transition:color var(--dur) var(--ease); }
+.chrome--label{
+  left:clamp(14px,2vw,28px); top:50%; transform:translateY(-50%) rotate(180deg);
+  writing-mode:vertical-rl; font-family:var(--f-mono); font-size:11px;
+  letter-spacing:.24em; text-transform:uppercase; pointer-events:none;
+}
+.chrome--label b{ color:var(--accent); font-weight:500; }
+.chrome--nav{ right:clamp(14px,2vw,28px); top:50%; transform:translateY(-50%); display:grid; gap:16px; justify-items:center; }
+.dots{ display:grid; gap:12px; justify-items:center; }
+.dot{ width:8px; height:8px; border-radius:999px; background:currentColor; opacity:.28; padding:0;
+  transition:opacity var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease); }
+.dot:hover{ opacity:.6; }
+.dot.on{ opacity:1; background:var(--accent); transform:scale(1.5); }
+.arrow{ width:34px; height:34px; border:1px solid currentColor; border-radius:999px; opacity:.4;
+  display:grid; place-items:center; font-size:12px; font-family:var(--f-mono);
+  transition:opacity var(--dur-fast) var(--ease); }
+.arrow:hover:not(:disabled){ opacity:1; }
+.arrow:disabled{ opacity:.12; cursor:default; }
+
+/* ============================================================
+   MOBILE CHROME — opaque themed bottom bar
+   ============================================================ */
+.bar{
+  position:fixed; left:0; right:0; bottom:0; z-index:45; display:none;
+  height:calc(var(--bar-h) + env(safe-area-inset-bottom));
+  padding:0 16px env(safe-area-inset-bottom);
+  background:var(--bar-bg,#0C1116); color:var(--bar-fg,#F2EEE6);
+  align-items:center; gap:14px;
+  border-top:1px solid rgba(128,128,128,.22);
+  transition:background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.bar__label{ font-family:var(--f-mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase; white-space:nowrap; }
+.bar__dots{ display:flex; gap:9px; margin-inline:auto; }
+.bar .dot{ background:var(--bar-dot,#4A5765); opacity:1; }
+.bar .dot.on{ background:var(--bar-dot-on,#E2643A); }
+.bar__cta{ font-family:var(--f-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+  border:1px solid currentColor; border-radius:999px; padding:9px 14px; white-space:nowrap; }
+
+/* ============================================================
+   OVERLAYS
+   ============================================================ */
+.ov{
+  position:fixed; inset:0; z-index:60; visibility:hidden;
+  transform:translate3d(100%,0,0);
+  transition:transform var(--dur) var(--ease), visibility 0s linear var(--dur);
+  background:var(--ink); color:var(--paper);
+  --muted:#8A97A3; --rule:#27323D; --chip:#151D25;
+}
+.ov.open{ transform:none; visibility:visible; transition-delay:0s,0s; }
+.ov--2{ z-index:70; background:var(--paper); color:var(--ink); --muted:#6B7078; --rule:#D6CFC1; --chip:#E5DFD3; }
+@media (min-width:861px){ .ov--2{ left:auto; width:min(620px,52vw); box-shadow:-40px 0 90px rgba(0,0,0,.4); } }
+@media (prefers-reduced-motion: reduce){
+  .ov{ transform:none !important; opacity:0; }
+  .ov.open{ opacity:1; }
+}
+.ov__scroll{ height:100svh; overflow-y:auto; overscroll-behavior:contain; padding:var(--pad); scrollbar-width:none; }
+.ov__scroll::-webkit-scrollbar{ display:none; }
+.ov__wrap{ width:min(1040px,100%); margin-inline:auto; }
+.ov__top{ display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:clamp(26px,4vw,52px); }
+.ov__close{ font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  border:1px solid var(--rule); border-radius:999px; padding:10px 16px; }
+.ov__close:hover{ border-color:var(--accent); color:var(--accent); }
+.ov h2{ margin-bottom:18px; }
+
+/* Detail grid: desktop 2 cols TOP-ALIGNED (never centered — a tall
+   media element centered against short text reads as a crop).
+   Mobile: single column, media forced BETWEEN the two text blocks
+   via display:contents + order, so the DOM never moves. */
+.ov__grid{
+  display:grid; grid-template-columns:1fr minmax(0,.85fr);
+  gap:clamp(26px,4vw,60px); align-items:start; margin-top:clamp(24px,3vw,40px);
+}
+.ov__grid.is-solo{ grid-template-columns:1fr; }
+.ov__text{ display:grid; gap:20px; align-content:start; }
+.ov__media{ align-self:start; }
+.ov__grid.is-solo .ov__media{ display:none; }
+
+@media (max-width:860px){
+  .ov__grid{ grid-template-columns:1fr; }
+  .ov__text{ display:contents; }
+  .ov__sum{ order:1; }
+  .ov__media{ order:2; }
+  .ov__rest{ order:3; }
+  .ov__act{ order:4; }
+}
+
+/* Reusable media frame: a well + a browser bezel. Never ship a bare
+   screenshot; never double-bezel one that already has chrome baked in
+   (set data-frame="plain" for those). */
+.frame{ background:var(--chip); border:1px solid var(--rule); border-radius:14px; padding:clamp(14px,2vw,26px); }
+.frame__win{ border-radius:9px; overflow:hidden; border:1px solid var(--rule); background:#fff; }
+.frame__bar{ display:flex; align-items:center; gap:6px; padding:9px 12px; background:var(--rule); }
+.frame__bar i{ width:9px; height:9px; border-radius:999px; background:currentColor; opacity:.35; }
+.frame[data-frame="plain"] .frame__bar{ display:none; }
+.frame[data-frame="plain"] .frame__win{ border:0; }
+.frame figcaption{ font-family:var(--f-mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-top:12px; }
+
+.meta{ display:flex; flex-wrap:wrap; gap:10px; }
+.meta span{ font-family:var(--f-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); border:1px solid var(--rule); padding:6px 11px; border-radius:999px; }
+
+/* ============================================================
+   RESPONSIVE — one breakpoint, two chrome systems
+   ============================================================ */
+@media (max-width:860px){
+  .chrome{ display:none; }
+  .bar{ display:flex; }
+  /* svh, not dvh: mobile Safari can re-expand its toolbar after a
+     scroll settles, which would strand the last element behind the bar. */
+  .panel__scroll{ height:calc(100svh - var(--bar-h)); padding-top:clamp(28px,9vh,64px); padding-bottom:34px; }
+  .panel__inner{ margin-block:0 auto; }
+  .ov__scroll{ height:100svh; }
+  .split,.contact__grid{ grid-template-columns:1fr; }
+  .cards{ grid-template-columns:1fr 1fr; }
+  .steps{ grid-template-columns:1fr; gap:26px; }
+  .step{ padding-top:20px; }
+  .work{ grid-template-columns:auto 1fr auto; gap:14px; }
+  .work__tag{ display:none; }
+}
+@media (max-width:520px){
+  .cards{ grid-template-columns:1fr; }
+  .card{ min-height:0; }
+  .bar__label{ display:none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#p-0">Skip to content</a>
+
+<main class="deck" id="deck">
+
+  <!-- 1 — HERO -->
+  <section class="panel" id="p-0" data-theme="ink" data-label="Index" aria-label="Index">
+    <div class="panel__scroll">
+      <div class="panel__inner hero">
+        <div class="hero__mark">
+          <svg class="chain chain--hero" viewBox="0 0 260 74" aria-hidden="true">
+            <rect class="lk" x="4" y="14" width="76" height="46" rx="23"/>
+            <rect class="lk" x="62" y="14" width="76" height="46" rx="23"/>
+            <rect class="lk" x="120" y="14" width="76" height="46" rx="23"/>
+            <rect class="lk lk--hot" x="178" y="14" width="76" height="46" rx="23"/>
+          </svg>
+          <span class="eyebrow" style="margin:0">MoreChain</span>
+        </div>
+        <h1>Lorem ipsum dolor sit amet, <em>consectetur</em> adipiscing elit.</h1>
+        <p class="lead">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.</p>
+        <div class="hero__foot">
+          <a class="btn" href="#p-5" data-goto="5">Book the free discovery <span aria-hidden="true">&#8594;</span></a>
+          <a class="btn btn--ghost" href="#p-3" data-goto="3">See how we price</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 — WHO -->
+  <section class="panel" id="p-1" data-theme="paper" data-label="Founders" aria-label="Founders">
+    <div class="panel__scroll">
+      <div class="panel__inner">
+        <p class="eyebrow">01 <span>/ Who is behind it</span></p>
+        <div class="split">
+          <div class="stack">
+            <h2>Lorem ipsum dolor sit amet consectetur.</h2>
+            <p class="body">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+            <p class="body">Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+          </div>
+          <div class="pairs">
+            <div class="pair"><span class="pair__k">ENG</span><span class="pair__v"><strong>Lorem ipsum dolor</strong> — sit amet consectetur adipiscing elit sed do eiusmod tempor.</span></div>
+            <div class="pair"><span class="pair__k">OPS</span><span class="pair__v"><strong>Incididunt ut labore</strong> — et dolore magna aliqua ut enim ad minim veniam quis.</span></div>
+            <div class="pair"><span class="pair__k">BIZ</span><span class="pair__v"><strong>Nostrud exercitation</strong> — ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></div>
+            <div class="pair"><span class="pair__k">P&amp;L</span><span class="pair__v"><strong>Duis aute irure</strong> — dolor in reprehenderit in voluptate velit esse cillum dolore.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 — WHAT WE BUILD -->
+  <section class="panel" id="p-2" data-theme="ink" data-label="Capabilities" aria-label="Capabilities">
+    <div class="panel__scroll">
+      <div class="panel__inner stack">
+        <p class="eyebrow">02 <span>/ What we build</span></p>
+        <h2>Lorem ipsum dolor sit amet, consectetur adipiscing.</h2>
+        <div class="cards">
+          <article class="card"><span class="card__n">A</span><h3>Lorem automation</h3><p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim.</p></article>
+          <article class="card"><span class="card__n">B</span><h3>Ipsum applications</h3><p>Veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.</p></article>
+          <article class="card"><span class="card__n">C</span><h3>Dolor system design</h3><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu.</p></article>
+          <article class="card"><span class="card__n">D</span><h3>Sit amet strategy</h3><p>Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt.</p></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 — THE MODEL -->
+  <section class="panel" id="p-3" data-theme="paper" data-label="The model" aria-label="The model">
+    <div class="panel__scroll">
+      <div class="panel__inner stack">
+        <p class="eyebrow">03 <span>/ How we price</span></p>
+        <h2>You pay a share of what we save you. Not before.</h2>
+        <div class="steps">
+          <div class="step step--live">
+            <svg class="step__link" viewBox="0 0 60 46" aria-hidden="true"><rect class="lk lk--hot" x="4" y="4" width="52" height="38" rx="19"/></svg>
+            <span class="step__n">STEP 01 / FREE</span>
+            <h3>Discovery</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt.</p>
+          </div>
+          <div class="step">
+            <svg class="step__link" viewBox="0 0 60 46" aria-hidden="true"><rect class="lk" x="4" y="4" width="52" height="38" rx="19"/></svg>
+            <span class="step__n">STEP 02</span>
+            <h3>Quantify</h3>
+            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
+          </div>
+          <div class="step">
+            <svg class="step__link" viewBox="0 0 60 46" aria-hidden="true"><rect class="lk" x="4" y="4" width="52" height="38" rx="19"/></svg>
+            <span class="step__n">STEP 03</span>
+            <h3>Price</h3>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat.</p>
+          </div>
+          <div class="step">
+            <svg class="step__link" viewBox="0 0 60 46" aria-hidden="true"><rect class="lk" x="4" y="4" width="52" height="38" rx="19"/></svg>
+            <span class="step__n">STEP 04</span>
+            <h3>Retainer</h3>
+            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p>
+          </div>
+        </div>
+        <p class="model__note">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua — placeholder for the plain-English statement of the risk reversal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 — WORK -->
+  <section class="panel" id="p-4" data-theme="ink" data-label="Work" aria-label="Work">
+    <div class="panel__scroll">
+      <div class="panel__inner stack">
+        <p class="eyebrow">04 <span>/ Selected systems</span></p>
+        <h2>Lorem ipsum, dolor sit amet.</h2>
+        <div class="worklist" id="worklist"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 — CONTACT -->
+  <section class="panel" id="p-5" data-theme="paper" data-label="Contact" aria-label="Contact">
+    <div class="panel__scroll">
+      <div class="panel__inner contact">
+        <p class="eyebrow">05 <span>/ Start with the free part</span></p>
+        <div class="contact__grid">
+          <div class="stack">
+            <h2>Lorem ipsum dolor sit amet consectetur adipiscing elit.</h2>
+            <p class="body">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+          </div>
+          <div class="stack">
+            <a class="big-link" href="mailto:hello@example.com">hello@example.com</a>
+            <a class="big-link" href="#">LinkedIn</a>
+          </div>
+        </div>
+        <hr class="rule">
+        <div class="colophon">
+          <span>MoreChain</span>
+          <span>Lorem ipsum &#183; Dolor sit</span>
+          <span>&#169; 2026</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Persistent chrome: outside the deck, survives navigation -->
+<div class="chrome chrome--label" id="label-d" aria-hidden="true"></div>
+<nav class="chrome chrome--nav" aria-label="Section navigation">
+  <button class="arrow" id="prev" aria-label="Previous section">&#9650;</button>
+  <div class="dots" id="dots-d"></div>
+  <button class="arrow" id="next" aria-label="Next section">&#9660;</button>
+</nav>
+
+<div class="bar" id="bar">
+  <span class="bar__label" id="label-m"></span>
+  <div class="bar__dots" id="dots-m"></div>
+  <button class="bar__cta" data-goto="5">Contact</button>
+</div>
+
+<!-- Overlay 1: summary -->
+<div class="ov ov--1" id="ov1" role="dialog" aria-modal="true" aria-labelledby="ov1-title">
+  <div class="ov__scroll">
+    <div class="ov__wrap">
+      <div class="ov__top">
+        <span class="eyebrow" style="margin:0" id="ov1-n"></span>
+        <button class="ov__close" data-close="1">Close <span aria-hidden="true">&#215;</span></button>
+      </div>
+      <h2 id="ov1-title"></h2>
+      <div class="meta" id="ov1-meta"></div>
+      <div class="ov__grid" id="ov1-grid">
+        <div class="ov__text">
+          <p class="body ov__sum" id="ov1-sum"></p>
+          <p class="body ov__rest" id="ov1-rest"></p>
+          <div class="ov__act"><button class="btn" id="ov1-more">Read the full breakdown <span aria-hidden="true">&#8594;</span></button></div>
+        </div>
+        <figure class="ov__media frame" id="ov1-frame" style="margin:0">
+          <div class="frame__win">
+            <div class="frame__bar"><i></i><i></i><i></i></div>
+            <img id="ov1-img" alt="">
+          </div>
+          <figcaption id="ov1-cap"></figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay 2: full detail, stacked on top of overlay 1 -->
+<div class="ov ov--2" id="ov2" role="dialog" aria-modal="true" aria-labelledby="ov2-title">
+  <div class="ov__scroll">
+    <div class="ov__wrap">
+      <div class="ov__top">
+        <span class="eyebrow" style="margin:0">Full breakdown</span>
+        <button class="ov__close" data-close="2"><span aria-hidden="true">&#8592;</span> Back</button>
+      </div>
+      <h2 id="ov2-title"></h2>
+      <div class="stack" id="ov2-body" style="margin-top:26px"></div>
+    </div>
+  </div>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"ProfessionalService",
+  "name":"MoreChain",
+  "url":"https://liav-chanoch.github.io/morechain/",
+  "description":"MoreChain identifies operational pain points, builds tailor-made automation and software systems, and prices its work as a share of the money those systems save.",
+  "serviceType":["Business process automation","Custom software development","Systems design","Business operations consulting"],
+  "areaServed":"Worldwide",
+  "offers":{
+    "@type":"Offer",
+    "name":"Free discovery",
+    "price":"0",
+    "priceCurrency":"USD",
+    "description":"A no-cost discovery engagement that identifies pain points and quantifies the savings a tailor-made system would produce."
+  }
+}
+</script>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---------- Case data (lorem placeholders) ---------- */
+  var CASES = [
+    { n:'01', title:'Lorem ipsum dolor sit', tag:'Automation',
+      sum:'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa quae ab illo inventore.',
+      rest:'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.',
+      meta:['Ops','6 weeks','Retainer'],
+      img:"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 520'><rect width='800' height='520' fill='rgb(242,238,230)'/><rect x='0' y='0' width='800' height='64' fill='rgb(229,223,211)'/><rect x='40' y='110' width='300' height='26' rx='6' fill='rgb(12,17,22)'/><rect x='40' y='158' width='500' height='12' rx='6' fill='rgb(180,175,165)'/><rect x='40' y='182' width='430' height='12' rx='6' fill='rgb(180,175,165)'/><rect x='40' y='240' width='340' height='200' rx='10' fill='rgb(226,100,58)'/><rect x='410' y='240' width='350' height='94' rx='10' fill='rgb(229,223,211)'/><rect x='410' y='348' width='350' height='92' rx='10' fill='rgb(229,223,211)'/></svg>",
+      cap:'Placeholder — swap for a real screenshot', frame:'browser',
+      body:['Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.','Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.','At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores.'] },
+
+    { n:'02', title:'Consectetur adipiscing elit', tag:'Internal app',
+      sum:'Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt.',
+      rest:'Ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.',
+      meta:['Finance','9 weeks','Retainer'],
+      img:null, cap:'', frame:'browser',
+      body:['Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.','Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.'] },
+
+    { n:'03', title:'Sed do eiusmod tempor', tag:'System design',
+      sum:'Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.',
+      rest:'Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.',
+      meta:['Logistics','12 weeks','Retainer'],
+      img:null, cap:'', frame:'browser',
+      body:['Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.','Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'] },
+
+    { n:'04', title:'Incididunt ut labore magna', tag:'Automation',
+      sum:'On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment.',
+      rest:'These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and nothing prevents our being able to do what we like best.',
+      meta:['Retail','4 weeks','Retainer'],
+      img:null, cap:'', frame:'browser',
+      body:['Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure some great pleasure.','But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated.'] }
+  ];
+
+  /* ---------- Elements ---------- */
+  var deck    = document.getElementById('deck');
+  var panels  = Array.prototype.slice.call(deck.querySelectorAll('.panel'));
+  var N       = panels.length;
+  var dotsD   = document.getElementById('dots-d');
+  var dotsM   = document.getElementById('dots-m');
+  var labelD  = document.getElementById('label-d');
+  var labelM  = document.getElementById('label-m');
+  var bar     = document.getElementById('bar');
+  var prevBtn = document.getElementById('prev');
+  var nextBtn = document.getElementById('next');
+  var themeMeta = document.querySelector('meta[name="theme-color"]');
+  var ov1 = document.getElementById('ov1');
+  var ov2 = document.getElementById('ov2');
+
+  /* Per-panel theme table — drives the mobile bar and the browser chrome tint */
+  var THEMES = {
+    ink:   { bg:'#0C1116', fg:'#F2EEE6', dot:'#49555F', dotOn:'#E2643A' },
+    paper: { bg:'#F2EEE6', fg:'#0C1116', dot:'#C9C1B2', dotOn:'#E2643A' }
+  };
+
+  /* ---------- Single source of truth ---------- */
+  var current = 0;
+
+  function buildDots(host){
+    for(var i=0;i<N;i++){
+      var b = document.createElement('button');
+      b.className = 'dot';
+      b.type = 'button';
+      b.setAttribute('aria-label','Go to ' + panels[i].dataset.label);
+      (function(idx){ b.addEventListener('click', function(){ goTo(idx); }); })(i);
+      host.appendChild(b);
+    }
+  }
+  buildDots(dotsD); buildDots(dotsM);
+
+  /* render() is the ONLY place that decides what is showing. */
+  function render(){
+    for(var i=0;i<N;i++){
+      var p = panels[i];
+      p.classList.toggle('is-current', i === current);
+      p.classList.toggle('is-above',   i <  current);
+      p.classList.toggle('is-below',   i >  current);
+      p.setAttribute('aria-hidden', i === current ? 'false' : 'true');
+      if('inert' in p) p.inert = (i !== current);
+    }
+    var cur = panels[current];
+    var label = cur.dataset.label;
+    labelD.innerHTML = '<b>' + String(current+1).padStart(2,'0') + '</b> &#183; ' + label;
+    labelM.textContent = label;
+
+    var t = THEMES[cur.dataset.theme] || THEMES.ink;
+    bar.style.setProperty('--bar-bg',     t.bg);
+    bar.style.setProperty('--bar-fg',     t.fg);
+    bar.style.setProperty('--bar-dot',    t.dot);
+    bar.style.setProperty('--bar-dot-on', t.dotOn);
+    document.documentElement.style.setProperty('--chrome-fg', t.fg);
+    if(themeMeta) themeMeta.setAttribute('content', t.bg);
+
+    [dotsD,dotsM].forEach(function(host){
+      for(var j=0;j<host.children.length;j++){
+        host.children[j].classList.toggle('on', j === current);
+        host.children[j].setAttribute('aria-current', j === current ? 'true' : 'false');
+      }
+    });
+
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === N-1;
+
+    try{ history.replaceState(null, '', '#' + cur.id); }catch(e){}
+  }
+
+  /* Every navigation trigger funnels through here. */
+  function goTo(i){
+    var n = Math.max(0, Math.min(N-1, i));
+    if(n === current) return;
+    current = n;
+    render();
+    var sc = panels[current].querySelector('.panel__scroll');
+    if(sc) sc.scrollTop = 0;
+  }
+
+  /* ---------- Inner-scroll boundary check ---------- */
+  function scroller(){ return panels[current].querySelector('.panel__scroll'); }
+  function canConsume(dir){
+    var el = scroller();
+    if(!el) return false;
+    var max = el.scrollHeight - el.clientHeight;
+    if(max <= 2) return false;
+    return dir > 0 ? (el.scrollTop < max - 2) : (el.scrollTop > 2);
+  }
+  function overlayOpen(){ return ov1.classList.contains('open') || ov2.classList.contains('open'); }
+
+  /* ---------- Wheel ----------
+     Fire the moment the threshold is crossed. Then lock — and while
+     locked, return BEFORE touching lockUntil, so incoming events can
+     never extend it (that feedback loop is what feels "stuck").
+     Lock length scales with how fast the gesture accumulated. */
+  var TH = 46, acc = 0, lockUntil = 0, lastEvt = 0, gestStart = 0;
+
+  window.addEventListener('wheel', function(e){
+    if(overlayOpen()) return;
+    var now = (window.performance && performance.now) ? performance.now() : Date.now();
+    if(now < lockUntil) return;
+
+    var dir = e.deltaY > 0 ? 1 : -1;
+    if(canConsume(dir)){ acc = 0; return; }
+    if(e.cancelable) e.preventDefault();
+
+    if(now - lastEvt > 180){ acc = 0; gestStart = now; }
+    lastEvt = now;
+    acc += e.deltaY;
+
+    if(Math.abs(acc) >= TH){
+      var elapsed = Math.max(1, now - gestStart);
+      var speed = Math.abs(acc) / elapsed;
+      var lock = Math.min(1100, Math.max(340, 340 + speed * 230));
+      lockUntil = now + lock;
+      goTo(current + (acc > 0 ? 1 : -1));
+      acc = 0;
+    }
+  }, { passive:false });
+
+  /* ---------- Touch ----------
+     Ask the current panel's own scroller whether it still had room in
+     that direction before treating the gesture as panel navigation. */
+  var tY = 0, tX = 0, tT = 0;
+  deck.addEventListener('touchstart', function(e){
+    var t = e.touches[0];
+    tY = t.clientY; tX = t.clientX;
+    tT = (window.performance && performance.now) ? performance.now() : Date.now();
+  }, { passive:true });
+
+  deck.addEventListener('touchend', function(e){
+    if(overlayOpen()) return;
+    var t = e.changedTouches[0];
+    var dy = t.clientY - tY, dx = t.clientX - tX;
+    if(Math.abs(dy) < 54) return;
+    if(Math.abs(dx) > Math.abs(dy)) return;
+    var dir = dy < 0 ? 1 : -1;
+    if(canConsume(dir)) return;
+    var now = (window.performance && performance.now) ? performance.now() : Date.now();
+    if(now - tT > 900 && Math.abs(dy) < 130) return;
+    goTo(current + dir);
+  }, { passive:true });
+
+  /* ---------- Keyboard ---------- */
+  window.addEventListener('keydown', function(e){
+    if(overlayOpen()){
+      if(e.key === 'Escape'){ ov2.classList.contains('open') ? closeOv(2) : closeOv(1); }
+      return;
+    }
+    var k = e.key;
+    if(k === 'ArrowDown' || k === 'PageDown' || k === ' '){
+      if(!canConsume(1)){ e.preventDefault(); goTo(current+1); }
+    } else if(k === 'ArrowUp' || k === 'PageUp'){
+      if(!canConsume(-1)){ e.preventDefault(); goTo(current-1); }
+    } else if(k === 'Home'){ e.preventDefault(); goTo(0); }
+    else if(k === 'End'){ e.preventDefault(); goTo(N-1); }
+  });
+
+  prevBtn.addEventListener('click', function(){ goTo(current-1); });
+  nextBtn.addEventListener('click', function(){ goTo(current+1); });
+
+  /* Any element with data-goto is a nav trigger too. */
+  document.addEventListener('click', function(e){
+    var el = e.target.closest ? e.target.closest('[data-goto]') : null;
+    if(!el) return;
+    e.preventDefault();
+    goTo(parseInt(el.getAttribute('data-goto'), 10));
+  });
+
+  /* ---------- Work list ---------- */
+  var list = document.getElementById('worklist');
+  CASES.forEach(function(c, i){
+    var b = document.createElement('button');
+    b.className = 'work';
+    b.type = 'button';
+    b.innerHTML =
+      '<span class="work__n">' + c.n + '</span>' +
+      '<span class="work__t">' + c.title + '</span>' +
+      '<span class="work__tag">' + c.tag + '</span>' +
+      '<span class="work__go" aria-hidden="true">&#8594;</span>';
+    b.addEventListener('click', function(){ openOv1(i); });
+    list.appendChild(b);
+  });
+
+  /* ---------- Overlays ---------- */
+  var lastFocus = null, activeCase = 0;
+
+  function openOv1(i){
+    activeCase = i;
+    var c = CASES[i];
+    document.getElementById('ov1-n').textContent = 'Case ' + c.n;
+    document.getElementById('ov1-title').textContent = c.title;
+    document.getElementById('ov1-sum').textContent = c.sum;
+    document.getElementById('ov1-rest').textContent = c.rest;
+
+    var meta = document.getElementById('ov1-meta');
+    meta.innerHTML = '';
+    c.meta.forEach(function(m){
+      var s = document.createElement('span'); s.textContent = m; meta.appendChild(s);
+    });
+
+    /* No image => collapse the column entirely rather than reserving
+       space for an empty placeholder box. */
+    var grid = document.getElementById('ov1-grid');
+    var frame = document.getElementById('ov1-frame');
+    var img = document.getElementById('ov1-img');
+    if(c.img){
+      grid.classList.remove('is-solo');
+      frame.setAttribute('data-frame', c.frame || 'browser');
+      img.src = c.img;
+      img.alt = c.title + ' — interface';
+      document.getElementById('ov1-cap').textContent = c.cap || '';
+    } else {
+      grid.classList.add('is-solo');
+      img.removeAttribute('src');
+    }
+
+    lastFocus = document.activeElement;
+    ov2.classList.remove('open');
+    ov1.classList.add('open');
+    document.body.classList.add('is-locked');
+    ov1.querySelector('.ov__scroll').scrollTop = 0;
+    ov1.querySelector('[data-close="1"]').focus();
+  }
+
+  function openOv2(){
+    var c = CASES[activeCase];
+    document.getElementById('ov2-title').textContent = c.title;
+    var host = document.getElementById('ov2-body');
+    host.innerHTML = '';
+    c.body.forEach(function(t){
+      var p = document.createElement('p'); p.className = 'body'; p.textContent = t; host.appendChild(p);
+    });
+    ov2.classList.add('open');
+    ov2.querySelector('.ov__scroll').scrollTop = 0;
+    ov2.querySelector('[data-close="2"]').focus();
+  }
+
+  function closeOv(which){
+    if(which === 2){
+      ov2.classList.remove('open');
+      ov1.querySelector('[data-close="1"]').focus();
+      return;
+    }
+    ov2.classList.remove('open');
+    ov1.classList.remove('open');
+    document.body.classList.remove('is-locked');
+    if(lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  document.getElementById('ov1-more').addEventListener('click', openOv2);
+  document.addEventListener('click', function(e){
+    var el = e.target.closest ? e.target.closest('[data-close]') : null;
+    if(!el) return;
+    closeOv(parseInt(el.getAttribute('data-close'), 10));
+  });
+
+  /* ---------- Init ---------- */
+  var hash = location.hash.replace('#','');
+  if(hash){
+    for(var i=0;i<N;i++){ if(panels[i].id === hash){ current = i; break; } }
+  }
+  render();
+})();
+</script>
+</body>
+</html>
