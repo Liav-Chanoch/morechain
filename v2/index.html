@@ -162,10 +162,67 @@ p{ margin:0; }
 .head{ display:flex; flex-direction:column; gap:clamp(14px,2.4vh,26px); }
 .grow{ margin-top:auto; }
 .center{ margin-block:auto; }
-/* Label sits at the top, the headline under it, and the content row
-   pins to the bottom of the card rather than leaving a void beneath
-   the label. */
-.tiles,.steps,.pillars,.chips{ margin-top:auto; }
+/* A headline carrying a full sentence needs a smaller ceiling than a
+   three-word one, or it eats the card at short viewport heights. */
+h2.h2--long{ font-size:clamp(1.5rem,3.5vh,2.5rem); line-height:1.04; letter-spacing:-.032em; }
+h2 .dim{ color:var(--faint-2); }
+
+/* Hero scroll hint */
+.hint{
+  display:inline-flex; align-items:center; gap:.6em;
+  font-family:var(--m); font-weight:400; font-size:10.5px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--faint-2);
+  margin-top:clamp(14px,2.6vh,30px);
+}
+@media (prefers-reduced-motion: no-preference){
+  .hint i{ font-style:normal; animation:bob 2.4s var(--ease) infinite; }
+}
+@keyframes bob{ 0%,100%{ transform:translateY(-2px) } 50%{ transform:translateY(3px) } }
+
+/* Step label row: STEP 0n plus a filled FREE pill */
+.step__top{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.free{
+  font-family:var(--m); font-weight:500; font-size:9px; letter-spacing:.14em;
+  text-transform:uppercase; background:var(--green); color:#07120C;
+  border-radius:999px; padding:3px 8px; line-height:1.4;
+}
+
+/* Risk reversal: a rule with the label sitting on it, then a two-tone lead */
+.rr{ margin-top:clamp(16px,2.8vh,34px); }
+.rr__rule{
+  position:relative; height:1px; background:var(--green); opacity:.55;
+  margin-bottom:clamp(14px,2.2vh,24px);
+}
+.rr__tag{
+  position:absolute; left:0; top:50%; transform:translateY(-50%);
+  background:var(--bg); padding-right:14px;
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--m); font-weight:500; font-size:9px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--green);
+}
+.card[data-i="2"] .rr__tag{ background:#0E1219; }
+.rr__node{
+  width:6px; height:6px; border-radius:2px; background:var(--green);
+  box-shadow:0 0 0 3px rgba(60,210,145,.18);
+}
+.rr__lead{
+  font-weight:600; letter-spacing:-.026em; line-height:1.18;
+  font-size:clamp(1.05rem,2.8vh,1.75rem); color:var(--ink);
+  max-width:34ch;
+}
+.rr__lead .yes{ color:var(--green); }
+.rr__sub{
+  margin-top:clamp(7px,1.2vh,12px); color:var(--faint);
+  font-size:clamp(11.5px,1.35vh,13px); line-height:1.5;
+}
+
+/* Pillars gain a kicker line above the body */
+.pillar__k{
+  color:var(--ink-2); font-size:clamp(12px,1.5vh,14px);
+  line-height:1.35; font-weight:500; letter-spacing:-.01em;
+}
+.pillar--edge .mono{ color:var(--amber); }
+.pillar--edge{ border-color:rgba(232,160,80,.28); }
 
 /* ==========================================================
    01 WHAT WE DO
@@ -309,8 +366,8 @@ p{ margin:0; }
   display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between;
   align-items:baseline; color:var(--faint-2);
 }
-.foot-mark b{ color:var(--faint); font-weight:500; }
-.foot-mark i{ font-style:normal; color:var(--green); font-weight:500; }
+.foot-mark__a{ color:var(--faint); font-weight:500; }
+.foot-mark__b{ color:var(--green); font-weight:500; }
 
 /* ==========================================================
    WORDMARK
@@ -321,9 +378,9 @@ p{ margin:0; }
   font-weight:700; letter-spacing:-.03em; line-height:1;
   font-size:15px;
 }
-.mark u{ text-decoration:none; color:var(--ink); }
-.mark s{ text-decoration:none; color:var(--green); }
-.mark em{
+.mark__a{ color:var(--ink); }
+.mark__b{ color:var(--green); }
+.mark__n{
   width:4.5px; height:4.5px; border-radius:1.5px;
   background:var(--mint); align-self:flex-end;
   margin:0 0 1px 3px;
@@ -331,7 +388,7 @@ p{ margin:0; }
 }
 /* Below about 13px the node stops reading and is dropped. */
 .mark--sm{ font-size:12px; }
-.mark--sm em{ display:none; }
+.mark--sm .mark__n{ display:none; }
 
 /* ==========================================================
    FIXED CHROME
@@ -438,6 +495,15 @@ p{ margin:0; }
   .stepbtn{ width:44px; height:44px; }
   .steps-nav{ padding:4px; }
   .big{ padding-bottom:10px; }
+  /* Screen 03 carries two full paragraphs plus three pillars with kickers,
+     which overflows a 390x844 card. The copy is approved, so the recovery
+     comes out of type and spacing on this card only. */
+  .card[data-i="3"] .lead{ font-size:clamp(12.5px,1.55vh,14px); line-height:1.48; }
+  .card[data-i="3"] .head{ gap:clamp(9px,1.5vh,16px); }
+  .card[data-i="3"] .pillars{ gap:8px; }
+  .card[data-i="3"] .pillar{ padding:clamp(11px,1.8vh,18px); gap:6px; }
+  .card[data-i="3"] .pillar__k{ font-size:clamp(11.5px,1.4vh,13px); }
+
   .readout{ right:calc(var(--gut) + 14px); gap:12px; padding:9px 12px; }
   .ro{ flex-direction:row; align-items:baseline; gap:6px; }
   .ro-status{ display:none; }
@@ -449,6 +515,11 @@ p{ margin:0; }
 @media (max-width:359px){
   .ro:nth-child(2){ display:none; }
 }
+
+/* Label at the top, headline under it, content row pinned to the bottom.
+   This has to sit after the per-section margin-top declarations: they are
+   the same specificity, so whichever comes last wins. */
+.tiles,.steps,.pillars,.chips{ margin-top:auto; }
 
 @media (prefers-reduced-motion: reduce){
   .conn::after,.conn i{ animation:none; }
@@ -462,7 +533,7 @@ p{ margin:0; }
 <canvas id="chain" aria-hidden="true"></canvas>
 
 <a class="chrome pill pill--logo" href="#p-0" data-go="0" aria-label="MoreChain, back to the top">
-  <span class="mark"><u>More</u><s>Chain</s><em></em></span>
+  <span class="mark"><span class="mark__a">More</span><span class="mark__b">Chain</span><span class="mark__n"></span></span>
 </a>
 <a class="chrome pill pill--cta mono" href="#p-5" data-go="5">Book discovery</a>
 
@@ -473,7 +544,7 @@ p{ margin:0; }
     <div class="card__box">
       <div class="card__dim"></div>
       <div class="card__in">
-        <p class="label mono"><b>MoreChain</b></p>
+        <p class="label mono">OPERATIONS SYSTEMS <span>&#183;</span> OUTCOME-PRICED</p>
         <div class="head center">
           <h1>Systems that pay for<br><i>themselves.</i></h1>
           <p class="lead">Every operation has headroom. We find where it sits, build the system that captures it, and take our fee out of the gain. Every system is built for your operation alone.</p>
@@ -481,6 +552,7 @@ p{ margin:0; }
             <a class="chrome pill mono" style="position:static;background:var(--green);color:#07120C;border-color:var(--green)" href="#p-5" data-go="5">Book the free discovery</a>
             <a class="chrome pill mono" style="position:static" href="#p-2" data-go="2">See how it works</a>
           </div>
+          <span class="hint">Scroll <i>&#8595;</i> the chain follows</span>
         </div>
       </div>
     </div>
@@ -491,34 +563,30 @@ p{ margin:0; }
     <div class="card__box">
       <div class="card__dim"></div>
       <div class="card__in">
-        <p class="label mono"><b>01</b><span>/</span>What we do</p>
-        <div class="head" style="margin-top:clamp(18px,3.2vh,40px)">
-          <h2>Custom systems, built<br>for one operation.</h2>
-          <p class="lead">We do not install software. We study how your business actually runs, then build the system that captures the headroom we find in it. Nothing off the shelf, nothing shared with another client.</p>
+        <p class="label mono"><b>01</b><span>/</span>WHAT WE DO</p>
+        <div class="head" style="margin-top:clamp(16px,2.8vh,34px)">
+          <h2 class="h2--long">We sit with the people who run the business, then build the system that takes over the work eating their week.</h2>
+          <p class="lead">It starts with a conversation. Where does the day really go? Which manual, repetitive tasks could run on their own? What is each one worth? We have founded and run successful companies ourselves, so this is business advice as much as software. And nothing is off a shelf: every system is built for that one operation.</p>
         </div>
         <div class="tiles">
           <article class="tile">
-            <span class="mono">A</span>
-            <h3>Operations automation</h3>
-            <p class="body">The repeat work your team does by hand, rebuilt as a system that runs itself.</p>
+            <h3>Automation</h3>
+            <p class="body">The manual work you repeat every week, handed to a system built for it.</p>
           </article>
           <span class="conn" aria-hidden="true"><i></i></span>
           <article class="tile">
-            <span class="mono">B</span>
-            <h3>Internal tools</h3>
-            <p class="body">Software shaped around your process, not a template you bend to fit.</p>
+            <h3>Applications</h3>
+            <p class="body">A tool made to fit the way your team already works.</p>
           </article>
           <span class="conn" aria-hidden="true"><i></i></span>
           <article class="tile">
-            <span class="mono">C</span>
-            <h3>Process redesign</h3>
-            <p class="body">The sequence itself, rebuilt around where the gain actually sits.</p>
+            <h3>System design</h3>
+            <p class="body">Your process, redrawn so more of it turns into revenue.</p>
           </article>
           <span class="conn" aria-hidden="true"><i></i></span>
           <article class="tile">
-            <span class="mono">D</span>
-            <h3>Data and reporting</h3>
-            <p class="body">One number you trust, built from the sources you already own.</p>
+            <h3>Strategy</h3>
+            <p class="body">Where to start, and what it is worth to you.</p>
           </article>
         </div>
       </div>
@@ -530,33 +598,37 @@ p{ margin:0; }
     <div class="card__box">
       <div class="card__dim"></div>
       <div class="card__in">
-        <p class="label mono"><b>02</b><span>/</span>How it works</p>
-        <div class="head" style="margin-top:clamp(18px,3.2vh,40px)">
-          <h2>You see the number<br>before you pay for it.</h2>
+        <p class="label mono"><b>02</b><span>/</span>HOW IT WORKS</p>
+        <div class="head" style="margin-top:clamp(16px,2.8vh,34px)">
+          <h2>You pay a share of what we save you. <span class="dim">Not before.</span></h2>
         </div>
         <div class="steps">
           <div class="step" data-free>
-            <span class="mono">Step 01, free</span>
+            <span class="step__top"><span class="mono">STEP 01</span><span class="free">Free</span></span>
             <h3>Discovery</h3>
-            <p class="body">We map how your operation runs today and where the headroom sits. No cost, no commitment.</p>
+            <p class="body">Two sessions. We walk the operation with you and map where the headroom sits.</p>
           </div>
           <div class="step">
-            <span class="mono">Step 02</span>
-            <h3>The number</h3>
-            <p class="body">We put a figure on the annual gain, built from your own baseline, and show the work behind it.</p>
+            <span class="step__top"><span class="mono">STEP 02</span></span>
+            <h3>Quantify</h3>
+            <p class="body">We put a number on the opportunity and scope the system around your operation.</p>
           </div>
           <div class="step">
-            <span class="mono">Step 03</span>
-            <h3>Build</h3>
-            <p class="body">We build the system for your operation alone, from scratch, around the gain we found.</p>
+            <span class="step__top"><span class="mono">STEP 03</span></span>
+            <h3>Price</h3>
+            <p class="body">We agree a share of the verified saving. No saving, no share. That is the entire deal.</p>
           </div>
           <div class="step">
-            <span class="mono">Step 04</span>
-            <h3>Share of the gain</h3>
-            <p class="body">You pay a share of the verified saving, monthly, once the gain is running.</p>
+            <span class="step__top"><span class="mono">STEP 04</span></span>
+            <h3>Retainer</h3>
+            <p class="body">Your system goes in, built from scratch. We stay on to keep the gain compounding.</p>
           </div>
         </div>
-        <p class="reversal">If the gain does not show up in your numbers, there is nothing to share and nothing to pay.</p>
+        <div class="rr">
+          <div class="rr__rule"><span class="rr__tag"><i class="rr__node"></i>Risk reversal</span></div>
+          <p class="rr__lead">If the saving does not show up in your numbers, <span class="yes">you do not pay us.</span></p>
+          <p class="rr__sub">Written into the engagement, not into the marketing.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -566,26 +638,27 @@ p{ margin:0; }
     <div class="card__box">
       <div class="card__dim"></div>
       <div class="card__in">
-        <p class="label mono"><b>03</b><span>/</span>Who we are</p>
-        <div class="head" style="margin-top:clamp(18px,3.2vh,40px)">
-          <h2>Operators and builders,<br>on your side of the table.</h2>
-          <p class="lead">One side of the founding team has started and run companies. The other builds product and systems. Both sides work on your operation directly, and every system leaves our hands built for you alone.</p>
+        <p class="label mono"><b>03</b><span>/</span>WHO WE ARE</p>
+        <div class="head" style="margin-top:clamp(16px,2.8vh,34px)">
+          <h2 class="h2--long">We built the businesses. Then we built the systems that made them better.</h2>
+          <p class="lead">We come from years of starting and running successful businesses, which means we have seen where the real headroom sits: the work that quietly absorbs hours, the process running at a fraction of what it could, the step everyone routes around.</p>
+          <p class="lead">Alongside that we have spent years building systems, first for our own companies and then for others, designed around exactly those opportunities. The result each time was the same: large cost savings and meaningful revenue growth.</p>
         </div>
         <div class="pillars">
           <article class="pillar">
-            <span class="mono">01</span>
-            <h3>We have run the business</h3>
-            <p class="body">Companies started, staffed and grown. We know what a payroll week feels like from the inside.</p>
+            <span class="mono">01 <span style="opacity:.5">/</span> Operators</span>
+            <p class="pillar__k">Years of starting and running successful businesses</p>
+            <p class="body">We know this world from the inside, so we know what to look for, where to look for it, and how to turn what we find into a better number.</p>
           </article>
           <article class="pillar">
-            <span class="mono">02</span>
-            <h3>We build the system</h3>
-            <p class="body">Product and engineering depth, pointed at your operation rather than at a product roadmap.</p>
+            <span class="mono">02 <span style="opacity:.5">/</span> Builders</span>
+            <p class="pillar__k">A long, proven record in product and custom system development</p>
+            <p class="body">Every system is built from scratch around the specific needs of the business in front of us. We do not resell a template.</p>
           </article>
-          <article class="pillar">
-            <span class="mono">03</span>
-            <h3>We carry the risk</h3>
-            <p class="body">Our fee comes out of the gain, so a system that does not earn does not bill.</p>
+          <article class="pillar pillar--edge">
+            <span class="mono">03 <span style="opacity:.5">/</span> The edge</span>
+            <p class="pillar__k">Current-generation automation, not the stack of a decade ago</p>
+            <p class="body">This is what makes it economic to capture gains that were previously too small to be worth anyone's time, and it is why our fee can come out of the upside.</p>
           </article>
         </div>
       </div>
@@ -597,26 +670,24 @@ p{ margin:0; }
     <div class="card__box">
       <div class="card__dim"></div>
       <div class="card__in">
-        <p class="label mono"><b>04</b><span>/</span>Our clients</p>
-        <div class="head" style="margin-top:clamp(18px,3.2vh,40px)">
-          <h2>Built for operations<br>like these.</h2>
-          <p class="lead">Owner-run operations where the headroom is real and nobody has had the time to go and capture it.</p>
+        <p class="label mono"><b>04</b><span>/</span>OUR CLIENTS</p>
+        <div class="head" style="margin-top:clamp(16px,2.8vh,34px)">
+          <h2>Some of the operations<br>we helped so far.</h2>
         </div>
         <div class="chips">
-          <span class="chip mono">Logistics</span>
-          <span class="chip mono">Retail</span>
-          <span class="chip mono">Professional services</span>
-          <span class="chip mono">Manufacturing</span>
-          <span class="chip mono">Hospitality</span>
-          <span class="chip mono">Field service</span>
+          <span class="chip mono">Tourism</span>
+          <span class="chip mono">Marine &amp; cruises</span>
+          <span class="chip mono">Sport &amp; leisure</span>
+          <span class="chip mono">Creative studios</span>
+          <span class="chip mono">Relocation</span>
         </div>
         <div class="clients">
           <div class="client">dereh-haski.co.il</div>
-          <div class="client"><em>Client name 02</em></div>
-          <div class="client"><em>Client name 03</em></div>
-          <div class="client"><em>Client name 04</em></div>
-          <div class="client"><em>Client name 05</em></div>
-          <div class="client"><em>Client name 06</em></div>
+          <div class="client">tour-guide.co.il</div>
+          <div class="client">snowpro.co.il</div>
+          <div class="client">corfuprivatecruises.com</div>
+          <div class="client">Ponygrll Studios</div>
+          <div class="client">MikMak Relocations</div>
         </div>
       </div>
     </div>
@@ -627,19 +698,19 @@ p{ margin:0; }
     <div class="card__box">
       <div class="card__dim"></div>
       <div class="card__in">
-        <p class="label mono"><b>05</b><span>/</span>Start with the free part</p>
-        <div class="head" style="margin-top:clamp(18px,3.2vh,40px)">
-          <h2>Start with the<br>free part.</h2>
+        <p class="label mono"><b>05</b><span>/</span>START WITH THE FREE PART</p>
+        <div class="head" style="margin-top:clamp(16px,2.8vh,34px)">
+          <h2 class="h2--long">The discovery costs you two hours and nothing else.</h2>
         </div>
         <div class="contact-grid">
-          <p class="lead">Discovery costs nothing. You leave it with a map of where your headroom sits and a number attached to it, whether or not you build the system with us.</p>
+          <p class="lead">If we cannot point at a gain worth capturing, we will say so and you will have lost an afternoon. If we can, you will have a number, and a system scoped for your operation alone, before you have an invoice.</p>
           <div style="display:flex;flex-direction:column;gap:clamp(10px,1.8vh,20px);align-items:flex-start">
             <a class="big" href="mailto:hello@morechain.co">hello@morechain.co</a>
             <a class="big" href="#" data-pending="linkedin">LinkedIn</a>
           </div>
         </div>
         <div class="foot mono">
-          <span class="foot-mark"><b>MORE</b><i>CHAIN</i></span>
+          <span class="foot-mark"><span class="foot-mark__a">MORE</span><span class="foot-mark__b">CHAIN</span></span>
           <span>Systems that pay for themselves</span>
           <span>&#169; 2026</span>
         </div>
@@ -651,18 +722,18 @@ p{ margin:0; }
 
 <div class="chrome readout" id="readout">
   <div class="ro">
-    <span class="ro-k">Uncaptured</span>
+    <span class="ro-k">UNCAPTURED</span>
     <span class="ro-v" data-k="uncaptured" id="ro-un">0</span>
   </div>
   <div class="ro">
-    <span class="ro-k">Captured</span>
+    <span class="ro-k">CAPTURED</span>
     <span class="ro-v" data-k="captured" id="ro-cap">0</span>
   </div>
   <div class="ro">
-    <span class="ro-k">Chain</span>
+    <span class="ro-k">CHAIN</span>
     <span class="ro-v" data-k="chain" id="ro-ch">0%</span>
   </div>
-  <span class="ro-status" id="ro-st">Mapping baseline</span>
+  <span class="ro-status" id="ro-st">MAPPING BASELINE</span>
 </div>
 
 <div class="chrome steps-nav">
@@ -966,7 +1037,7 @@ function readouts(seal, dt, moving){
   }
 
   var un = fmt(uncaptured), cp = fmt(captured), ch = Math.round(seal * 100) + '%';
-  var st = seal < 0.02 ? 'Mapping baseline' : (seal < 0.985 ? 'Optimising' : 'Running optimised');
+  var st = seal < 0.02 ? 'MAPPING BASELINE' : (seal < 0.985 ? 'OPTIMISING' : 'RUNNING OPTIMISED');
 
   if(un !== lastUn){ roUn.textContent  = un; lastUn = un; }
   if(cp !== lastCap){ roCap.textContent = cp; lastCap = cp; }

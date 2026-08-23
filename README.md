@@ -7,11 +7,12 @@ prices itself as a share of the verified gain.
 Built to the brief in `HANDOFF - morechain.md`. Live at
 <https://liav-chanoch.github.io/morechain/>.
 
-> **Copy status.** The hero is verbatim from the brief. Screens 01 to 05 carry
-> provisional copy written to the tone rules below, because the approved
-> prototypes (`MoreChain Site v5.dc.html`, `MoreChain Mobile.dc.html`) were not
-> available at build time. Replace those strings with the exact ones from v5
-> before launch.
+> **Copy status.** All screens now carry the approved strings, supplied in
+> `FIXES - make chain.md` and copied across verbatim. Screen 02's four step
+> bodies are deliberately 76 to 86 characters so the strip reads as equal
+> weight; keep any rewrite inside that range. The prototypes themselves
+> (`MoreChain Site v5.dc.html`, `MoreChain Mobile.dc.html`) are still not on
+> this machine, so they remain the tie-breaker for anything not covered.
 
 ## Why it exists
 
