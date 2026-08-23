@@ -1223,7 +1223,7 @@ function frame(ts){
      baseline so it never resets to zero. */
   var seal = lerp(auto, RETAIN + (1 - RETAIN) * scrollProg, dockP);
 
-  var op = MOBILE ? lerp(0.55, 0.12, dockP) : lerp(1, 0.55, dockP);
+  var op = MOBILE ? lerp(0.55, 0.12, dockP) : lerp(1, 0.44, dockP);
   op = Math.round(op * 100) / 100;
   if(op !== lastOpacity){ cv.style.opacity = op; lastOpacity = op; }
 
@@ -1250,7 +1250,7 @@ function staticFrame(){
   var dockP = clamp(scrollY / Math.max(1, CARD_H * 0.9), 0, 1);
   var scrollProg = clamp(scrollY / Math.max(1, MAX_SCROLL), 0, 1);
   var seal = lerp(0, RETAIN + (1 - RETAIN) * scrollProg, dockP);
-  var op = MOBILE ? lerp(0.55, 0.12, dockP) : lerp(1, 0.55, dockP);
+  var op = MOBILE ? lerp(0.55, 0.12, dockP) : lerp(1, 0.44, dockP);
   cv.style.opacity = Math.round(op * 100) / 100;
   paintCards(scrollY);
   draw(seal, dockP, 16);
