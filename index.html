@@ -173,6 +173,10 @@ p{ margin:0; }
 }
 .head{ display:flex; flex-direction:column; gap:clamp(9px,2.2vh,26px); }
 .grow{ margin-top:auto; }
+/* The phone prototype carries its own shorter strings. Both live in the
+   markup and the breakpoint picks one, rather than the phone inheriting
+   desktop wording and then being squeezed to fit it. */
+.only-m{ display:none; }
 .center{ margin-block:auto; }
 /* A headline carrying a full sentence needs a smaller ceiling than a
    three-word one, or it eats the card at short viewport heights. */
@@ -300,8 +304,8 @@ h2 .dim{ color:var(--faint-2); }
   animation:mcSeal 4s var(--ease) infinite;
 }
 .conn i{
-  position:absolute; top:50%; left:50%; width:7px; height:7px;
-  margin:-3.5px 0 0 -3.5px; border-radius:2px;
+  position:absolute; top:50%; left:50%; width:8px; height:8px;
+  margin:-4px 0 0 -4px; border-radius:2px;
   border:1px solid var(--amber); background:transparent;
   animation:mcNode 4s var(--ease) infinite;
 }
@@ -478,6 +482,8 @@ h2 .dim{ color:var(--faint-2); }
 }
 .ro{ display:flex; align-items:baseline; gap:7px; }
 .ro-k{ color:var(--faint-2); font-family:var(--m); font-size:clamp(9px,1.25vh,12px); letter-spacing:.16em; text-transform:uppercase; }
+.ro-k i{ font-style:normal; }
+.ro-k .narrow{ display:none; }
 .ro-v{
   font-family:var(--m); font-weight:500; font-size:clamp(13px,2.1vh,20px); color:var(--ink);
   font-variant-numeric:tabular-nums;
@@ -540,11 +546,44 @@ h2 .dim{ color:var(--faint-2); }
    MOBILE
    ========================================================== */
 @media (max-width:760px){
-  html{ scroll-snap-type:y mandatory; }
+  /* A phone card is a bigger radius inside a tighter gutter than desktop. */
+  :root{ --r:34px; --gut:7px; }
+
+  html{ scroll-snap-type:y mandatory; overscroll-behavior-y:contain; }
   html.no-snap{ scroll-snap-type:none; }
+  body{ overscroll-behavior-y:contain; }
+  /* scroll-snap-stop is the load-bearing one: without it a fast flick skips
+     two or three cards and the seal front jumps in a single frame. */
   .card{ scroll-snap-align:start; scroll-snap-stop:always; }
 
-  .card__in{ padding:clamp(64px,10vh,84px) 20px clamp(78px,11vh,96px) 20px; }
+  /* Swipe is the navigation on a phone, so the rail and the step buttons go.
+     Only the logo and the Book pill navigate. */
+  .rail,.steps-nav{ display:none !important; }
+
+  /* One narrow row above the home indicator: abbreviated labels, no chain
+     percentage, and a fixed value width so digits cannot jitter the row. */
+  .ro-k .wide{ display:none; }
+  .ro-k .narrow{ display:inline; }
+  .ro--chain{ display:none; }
+  /* Declared again below the older mobile readout rules: same specificity, so
+     whichever comes last wins, and a jittering row is the failure. */
+
+  /* Two connectors, one per row of the 2x2 service grid. */
+  .conn i{ width:7px; height:7px; margin:-3.5px 0 0 -3.5px; }
+  .conn:nth-of-type(2){ display:none; }
+  .conn:nth-of-type(3)::after,.conn:nth-of-type(3) i{ animation-delay:.6s; }
+
+  /* The hero text column is capped so the headline never runs under the
+     chain, which is why the phone hero can stay at full opacity. */
+  .card[data-i="0"] h1,
+  .card[data-i="0"] .lead{ max-width:min(100%, 236px); }
+  /* The hint is a single mono line and must not be capped, or it wraps. */
+  .card[data-i="0"] .hint{ white-space:nowrap; }
+  .only-d{ display:none; }
+  .only-m{ display:block; }
+  span.only-m{ display:inline; }
+
+  .card__in{ padding:clamp(72px,11.4vh,96px) 22px clamp(56px,8.8vh,74px) 22px; }
   /* A vh middle term is right for the short, wide desktop card, but on a tall
      phone it inflates headlines (5.4vh of 844 is a 45px h2). Width is the
      constraint here, so the middle term becomes vw. */
@@ -561,8 +600,8 @@ h2 .dim{ color:var(--faint-2); }
   .step{ border-left:0; border-top:1px solid var(--hair); }
   .step:first-child{ border-top:0; }
   .readout-wrap{ right:calc(var(--gut) + 14px); gap:10px; }
-  .tiles{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
-  .conn{ display:none; }
+  .tiles{ display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); gap:8px 0; }
+  .conn{ width:clamp(18px,5vw,30px); }
   .clients{ grid-template-columns:repeat(2,minmax(0,1fr)); }
   .contact-grid{ grid-template-columns:minmax(0,1fr); }
 
@@ -585,7 +624,8 @@ h2 .dim{ color:var(--faint-2); }
   .readout{ right:calc(var(--gut) + 14px); gap:12px; padding:9px 12px; }
   .ro{ flex-direction:row; align-items:baseline; gap:6px; }
   .ro-status{ display:none; }
-  .ro-v{ min-width:6ch; font-size:11px; }
+  .ro-v{ font-size:11.5px; min-width:54px; }
+  .ro-v[data-k="chain"]{ min-width:54px; }
   .steps-nav{ bottom:calc(var(--gut) + 72px); }
   .rail{ padding-right:6px; }
   .mk-n{ display:none; }
@@ -641,7 +681,8 @@ h2 .dim{ color:var(--faint-2); }
         <div class="content">
           <div class="two">
             <h2 class="h2--long">We sit with the people who run the business, then build the system that takes over the work eating their week.</h2>
-            <p class="lead two__body">It starts with a conversation. Where does the day really go? Which manual, repetitive tasks could run on their own? What is each one worth? We have founded and run successful companies ourselves, so this is business advice as much as software. And nothing is off a shelf: every system is built for that one operation.</p>
+            <p class="lead two__body only-d">It starts with a conversation. Where does the day really go? Which manual, repetitive tasks could run on their own? What is each one worth? We have founded and run successful companies ourselves, so this is business advice as much as software. And nothing is off a shelf: every system is built for that one operation.</p>
+            <p class="lead two__body only-m">It starts with a conversation. Where does the day really go? Which manual tasks could run on their own? What is each one worth? We have founded and run successful companies ourselves, so this is business advice as much as software. Nothing is off a shelf.</p>
           </div>
           <div class="tiles">
             <article class="tile">
@@ -682,22 +723,26 @@ h2 .dim{ color:var(--faint-2); }
             <div class="step">
               <span class="step__top"><span class="mono">STEP 01</span><span class="free">Free</span></span>
               <h3>Discovery</h3>
-              <p class="body">Two sessions. We walk the operation with you and map where the headroom sits.</p>
+              <p class="body only-d">Two sessions. We walk the operation with you and map where the headroom sits.</p>
+              <p class="body only-m">Two sessions. We map where the headroom sits.</p>
             </div>
             <div class="step">
               <span class="step__top"><span class="mono">STEP 02</span></span>
               <h3>Quantify</h3>
-              <p class="body">We put a number on the opportunity and scope the system around your operation.</p>
+              <p class="body only-d">We put a number on the opportunity and scope the system around your operation.</p>
+              <p class="body only-m">A number on the opportunity, and the system scoped around your operation.</p>
             </div>
             <div class="step">
               <span class="step__top"><span class="mono">STEP 03</span></span>
               <h3>Price</h3>
-              <p class="body">We agree a share of the verified saving. No saving, no share. That is the entire deal.</p>
+              <p class="body only-d">We agree a share of the verified saving. No saving, no share. That is the entire deal.</p>
+              <p class="body only-m">A share of the verified saving. No saving, no share.</p>
             </div>
             <div class="step">
               <span class="step__top"><span class="mono">STEP 04</span></span>
               <h3>Retainer</h3>
-              <p class="body">Your system goes in, built from scratch. We stay on to keep the gain compounding.</p>
+              <p class="body only-d">Your system goes in, built from scratch. We stay on to keep the gain compounding.</p>
+              <p class="body only-m">Your system goes in, built from scratch. We keep the gain compounding.</p>
             </div>
           </div>
           <div class="rr">
@@ -721,19 +766,23 @@ h2 .dim{ color:var(--faint-2); }
           <div class="two">
             <div class="head">
               <h2 class="h2--long">We built the businesses. Then we built the systems that made them better.</h2>
-              <p class="lead">We come from years of starting and running successful businesses, which means we have seen where the real headroom sits: the work that quietly absorbs hours, the process running at a fraction of what it could, the step everyone routes around.</p>
-              <p class="lead">Alongside that we have spent years building systems, first for our own companies and then for others, designed around exactly those opportunities. The result each time was the same: large cost savings and meaningful revenue growth.</p>
+              <p class="lead only-d">We come from years of starting and running successful businesses, which means we have seen where the real headroom sits: the work that quietly absorbs hours, the process running at a fraction of what it could, the step everyone routes around.</p>
+              <p class="lead only-d">Alongside that we have spent years building systems, first for our own companies and then for others, designed around exactly those opportunities. The result each time was the same: large cost savings and meaningful revenue growth.</p>
+              <p class="lead only-m">Years of starting and running successful businesses, which means we have seen where the real headroom sits. Then years building systems around exactly those opportunities, first for our own companies and then for others.</p>
             </div>
             <div class="pillars">
               <article class="pillar">
                 <span class="mono">01 <span style="opacity:.5">/</span> Operators</span>
                 <p class="pillar__k">Years of starting and running successful businesses</p>
-                <p class="body">We know this world from the inside, so we know what to look for, where to look for it, and how to turn what we find into a better number.</p>
+                <p class="body only-d">We know this world from the inside, so we know what to look for, where to look for it, and how to turn what we find into a better number.</p>
+                <p class="body only-m">We know this world from the inside, so we know what to look for and how to turn it into a better number.</p>
               </article>
               <article class="pillar">
                 <span class="mono">02 <span style="opacity:.5">/</span> Builders</span>
-                <p class="pillar__k">A long, proven record in product and custom system development</p>
-                <p class="body">Every system is built from scratch around the specific needs of the business in front of us. We do not resell a template.</p>
+                <p class="pillar__k only-d">A long, proven record in product and custom system development</p>
+                <p class="pillar__k only-m">A proven record in product and custom system development</p>
+                <p class="body only-d">Every system is built from scratch around the specific needs of the business in front of us. We do not resell a template.</p>
+                <p class="body only-m">Every system is built from scratch around the business in front of us. We do not resell a template.</p>
               </article>
               <article class="pillar pillar--edge">
                 <span class="mono">03 <span style="opacity:.5">/</span> The edge</span>
@@ -788,7 +837,8 @@ h2 .dim{ color:var(--faint-2); }
         <div class="content">
           <h2 class="h2--long">The discovery costs you two hours and nothing else.</h2>
           <div class="contact-grid">
-            <p class="lead">If we cannot point at a gain worth capturing, we will say so and you will have lost an afternoon. If we can, you will have a number, and a system scoped for your operation alone, before you have an invoice.</p>
+            <p class="lead only-d">If we cannot point at a gain worth capturing, we will say so and you will have lost an afternoon. If we can, you will have a number, and a system scoped for your operation alone, before you have an invoice.</p>
+          <p class="lead only-m">If we cannot point at a gain worth capturing, we will say so. If we can, you will have a number, and a system scoped for your operation alone, before you have an invoice.</p>
             <div style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
               <a class="cta cta--go cta--wide" href="mailto:hello@morechain.co">hello@morechain.co</a>
               <a class="cta cta--wide" href="#" data-pending="linkedin">LinkedIn</a>
@@ -796,8 +846,8 @@ h2 .dim{ color:var(--faint-2); }
           </div>
         </div>
         <div class="foot mono">
-          <span><span class="foot-mark"><span class="foot-mark__a">MORE</span><span class="foot-mark__b">CHAIN</span></span><span style="opacity:.45;padding:0 .7em">&#183;</span>Systems that pay for themselves</span>
-          <span>&#169; 2026</span>
+          <span><span class="foot-mark"><span class="foot-mark__a">MORE</span><span class="foot-mark__b">CHAIN</span></span><span style="opacity:.45;padding:0 .7em">&#183;</span><span class="only-d">Systems that pay for themselves</span><span class="only-m">&#169; 2026</span></span>
+          <span class="only-d">&#169; 2026</span>
         </div>
       </div>
     </div>
@@ -807,9 +857,9 @@ h2 .dim{ color:var(--faint-2); }
 
 <div class="readout-wrap">
   <div class="chrome readout" id="readout">
-    <span class="ro"><span class="ro-k">Uncaptured</span><span class="ro-v" data-k="uncaptured" id="ro-un">$0</span></span>
-    <span class="ro"><span class="ro-k">Captured</span><span class="ro-v" data-k="captured" id="ro-cap">$0</span></span>
-    <span class="ro"><span class="ro-k">Chain</span><span class="ro-v" data-k="chain" id="ro-ch">0%</span></span>
+    <span class="ro"><span class="ro-k"><i class="wide">Uncaptured</i><i class="narrow">Uncap</i></span><span class="ro-v" data-k="uncaptured" id="ro-un">$0</span></span>
+    <span class="ro"><span class="ro-k"><i class="wide">Captured</i><i class="narrow">Cap</i></span><span class="ro-v" data-k="captured" id="ro-cap">$0</span></span>
+    <span class="ro ro--chain"><span class="ro-k">Chain</span><span class="ro-v" data-k="chain" id="ro-ch">0%</span></span>
   </div>
   <span class="ro-status" id="ro-st">Mapping baseline</span>
 </div>
@@ -962,7 +1012,10 @@ function twoPass(color, glowA, size){
 function draw(seal, dockP, dt){
   ctx.clearRect(0,0,W,H);
 
-  var heroLen = Math.max(220, Math.min(H - 190, 940));
+  /* The phone hero runs a short chain: a full height one crowded the 44px
+     headline and the two buttons. Docked, both platforms grow past the edges. */
+  var heroLen = MOBILE ? Math.max(200, Math.min(H * 0.52, 400))
+                       : Math.max(220, Math.min(H - 190, 940));
   var dockLen = H * 1.02;
   var len = lerp(heroLen, dockLen, dockP);
   /* On a 390px card a centred chain sits straight through the headline, so
@@ -972,10 +1025,13 @@ function draw(seal, dockP, dt){
      0.672W + 172. Docking then walks it out to the right edge, which is a
      flat 90.7% in the reference. */
   var heroX = Math.min(W * 0.90, W * 0.672 + 172);
-  var cx  = MOBILE ? lerp(W * 0.74, W * 0.90, dockP) : lerp(heroX, W * 0.907, dockP);
+  /* A phone is one width, so the lane is a constant offset from the edge
+     rather than anything measured. Docked it sits right against the edge:
+     there is no rail on mobile, so nothing needs clearance. */
+  var cx  = MOBILE ? lerp(W - 52, W - 26, dockP) : lerp(heroX, W * 0.907, dockP);
   var top = (H - len) / 2;
   var gap = len / (NODES - 1);
-  var size = clamp(gap * 0.57, 9, 70);
+  var size = clamp(gap * 0.57, 9, MOBILE ? 44 : 70);
   var half = size / 2;
   var sealY = top + seal * len;
 
@@ -1142,7 +1198,7 @@ function draw(seal, dockP, dt){
   }
 
   spawnAcc += dt;
-  if(spawnAcc > 130 && particles.length < 55){
+  if(spawnAcc > (MOBILE ? 100 : 130) && particles.length < (MOBILE ? 34 : 55)){
     spawnAcc = 0;
     particles.push({ x:cx, y:top, sp:0.75 + Math.random()*0.6, last:-1, spill:false });
   }
@@ -1170,7 +1226,9 @@ function readouts(seal, dt, moving){
   }
 
   var un = '$' + fmt(uncaptured), cp = '$' + fmt(captured), ch = Math.round(seal * 100) + '%';
-  var st = seal < 0.02 ? 'MAPPING BASELINE' : (seal < 0.985 ? 'OPTIMISING' : 'RUNNING OPTIMISED');
+  var st = MOBILE
+    ? (seal < 0.02 ? 'MAPPING' : (seal < 0.985 ? 'OPTIMISING' : 'OPTIMISED'))
+    : (seal < 0.02 ? 'MAPPING BASELINE' : (seal < 0.985 ? 'OPTIMISING' : 'RUNNING OPTIMISED'));
 
   if(un !== lastUn){ roUn.textContent  = un; lastUn = un; }
   if(cp !== lastCap){ roCap.textContent = cp; lastCap = cp; }
@@ -1197,14 +1255,28 @@ function paintCards(sy){
 /* ============================================================
    Frame loop
    ============================================================ */
-var scrollY = 0, ticking = false, lastT = 0;
+var scrollY = 0, ticking = false, lastT = 0, dock = 0;
+
+function dockTargetNow(){
+  return easeInOutCubic(clamp(scrollY / Math.max(1, CARD_H), 0, 1));
+}
+/* Seal progress is measured from the first card onward, not from the top of
+   the document. Measured from the top, screen 01 already reads far past the
+   retained baseline; from card 1 it lands on RETAIN exactly, which is what
+   the brief means by the chain being about 30 percent sealed there. */
+function sealTargetNow(){
+  return clamp((scrollY - CARD_H) / Math.max(1, MAX_SCROLL - CARD_H), 0, 1);
+}
 
 function frame(ts){
   var dt = lastT ? Math.min(48, ts - lastT) : 16;
   lastT = ts;
 
-  var dockP = clamp(scrollY / Math.max(1, CARD_H * 0.9), 0, 1);
-  var scrollProg = clamp(scrollY / Math.max(1, MAX_SCROLL), 0, 1);
+  /* The dock value chases its target rather than tracking scroll directly, so
+     a snap lands the card instantly while the chain glides after it. */
+  dock += (dockTargetNow() - dock) * Math.min(1, (dt / 1000) * 9);
+  var dockP = dock;
+  var scrollProg = sealTargetNow();
 
   loopT += dt;
   if(loopT >= LOOP) loopT -= LOOP;
@@ -1223,7 +1295,7 @@ function frame(ts){
      baseline so it never resets to zero. */
   var seal = lerp(auto, RETAIN + (1 - RETAIN) * scrollProg, dockP);
 
-  var op = MOBILE ? lerp(0.55, 0.12, dockP) : lerp(1, 0.44, dockP);
+  var op = MOBILE ? lerp(1, 0.10, dockP) : lerp(1, 0.44, dockP);
   op = Math.round(op * 100) / 100;
   if(op !== lastOpacity){ cv.style.opacity = op; lastOpacity = op; }
 
@@ -1247,10 +1319,11 @@ function frame(ts){
 }
 
 function staticFrame(){
-  var dockP = clamp(scrollY / Math.max(1, CARD_H * 0.9), 0, 1);
-  var scrollProg = clamp(scrollY / Math.max(1, MAX_SCROLL), 0, 1);
+  var dockP = dockTargetNow();
+  dock = dockP;
+  var scrollProg = sealTargetNow();
   var seal = lerp(0, RETAIN + (1 - RETAIN) * scrollProg, dockP);
-  var op = MOBILE ? lerp(0.55, 0.12, dockP) : lerp(1, 0.44, dockP);
+  var op = MOBILE ? lerp(1, 0.10, dockP) : lerp(1, 0.44, dockP);
   cv.style.opacity = Math.round(op * 100) / 100;
   paintCards(scrollY);
   draw(seal, dockP, 16);
