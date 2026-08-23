@@ -116,8 +116,14 @@ a{ color:inherit; text-decoration:none; }
   position:relative; z-index:3;
   flex:1; min-height:0;
   display:flex; flex-direction:column;
-  padding:clamp(58px,9vh,94px) clamp(30px,9vw,150px) clamp(50px,8vh,90px) clamp(32px,6vw,88px);
+  /* The right padding is large on purpose: the text column has to end
+     before the chain lane, which sits at about 86% of the viewport. */
+  padding:clamp(56px,10.5vh,96px) clamp(30px,17.5vw,250px) clamp(52px,10vh,92px) clamp(32px,6vw,88px);
 }
+/* Label and its rule stay pinned at the top; the content block is centred
+   in whatever space is left, and a footer (screen 05) falls to the bottom. */
+.content{ margin-block:auto; display:flex; flex-direction:column; min-height:0; width:100%; }
+.hair{ height:1px; background:var(--hair); margin-top:clamp(10px,1.8vh,18px); flex:0 0 auto; }
 
 .card[data-i="0"] .card__box{ background:linear-gradient(150deg,#111A22,#080D11 60%); }
 .card[data-i="1"] .card__box{ background:linear-gradient(165deg,#0E141A,#0A0F14 70%); }
@@ -135,16 +141,21 @@ a{ color:inherit; text-decoration:none; }
    Every size is fluid against both axes. The stack is height
    constrained, so the middle term is vh wherever it can be.
    ========================================================== */
-.label{ color:var(--faint); margin:0; }
+.label{ color:var(--faint); margin:0; flex:0 0 auto; }
 .label b{ color:var(--green); font-weight:500; }
 .label span{ color:var(--faint-2); padding:0 .5em; }
 
 h1,h2{
   margin:0; font-weight:700;
-  letter-spacing:-.042em; line-height:.92;
-  font-size:clamp(2.3rem,6.2vh,4.5rem);
+  letter-spacing:-.042em; line-height:.94;
+  font-size:clamp(1.7rem,5.6vh,3.4rem);
 }
-h1{ font-size:clamp(2.6rem,7.6vh,5.5rem); letter-spacing:-.045em; line-height:.88; }
+h1{
+  font-size:clamp(2.4rem,10vh,5.6rem); letter-spacing:-.045em; line-height:.9;
+  /* The reference wraps the hero headline at about half the card width.
+     An em-based cap keeps that wrap point as the type scales. */
+  max-width:9.2em;
+}
 h1 i{ font-style:italic; color:var(--green); }
 h3{
   margin:0; font-weight:600; letter-spacing:-.02em; line-height:1.06;
@@ -153,19 +164,36 @@ h3{
 p{ margin:0; }
 .lead{
   color:var(--ink-2); max-width:52ch;
-  font-size:clamp(13.5px,1.85vh,17px); line-height:1.55;
+  font-size:clamp(12px,1.75vh,17px); line-height:1.52;
 }
 .body{
   color:var(--muted);
-  font-size:clamp(12.5px,1.5vh,14px); line-height:1.55;
+  font-size:clamp(10.5px,1.45vh,14px); line-height:1.5;
 }
-.head{ display:flex; flex-direction:column; gap:clamp(14px,2.4vh,26px); }
+.head{ display:flex; flex-direction:column; gap:clamp(9px,2.2vh,26px); }
 .grow{ margin-top:auto; }
 .center{ margin-block:auto; }
 /* A headline carrying a full sentence needs a smaller ceiling than a
    three-word one, or it eats the card at short viewport heights. */
-h2.h2--long{ font-size:clamp(1.5rem,3.5vh,2.5rem); line-height:1.04; letter-spacing:-.032em; }
+h2.h2--long{
+  font-size:clamp(1.45rem,5.4vh,2.9rem); line-height:1.05; letter-spacing:-.034em;
+  /* Keeps the reference wrap where the headline is not already inside a
+     constrained column. */
+  max-width:13em;
+}
 h2 .dim{ color:var(--faint-2); }
+
+/* Hero eyebrow: a bordered pill with an amber node */
+.eyebrow{
+  display:inline-flex; align-items:center; gap:9px; align-self:flex-start;
+  border:1px solid var(--hair); border-radius:999px; padding:7px 14px;
+  font-family:var(--m); font-weight:500; font-size:clamp(9px,1.05vh,11px);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+}
+.eyebrow i{
+  width:6px; height:6px; border-radius:999px; background:var(--amber);
+  box-shadow:0 0 0 3px rgba(232,160,80,.16); flex:0 0 auto;
+}
 
 /* Hero scroll hint */
 .hint{
@@ -188,10 +216,10 @@ h2 .dim{ color:var(--faint-2); }
 }
 
 /* Risk reversal: a rule with the label sitting on it, then a two-tone lead */
-.rr{ margin-top:clamp(16px,2.8vh,34px); }
+.rr{ margin-top:clamp(15px,2.6vh,32px); }
 .rr__rule{
-  position:relative; height:1px; background:var(--green); opacity:.55;
-  margin-bottom:clamp(14px,2.2vh,24px);
+  position:relative; height:1px; background:var(--green); opacity:.4;
+  margin-bottom:clamp(13px,2vh,22px);
 }
 .rr__tag{
   position:absolute; left:0; top:50%; transform:translateY(-50%);
@@ -202,8 +230,7 @@ h2 .dim{ color:var(--faint-2); }
 }
 .card[data-i="2"] .rr__tag{ background:#0E1219; }
 .rr__node{
-  width:6px; height:6px; border-radius:2px; background:var(--green);
-  box-shadow:0 0 0 3px rgba(60,210,145,.18);
+  width:7px; height:7px; border-radius:2px; background:var(--green);
 }
 .rr__lead{
   font-weight:600; letter-spacing:-.026em; line-height:1.18;
@@ -218,11 +245,21 @@ h2 .dim{ color:var(--faint-2); }
 
 /* Pillars gain a kicker line above the body */
 .pillar__k{
-  color:var(--ink-2); font-size:clamp(12px,1.5vh,14px);
-  line-height:1.35; font-weight:500; letter-spacing:-.01em;
+  color:var(--ink-2); font-size:clamp(11px,1.55vh,15px);
+  line-height:1.3; font-weight:500; letter-spacing:-.01em;
 }
 .pillar--edge .mono{ color:var(--amber); }
 .pillar--edge{ border-color:rgba(232,160,80,.28); }
+
+/* Headline left, supporting prose right, top aligned. */
+.two{
+  display:grid; grid-template-columns:minmax(0,1.02fr) minmax(0,0.98fr);
+  gap:clamp(26px,4.5vw,64px); align-items:start; min-height:0;
+}
+.two__body{ padding-top:clamp(6px,2.6vh,34px); }
+/* Screen 04 gives the chip cluster more room so the first row holds three,
+   as it does in the reference. */
+.card[data-i="4"] .two{ grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr); }
 
 /* ==========================================================
    01 WHAT WE DO
@@ -231,7 +268,7 @@ h2 .dim{ color:var(--faint-2); }
    children they would each consume a column and wrap the row. */
 .tiles{
   display:flex; align-items:stretch; min-height:0;
-  margin-top:clamp(20px,3.6vh,44px);
+  margin-top:clamp(18px,3.4vh,42px);
   gap:0;
 }
 .tile{
@@ -280,19 +317,21 @@ h2 .dim{ color:var(--faint-2); }
 /* ==========================================================
    02 HOW IT WORKS
    ========================================================== */
+/* One bordered strip with internal rules, not four separate cards. */
 .steps{
   display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:clamp(14px,2.2vw,30px); min-height:0;
-  margin-top:clamp(20px,3.4vh,42px);
+  gap:0; min-height:0;
+  margin-top:clamp(18px,3.2vh,40px);
+  border:1px solid var(--hair); border-radius:14px; overflow:hidden;
 }
 .step{
-  display:flex; flex-direction:column; gap:clamp(7px,1.2vh,12px);
-  padding-top:clamp(12px,1.8vh,18px); border-top:1px solid var(--hair);
+  display:flex; flex-direction:column; gap:clamp(6px,1.1vh,11px);
+  padding:clamp(13px,2.2vh,22px) clamp(12px,1.5vw,20px);
+  border-left:1px solid var(--hair);
   min-height:0;
 }
-.step[data-free] { border-top-color:var(--green); }
+.step:first-child{ border-left:0; }
 .step .mono{ color:var(--faint); }
-.step[data-free] .mono{ color:var(--green); }
 .reversal{
   margin-top:clamp(18px,3vh,36px);
   border-left:1px solid var(--green);
@@ -308,42 +347,41 @@ h2 .dim{ color:var(--faint-2); }
    03 WHO WE ARE
    ========================================================== */
 .pillars{
-  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:clamp(14px,2.2vw,32px); min-height:0;
-  margin-top:clamp(20px,3.4vh,42px);
+  display:block; min-height:0;
+  border:1px solid var(--hair); border-radius:14px; overflow:hidden;
+  background:rgba(12,17,22,.5);
 }
 .pillar{
-  background:var(--panel); border:1px solid var(--hair); border-radius:14px;
-  padding:clamp(15px,2.4vh,26px);
-  display:flex; flex-direction:column; gap:clamp(8px,1.3vh,13px);
-  min-height:0;
+  padding:clamp(9px,2vh,22px) clamp(12px,1.6vw,22px);
+  display:flex; flex-direction:column; gap:clamp(3px,0.8vh,9px);
+  border-top:1px solid var(--hair);
 }
+.pillar:first-child{ border-top:0; }
 .pillar .mono{ color:var(--green); }
 
 /* ==========================================================
    04 OUR CLIENTS
    ========================================================== */
-.chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:clamp(16px,2.6vh,30px); }
+.chips{ display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; align-content:flex-start; }
 .chip{
   border:1px solid var(--hair); border-radius:999px;
-  padding:7px 13px; color:var(--muted);
+  padding:7px 12px; color:var(--muted);
 }
 .clients{
   display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
   gap:1px; background:var(--hair);
   border:1px solid var(--hair); border-radius:14px; overflow:hidden;
-  margin-top:clamp(18px,3vh,38px); min-height:0;
+  margin-top:clamp(16px,2.8vh,34px); min-height:0;
 }
 .client{
-  background:var(--panel);
-  padding:clamp(15px,2.6vh,28px) clamp(12px,1.6vw,22px);
-  display:flex; align-items:center;
+  background:rgba(12,17,22,.55);
+  padding:clamp(13px,2.3vh,24px) clamp(10px,1.4vw,20px);
+  display:flex; align-items:center; justify-content:center; text-align:center;
   /* A client name must never wrap or break at its own hyphen. */
   white-space:nowrap;
-  font-size:clamp(12px,1.5vh,15px); font-weight:500; color:var(--ink-2);
-  letter-spacing:-.01em;
+  font-family:var(--m); font-weight:400;
+  font-size:clamp(10px,1.3vh,12.5px); color:var(--ink-2); letter-spacing:.02em;
 }
-.client em{ font-style:normal; color:var(--faint-2); }
 
 /* ==========================================================
    05 CONTACT
@@ -356,15 +394,15 @@ h2 .dim{ color:var(--faint-2); }
 }
 .big:hover{ color:var(--green); border-color:var(--green); }
 .contact-grid{
-  display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,0.78fr);
   gap:clamp(22px,4vw,64px); align-items:start; min-height:0;
   margin-top:clamp(18px,3vh,38px);
 }
 .foot{
-  margin-top:auto; padding-top:clamp(16px,2.6vh,30px);
+  padding-top:clamp(14px,2.2vh,26px);
   border-top:1px solid var(--hair);
   display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between;
-  align-items:baseline; color:var(--faint-2);
+  align-items:baseline; color:var(--faint-2); flex:0 0 auto;
 }
 .foot-mark__a{ color:var(--faint); font-weight:500; }
 .foot-mark__b{ color:var(--green); font-weight:500; }
@@ -402,45 +440,69 @@ h2 .dim{ color:var(--faint-2); }
 }
 .pill{
   top:calc(var(--gut) + 14px);
-  padding:10px 16px; min-height:40px;
-  display:flex; align-items:center;
-  transition:background 200ms var(--ease), color 200ms var(--ease), border-color 200ms var(--ease);
+  padding:10px 18px; min-height:40px;
+  display:flex; align-items:center; gap:.5em;
+  font-weight:500; font-size:13.5px; letter-spacing:-.005em;
+  transition:background 200ms var(--ease), color 200ms var(--ease), border-color 200ms var(--ease), transform 200ms var(--ease);
 }
+/* Hero CTAs sit in the flow rather than as fixed chrome. */
+.cta{
+  display:inline-flex; align-items:center; gap:.55em;
+  border:1px solid var(--hair); border-radius:999px;
+  padding:13px 22px; font-weight:500;
+  font-size:clamp(13px,1.6vh,15px); letter-spacing:-.005em;
+  background:var(--chrome-bg); color:var(--ink);
+  transition:background 200ms var(--ease), border-color 200ms var(--ease), transform 200ms var(--ease);
+}
+.cta:hover{ transform:translateY(-1px); border-color:rgba(60,210,145,.42); }
+.cta--go{ background:var(--green); color:#07120C; border-color:var(--green); font-weight:600; }
+.cta--go:hover{ background:#4ade9f; border-color:#4ade9f; }
+/* Screen 05 stacks two of these full width in their column. */
+.cta--wide{ width:100%; justify-content:center; padding:15px 22px; font-size:clamp(13.5px,1.7vh,15.5px); }
 .pill--logo{ left:calc(var(--gut) + 14px); }
 .pill--cta{ right:calc(var(--gut) + 14px); color:var(--ink-2); }
 .pill--cta:hover{ background:var(--green); color:#07120C; border-color:var(--green); }
 .pill--logo:hover{ border-color:rgba(60,210,145,0.42); }
 
-.readout{
+.readout-wrap{
+  position:fixed; z-index:20;
   left:calc(var(--gut) + 14px); bottom:calc(var(--gut) + 14px);
-  border-radius:14px; padding:10px 14px;
-  display:flex; gap:18px; align-items:center;
+  display:flex; align-items:center; gap:16px;
 }
-.ro{ display:flex; flex-direction:column; gap:3px; }
+.readout{
+  position:static;
+  border-radius:12px; padding:9px 15px;
+  display:flex; gap:20px; align-items:baseline;
+}
+.ro{ display:flex; align-items:baseline; gap:7px; }
 .ro-k{ color:var(--faint-2); font-family:var(--m); font-size:9px; letter-spacing:.16em; text-transform:uppercase; }
 .ro-v{
-  font-family:var(--m); font-weight:500; font-size:12px; color:var(--ink-2);
+  font-family:var(--m); font-weight:500; font-size:13px; color:var(--ink);
   font-variant-numeric:tabular-nums;
   /* Fixed width so a digit change never shifts the row. */
   min-width:7ch;
 }
+.ro-v[data-k="uncaptured"]{ color:var(--amber); }
 .ro-v[data-k="captured"]{ color:var(--green); }
-.ro-v[data-k="chain"]{ color:var(--mint); min-width:4ch; }
+.ro-v[data-k="chain"]{ color:var(--ink); min-width:4ch; }
+/* The status word sits outside the pill, on the page. */
 .ro-status{
-  border-left:1px solid var(--hair); padding-left:16px;
-  color:var(--faint); font-family:var(--m); font-size:9px;
+  color:var(--green); font-family:var(--m); font-size:9px; font-weight:500;
   letter-spacing:.16em; text-transform:uppercase; min-width:17ch;
 }
 
 .steps-nav{
   right:calc(var(--gut) + 14px); bottom:calc(var(--gut) + 14px);
-  border-radius:999px; padding:6px; display:flex; gap:4px;
+  border:0; background:none;
+  display:flex; flex-direction:column; gap:7px;
 }
 .stepbtn{
-  width:36px; height:36px; border-radius:999px;
+  width:36px; height:32px; border-radius:9px;
+  border:1px solid var(--hair); background:var(--chrome-bg);
   display:grid; place-items:center; color:var(--muted);
-  transition:background 180ms var(--ease), color 180ms var(--ease);
+  transition:background 180ms var(--ease), color 180ms var(--ease), border-color 180ms var(--ease);
 }
+.stepbtn:hover:not(:disabled){ border-color:rgba(60,210,145,.42); }
 .stepbtn:hover:not(:disabled){ background:rgba(255,255,255,.06); color:var(--ink); }
 .stepbtn:disabled{ opacity:.25; cursor:default; }
 .stepbtn svg{ width:13px; height:13px; }
@@ -481,12 +543,24 @@ h2 .dim{ color:var(--faint-2); }
   .card{ scroll-snap-align:start; scroll-snap-stop:always; }
 
   .card__in{ padding:clamp(64px,10vh,84px) 20px clamp(78px,11vh,96px) 20px; }
-  h1{ font-size:clamp(2.1rem,6.4vh,3.2rem); }
-  h2{ font-size:clamp(1.75rem,5vh,2.6rem); }
+  /* A vh middle term is right for the short, wide desktop card, but on a tall
+     phone it inflates headlines (5.4vh of 844 is a 45px h2). Width is the
+     constraint here, so the middle term becomes vw. */
+  h1{ font-size:clamp(2rem,8.4vw,3rem); max-width:none; }
+  h2{ font-size:clamp(1.45rem,6.2vw,2.1rem); }
+  h2.h2--long{ font-size:clamp(1.2rem,5.3vw,1.8rem); max-width:none; }
+  .lead{ font-size:clamp(12.5px,3.4vw,14.5px); }
 
+  .two{ grid-template-columns:minmax(0,1fr); gap:clamp(12px,2vh,20px); }
+  .two__body{ padding-top:0; }
+  .contact-grid{ gap:clamp(16px,3vh,26px); }
+  .chips{ justify-content:flex-start; }
+  .steps{ grid-template-columns:minmax(0,1fr); }
+  .step{ border-left:0; border-top:1px solid var(--hair); }
+  .step:first-child{ border-top:0; }
+  .readout-wrap{ right:calc(var(--gut) + 14px); gap:10px; }
   .tiles{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
   .conn{ display:none; }
-  .steps,.pillars{ grid-template-columns:minmax(0,1fr); gap:clamp(9px,1.6vh,16px); }
   .clients{ grid-template-columns:repeat(2,minmax(0,1fr)); }
   .contact-grid{ grid-template-columns:minmax(0,1fr); }
 
@@ -495,14 +569,16 @@ h2 .dim{ color:var(--faint-2); }
   .stepbtn{ width:44px; height:44px; }
   .steps-nav{ padding:4px; }
   .big{ padding-bottom:10px; }
-  /* Screen 03 carries two full paragraphs plus three pillars with kickers,
-     which overflows a 390x844 card. The copy is approved, so the recovery
-     comes out of type and spacing on this card only. */
-  .card[data-i="3"] .lead{ font-size:clamp(12.5px,1.55vh,14px); line-height:1.48; }
-  .card[data-i="3"] .head{ gap:clamp(9px,1.5vh,16px); }
-  .card[data-i="3"] .pillars{ gap:8px; }
-  .card[data-i="3"] .pillar{ padding:clamp(11px,1.8vh,18px); gap:6px; }
-  .card[data-i="3"] .pillar__k{ font-size:clamp(11.5px,1.4vh,13px); }
+  /* Screen 03 carries two full paragraphs plus three pillars with kickers.
+     The copy is approved, so the recovery comes out of type and spacing on
+     this card alone rather than out of the wording. */
+  .card[data-i="3"] .lead{ font-size:12px; line-height:1.45; }
+  .card[data-i="3"] .head{ gap:8px; }
+  .card[data-i="3"] .content{ gap:10px; }
+  .card[data-i="3"] .two{ gap:10px; }
+  .card[data-i="3"] .pillar{ padding:9px 12px; gap:3px; }
+  .card[data-i="3"] .pillar__k{ font-size:11.5px; line-height:1.28; }
+  .card[data-i="3"] .body{ font-size:11px; line-height:1.42; }
 
   .readout{ right:calc(var(--gut) + 14px); gap:12px; padding:9px 12px; }
   .ro{ flex-direction:row; align-items:baseline; gap:6px; }
@@ -515,11 +591,6 @@ h2 .dim{ color:var(--faint-2); }
 @media (max-width:359px){
   .ro:nth-child(2){ display:none; }
 }
-
-/* Label at the top, headline under it, content row pinned to the bottom.
-   This has to sit after the per-section margin-top declarations: they are
-   the same specificity, so whichever comes last wins. */
-.tiles,.steps,.pillars,.chips{ margin-top:auto; }
 
 @media (prefers-reduced-motion: reduce){
   .conn::after,.conn i{ animation:none; }
@@ -535,7 +606,7 @@ h2 .dim{ color:var(--faint-2); }
 <a class="chrome pill pill--logo" href="#p-0" data-go="0" aria-label="MoreChain, back to the top">
   <span class="mark"><span class="mark__a">More</span><span class="mark__b">Chain</span><span class="mark__n"></span></span>
 </a>
-<a class="chrome pill pill--cta mono" href="#p-5" data-go="5">Book discovery</a>
+<a class="chrome pill pill--cta" href="#p-5" data-go="5">Book discovery</a>
 
 <main class="stack" id="stack">
 
@@ -544,13 +615,13 @@ h2 .dim{ color:var(--faint-2); }
     <div class="card__box">
       <div class="card__dim"></div>
       <div class="card__in">
-        <p class="label mono">OPERATIONS SYSTEMS <span>&#183;</span> OUTCOME-PRICED</p>
-        <div class="head center">
+        <div class="content" style="gap:clamp(14px,2.6vh,28px)">
+          <span class="eyebrow"><i></i>Operations systems <span style="opacity:.5">&#183;</span> Outcome-priced</span>
           <h1>Systems that pay for<br><i>themselves.</i></h1>
           <p class="lead">Every operation has headroom. We find where it sits, build the system that captures it, and take our fee out of the gain. Every system is built for your operation alone.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(6px,1.4vh,16px)">
-            <a class="chrome pill mono" style="position:static;background:var(--green);color:#07120C;border-color:var(--green)" href="#p-5" data-go="5">Book the free discovery</a>
-            <a class="chrome pill mono" style="position:static" href="#p-2" data-go="2">See how it works</a>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(4px,1.2vh,14px)">
+            <a class="cta cta--go" href="#p-5" data-go="5">Book the free discovery <span aria-hidden="true">&#8594;</span></a>
+            <a class="cta" href="#p-2" data-go="2">See how it works</a>
           </div>
           <span class="hint">Scroll <i>&#8595;</i> the chain follows</span>
         </div>
@@ -564,30 +635,33 @@ h2 .dim{ color:var(--faint-2); }
       <div class="card__dim"></div>
       <div class="card__in">
         <p class="label mono"><b>01</b><span>/</span>WHAT WE DO</p>
-        <div class="head" style="margin-top:clamp(16px,2.8vh,34px)">
-          <h2 class="h2--long">We sit with the people who run the business, then build the system that takes over the work eating their week.</h2>
-          <p class="lead">It starts with a conversation. Where does the day really go? Which manual, repetitive tasks could run on their own? What is each one worth? We have founded and run successful companies ourselves, so this is business advice as much as software. And nothing is off a shelf: every system is built for that one operation.</p>
-        </div>
-        <div class="tiles">
-          <article class="tile">
-            <h3>Automation</h3>
-            <p class="body">The manual work you repeat every week, handed to a system built for it.</p>
-          </article>
-          <span class="conn" aria-hidden="true"><i></i></span>
-          <article class="tile">
-            <h3>Applications</h3>
-            <p class="body">A tool made to fit the way your team already works.</p>
-          </article>
-          <span class="conn" aria-hidden="true"><i></i></span>
-          <article class="tile">
-            <h3>System design</h3>
-            <p class="body">Your process, redrawn so more of it turns into revenue.</p>
-          </article>
-          <span class="conn" aria-hidden="true"><i></i></span>
-          <article class="tile">
-            <h3>Strategy</h3>
-            <p class="body">Where to start, and what it is worth to you.</p>
-          </article>
+        <div class="hair"></div>
+        <div class="content">
+          <div class="two">
+            <h2 class="h2--long">We sit with the people who run the business, then build the system that takes over the work eating their week.</h2>
+            <p class="lead two__body">It starts with a conversation. Where does the day really go? Which manual, repetitive tasks could run on their own? What is each one worth? We have founded and run successful companies ourselves, so this is business advice as much as software. And nothing is off a shelf: every system is built for that one operation.</p>
+          </div>
+          <div class="tiles">
+            <article class="tile">
+              <h3>Automation</h3>
+              <p class="body">The manual work you repeat every week, handed to a system built for it.</p>
+            </article>
+            <span class="conn" aria-hidden="true"><i></i></span>
+            <article class="tile">
+              <h3>Applications</h3>
+              <p class="body">A tool made to fit the way your team already works.</p>
+            </article>
+            <span class="conn" aria-hidden="true"><i></i></span>
+            <article class="tile">
+              <h3>System design</h3>
+              <p class="body">Your process, redrawn so more of it turns into revenue.</p>
+            </article>
+            <span class="conn" aria-hidden="true"><i></i></span>
+            <article class="tile">
+              <h3>Strategy</h3>
+              <p class="body">Where to start, and what it is worth to you.</p>
+            </article>
+          </div>
         </div>
       </div>
     </div>
@@ -599,35 +673,36 @@ h2 .dim{ color:var(--faint-2); }
       <div class="card__dim"></div>
       <div class="card__in">
         <p class="label mono"><b>02</b><span>/</span>HOW IT WORKS</p>
-        <div class="head" style="margin-top:clamp(16px,2.8vh,34px)">
+        <div class="hair"></div>
+        <div class="content">
           <h2>You pay a share of what we save you. <span class="dim">Not before.</span></h2>
-        </div>
-        <div class="steps">
-          <div class="step" data-free>
-            <span class="step__top"><span class="mono">STEP 01</span><span class="free">Free</span></span>
-            <h3>Discovery</h3>
-            <p class="body">Two sessions. We walk the operation with you and map where the headroom sits.</p>
+          <div class="steps">
+            <div class="step">
+              <span class="step__top"><span class="mono">STEP 01</span><span class="free">Free</span></span>
+              <h3>Discovery</h3>
+              <p class="body">Two sessions. We walk the operation with you and map where the headroom sits.</p>
+            </div>
+            <div class="step">
+              <span class="step__top"><span class="mono">STEP 02</span></span>
+              <h3>Quantify</h3>
+              <p class="body">We put a number on the opportunity and scope the system around your operation.</p>
+            </div>
+            <div class="step">
+              <span class="step__top"><span class="mono">STEP 03</span></span>
+              <h3>Price</h3>
+              <p class="body">We agree a share of the verified saving. No saving, no share. That is the entire deal.</p>
+            </div>
+            <div class="step">
+              <span class="step__top"><span class="mono">STEP 04</span></span>
+              <h3>Retainer</h3>
+              <p class="body">Your system goes in, built from scratch. We stay on to keep the gain compounding.</p>
+            </div>
           </div>
-          <div class="step">
-            <span class="step__top"><span class="mono">STEP 02</span></span>
-            <h3>Quantify</h3>
-            <p class="body">We put a number on the opportunity and scope the system around your operation.</p>
+          <div class="rr">
+            <div class="rr__rule"><span class="rr__tag"><i class="rr__node"></i>Risk reversal</span></div>
+            <p class="rr__lead">If the saving does not show up in your numbers, <span class="yes">you do not pay us.</span></p>
+            <p class="rr__sub">Written into the engagement, not into the marketing.</p>
           </div>
-          <div class="step">
-            <span class="step__top"><span class="mono">STEP 03</span></span>
-            <h3>Price</h3>
-            <p class="body">We agree a share of the verified saving. No saving, no share. That is the entire deal.</p>
-          </div>
-          <div class="step">
-            <span class="step__top"><span class="mono">STEP 04</span></span>
-            <h3>Retainer</h3>
-            <p class="body">Your system goes in, built from scratch. We stay on to keep the gain compounding.</p>
-          </div>
-        </div>
-        <div class="rr">
-          <div class="rr__rule"><span class="rr__tag"><i class="rr__node"></i>Risk reversal</span></div>
-          <p class="rr__lead">If the saving does not show up in your numbers, <span class="yes">you do not pay us.</span></p>
-          <p class="rr__sub">Written into the engagement, not into the marketing.</p>
         </div>
       </div>
     </div>
@@ -639,27 +714,32 @@ h2 .dim{ color:var(--faint-2); }
       <div class="card__dim"></div>
       <div class="card__in">
         <p class="label mono"><b>03</b><span>/</span>WHO WE ARE</p>
-        <div class="head" style="margin-top:clamp(16px,2.8vh,34px)">
-          <h2 class="h2--long">We built the businesses. Then we built the systems that made them better.</h2>
-          <p class="lead">We come from years of starting and running successful businesses, which means we have seen where the real headroom sits: the work that quietly absorbs hours, the process running at a fraction of what it could, the step everyone routes around.</p>
-          <p class="lead">Alongside that we have spent years building systems, first for our own companies and then for others, designed around exactly those opportunities. The result each time was the same: large cost savings and meaningful revenue growth.</p>
-        </div>
-        <div class="pillars">
-          <article class="pillar">
-            <span class="mono">01 <span style="opacity:.5">/</span> Operators</span>
-            <p class="pillar__k">Years of starting and running successful businesses</p>
-            <p class="body">We know this world from the inside, so we know what to look for, where to look for it, and how to turn what we find into a better number.</p>
-          </article>
-          <article class="pillar">
-            <span class="mono">02 <span style="opacity:.5">/</span> Builders</span>
-            <p class="pillar__k">A long, proven record in product and custom system development</p>
-            <p class="body">Every system is built from scratch around the specific needs of the business in front of us. We do not resell a template.</p>
-          </article>
-          <article class="pillar pillar--edge">
-            <span class="mono">03 <span style="opacity:.5">/</span> The edge</span>
-            <p class="pillar__k">Current-generation automation, not the stack of a decade ago</p>
-            <p class="body">This is what makes it economic to capture gains that were previously too small to be worth anyone's time, and it is why our fee can come out of the upside.</p>
-          </article>
+        <div class="hair"></div>
+        <div class="content">
+          <div class="two">
+            <div class="head">
+              <h2 class="h2--long">We built the businesses. Then we built the systems that made them better.</h2>
+              <p class="lead">We come from years of starting and running successful businesses, which means we have seen where the real headroom sits: the work that quietly absorbs hours, the process running at a fraction of what it could, the step everyone routes around.</p>
+              <p class="lead">Alongside that we have spent years building systems, first for our own companies and then for others, designed around exactly those opportunities. The result each time was the same: large cost savings and meaningful revenue growth.</p>
+            </div>
+            <div class="pillars">
+              <article class="pillar">
+                <span class="mono">01 <span style="opacity:.5">/</span> Operators</span>
+                <p class="pillar__k">Years of starting and running successful businesses</p>
+                <p class="body">We know this world from the inside, so we know what to look for, where to look for it, and how to turn what we find into a better number.</p>
+              </article>
+              <article class="pillar">
+                <span class="mono">02 <span style="opacity:.5">/</span> Builders</span>
+                <p class="pillar__k">A long, proven record in product and custom system development</p>
+                <p class="body">Every system is built from scratch around the specific needs of the business in front of us. We do not resell a template.</p>
+              </article>
+              <article class="pillar pillar--edge">
+                <span class="mono">03 <span style="opacity:.5">/</span> The edge</span>
+                <p class="pillar__k">Current-generation automation, not the stack of a decade ago</p>
+                <p class="body">This is what makes it economic to capture gains that were previously too small to be worth anyone's time, and it is why our fee can come out of the upside.</p>
+              </article>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -671,23 +751,26 @@ h2 .dim{ color:var(--faint-2); }
       <div class="card__dim"></div>
       <div class="card__in">
         <p class="label mono"><b>04</b><span>/</span>OUR CLIENTS</p>
-        <div class="head" style="margin-top:clamp(16px,2.8vh,34px)">
-          <h2>Some of the operations<br>we helped so far.</h2>
-        </div>
-        <div class="chips">
-          <span class="chip mono">Tourism</span>
-          <span class="chip mono">Marine &amp; cruises</span>
-          <span class="chip mono">Sport &amp; leisure</span>
-          <span class="chip mono">Creative studios</span>
-          <span class="chip mono">Relocation</span>
-        </div>
-        <div class="clients">
-          <div class="client">dereh-haski.co.il</div>
-          <div class="client">tour-guide.co.il</div>
-          <div class="client">snowpro.co.il</div>
-          <div class="client">corfuprivatecruises.com</div>
-          <div class="client">Ponygrll Studios</div>
-          <div class="client">MikMak Relocations</div>
+        <div class="hair"></div>
+        <div class="content">
+          <div class="two">
+            <h2>Some of the operations we helped so far.</h2>
+            <div class="chips two__body">
+              <span class="chip mono">Tourism</span>
+              <span class="chip mono">Marine &amp; cruises</span>
+              <span class="chip mono">Sport &amp; leisure</span>
+              <span class="chip mono">Creative studios</span>
+              <span class="chip mono">Relocation</span>
+            </div>
+          </div>
+          <div class="clients">
+            <div class="client">dereh-haski.co.il</div>
+            <div class="client">tour-guide.co.il</div>
+            <div class="client">snowpro.co.il</div>
+            <div class="client">corfuprivatecruises.com</div>
+            <div class="client">Ponygrll Studios</div>
+            <div class="client">MikMak Relocations</div>
+          </div>
         </div>
       </div>
     </div>
@@ -699,19 +782,19 @@ h2 .dim{ color:var(--faint-2); }
       <div class="card__dim"></div>
       <div class="card__in">
         <p class="label mono"><b>05</b><span>/</span>START WITH THE FREE PART</p>
-        <div class="head" style="margin-top:clamp(16px,2.8vh,34px)">
+        <div class="hair"></div>
+        <div class="content">
           <h2 class="h2--long">The discovery costs you two hours and nothing else.</h2>
-        </div>
-        <div class="contact-grid">
-          <p class="lead">If we cannot point at a gain worth capturing, we will say so and you will have lost an afternoon. If we can, you will have a number, and a system scoped for your operation alone, before you have an invoice.</p>
-          <div style="display:flex;flex-direction:column;gap:clamp(10px,1.8vh,20px);align-items:flex-start">
-            <a class="big" href="mailto:hello@morechain.co">hello@morechain.co</a>
-            <a class="big" href="#" data-pending="linkedin">LinkedIn</a>
+          <div class="contact-grid">
+            <p class="lead">If we cannot point at a gain worth capturing, we will say so and you will have lost an afternoon. If we can, you will have a number, and a system scoped for your operation alone, before you have an invoice.</p>
+            <div style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
+              <a class="cta cta--go cta--wide" href="mailto:hello@morechain.co">hello@morechain.co</a>
+              <a class="cta cta--wide" href="#" data-pending="linkedin">LinkedIn</a>
+            </div>
           </div>
         </div>
         <div class="foot mono">
-          <span class="foot-mark"><span class="foot-mark__a">MORE</span><span class="foot-mark__b">CHAIN</span></span>
-          <span>Systems that pay for themselves</span>
+          <span><span class="foot-mark"><span class="foot-mark__a">MORE</span><span class="foot-mark__b">CHAIN</span></span><span style="opacity:.45;padding:0 .7em">&#183;</span>Systems that pay for themselves</span>
           <span>&#169; 2026</span>
         </div>
       </div>
@@ -720,20 +803,13 @@ h2 .dim{ color:var(--faint-2); }
 
 </main>
 
-<div class="chrome readout" id="readout">
-  <div class="ro">
-    <span class="ro-k">UNCAPTURED</span>
-    <span class="ro-v" data-k="uncaptured" id="ro-un">0</span>
+<div class="readout-wrap">
+  <div class="chrome readout" id="readout">
+    <span class="ro"><span class="ro-k">Uncaptured</span><span class="ro-v" data-k="uncaptured" id="ro-un">$0</span></span>
+    <span class="ro"><span class="ro-k">Captured</span><span class="ro-v" data-k="captured" id="ro-cap">$0</span></span>
+    <span class="ro"><span class="ro-k">Chain</span><span class="ro-v" data-k="chain" id="ro-ch">0%</span></span>
   </div>
-  <div class="ro">
-    <span class="ro-k">CAPTURED</span>
-    <span class="ro-v" data-k="captured" id="ro-cap">0</span>
-  </div>
-  <div class="ro">
-    <span class="ro-k">CHAIN</span>
-    <span class="ro-v" data-k="chain" id="ro-ch">0%</span>
-  </div>
-  <span class="ro-status" id="ro-st">MAPPING BASELINE</span>
+  <span class="ro-status" id="ro-st">Mapping baseline</span>
 </div>
 
 <div class="chrome steps-nav">
@@ -883,7 +959,7 @@ function draw(seal, dockP, dt){
   var len = lerp(heroLen, dockLen, dockP);
   /* On a 390px card a centred chain sits straight through the headline, so
      the phone hero holds it off to the right before it docks. */
-  var cx  = MOBILE ? lerp(W * 0.74, W * 0.90, dockP) : lerp(W * 0.70, W * 0.865, dockP);
+  var cx  = MOBILE ? lerp(W * 0.74, W * 0.90, dockP) : W * 0.862;
   var top = (H - len) / 2;
   var gap = len / (NODES - 1);
   var size = clamp(gap * 0.52, 9, 17);
@@ -1036,7 +1112,7 @@ function readouts(seal, dt, moving){
     captured = Math.min(UNCAP_MAX, captured + seal * dt * 1.6);
   }
 
-  var un = fmt(uncaptured), cp = fmt(captured), ch = Math.round(seal * 100) + '%';
+  var un = '$' + fmt(uncaptured), cp = '$' + fmt(captured), ch = Math.round(seal * 100) + '%';
   var st = seal < 0.02 ? 'MAPPING BASELINE' : (seal < 0.985 ? 'OPTIMISING' : 'RUNNING OPTIMISED');
 
   if(un !== lastUn){ roUn.textContent  = un; lastUn = un; }

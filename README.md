@@ -30,6 +30,16 @@ stack rather than a nav-driven brochure.
 | Optimisation, never repair | The client is not broken, they have untapped headroom. Banned: fix, repair, broken, leak, bleeding money, problem, damage, what is wrong. Preferred: headroom, upside, opportunity, gain, capture, unlock, optimise, improve, compounding. Internal code identifiers may use any name. |
 | Custom-built throughline | Every screen carries the claim that systems are built from scratch for that one operation. |
 
+## Reference screens
+
+`reference/` in the handoff carries six PNGs captured from the approved
+prototype at 924x540. They are the source of truth for **proportion, hierarchy
+and spacing**, not for pixel values: every size in the prototype is a `clamp()`
+with a `vh` term, so the captures are deliberately short and wide. Match the
+ratios, in particular that the text column ends before the chain lane at about
+86% of the width, the section label sits alone above a hairline, and the
+content block is centred in the space left below it.
+
 ## Structure
 
 Six full-viewport cards. Each pins to the top while the next slides over it;
