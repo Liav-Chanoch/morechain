@@ -3,517 +3,644 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MoreChain — Systems that pay for themselves</title>
-<meta name="description" content="MoreChain finds the cost bleeding out of your operation, builds the system that stops it, and prices itself as a share of what it saves.">
+<title>MoreChain, systems that pay for themselves</title>
+<meta name="description" content="MoreChain builds custom operational systems for owner-run businesses and takes its fee out of the verified gain. Every system is built for one operation alone.">
 <meta name="robots" content="noindex, nofollow">
-<meta name="color-scheme" content="dark light">
-<meta name="theme-color" content="#0C1116">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#070B0E">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MoreChain">
-<meta property="og:title" content="MoreChain — Systems that pay for themselves">
-<meta property="og:description" content="We find the cost bleeding out of your operation, build the system that stops it, and price ourselves as a share of what it saves.">
+<meta property="og:title" content="MoreChain, systems that pay for themselves">
+<meta property="og:description" content="Every operation has headroom. We find where it sits, build the system that captures it, and take our fee out of the gain.">
 <meta property="og:url" content="https://liav-chanoch.github.io/morechain/">
+<meta property="og:image" content="https://liav-chanoch.github.io/morechain/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   TOKENS
-   ============================================================ */
+/* ==========================================================
+   TOKENS. No hue outside this list.
+   ========================================================== */
 :root{
-  --ink:#0C1116;
-  --ink-2:#151D25;
-  --ink-3:#26313C;
-  --paper:#F2EEE6;
-  --paper-2:#E5DFD3;
-  --accent:#E2643A;
-  --accent-2:#5E9EA0;
+  --bg:#070B0E;
+  --panel:#0C1116;
+  --ink:#E9EEF3;
+  --ink-2:#C6D1DB;
+  --muted:#8593A0;
+  --faint:#6F7D89;
+  --faint-2:#5C6873;
+  --green:#3cd291;
+  --mint:#7ee8c4;
+  --amber:#e8a050;
+  --slate:rgba(168,190,208,0.26);
+  --hair:rgba(255,255,255,0.09);
+  --chrome-bg:rgba(7,11,14,0.93);
 
-  --f-display:"Bricolage Grotesque","Space Grotesk",system-ui,sans-serif;
-  --f-body:"Space Grotesk",system-ui,sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --f:"Archivo",system-ui,-apple-system,sans-serif;
+  --m:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 
-  --ease:cubic-bezier(.22,1,.36,1);
-  --dur:700ms;
-  --dur-fast:340ms;
-
-  --pad:clamp(22px,5vw,80px);
-  --bar-h:66px;
-  --bp:860px;
-
-  --chrome-fg:var(--paper);
-}
-@media (prefers-reduced-motion: reduce){
-  :root{ --dur:1ms; --dur-fast:1ms; }
+  --r:22px;
+  --gut:12px;
+  --ease:cubic-bezier(.4,0,.2,1);
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
-html,body{ height:100%; }
+html{ background:var(--bg); scroll-behavior:auto; }
 body{
-  margin:0;
-  font-family:var(--f-body);
-  background:var(--ink);
-  color:var(--paper);
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--f); font-weight:400;
   -webkit-font-smoothing:antialiased;
-  overflow:hidden;
-  overscroll-behavior:none;
+  overflow-x:hidden;
 }
-body.is-locked{ overflow:hidden; }
 img{ max-width:100%; display:block; }
 button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
-a{ color:inherit; }
+a{ color:inherit; text-decoration:none; }
+:focus-visible{ outline:2px solid var(--green); outline-offset:3px; border-radius:4px; }
 
-.skip{
-  position:fixed; top:-100px; left:12px; z-index:999;
-  background:var(--accent); color:#fff; padding:10px 16px; border-radius:6px;
-  font-family:var(--f-mono); font-size:12px; text-decoration:none;
-}
-.skip:focus{ top:12px; }
-:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:3px; }
-
-/* ============================================================
-   DECK + PANELS
-   Static defaults below MUST match the initial JS state
-   (panel 0 visible, all others hidden) so nothing flashes
-   between first paint and script execution.
-   ============================================================ */
-.deck{ position:fixed; inset:0; overflow:hidden; }
-
-.panel{
-  position:absolute; inset:0;
-  background:var(--bg); color:var(--fg);
-  transform:translate3d(0,100%,0);
-  visibility:hidden;
-  transition:
-    transform var(--dur) var(--ease),
-    opacity var(--dur) var(--ease),
-    visibility 0s linear var(--dur);
-  will-change:transform;
-}
-.panel:first-child{ transform:none; visibility:visible; z-index:2; transition-delay:0s; }
-
-.panel.is-current{ transform:none; visibility:visible; z-index:2; transition-delay:0s,0s,0s; }
-.panel.is-above{ transform:translate3d(0,-100%,0); visibility:hidden; z-index:1; }
-.panel.is-below{ transform:translate3d(0,100%,0); visibility:hidden; z-index:1; }
-
-@media (prefers-reduced-motion: reduce){
-  .panel{ transform:none !important; opacity:0; }
-  .panel.is-current{ opacity:1; }
-  .panel:first-child{ opacity:1; }
-  .panel.is-above,.panel.is-below{ opacity:0; }
+.mono{
+  font-family:var(--m); font-weight:500; text-transform:uppercase;
+  letter-spacing:.14em; font-size:clamp(9px,1.05vh,11px);
 }
 
-.panel[data-theme="ink"]{
-  --bg:var(--ink); --fg:var(--paper); --muted:#8A97A3; --rule:#27323D; --chip:#151D25;
-}
-.panel[data-theme="paper"]{
-  --bg:var(--paper); --fg:var(--ink); --muted:#6B7078; --rule:#D6CFC1; --chip:#E5DFD3;
+/* ==========================================================
+   CHAIN CANVAS
+   Sits over the card backgrounds and under the fixed chrome, so
+   the copy reads across it and it can be inset to clear the CTA
+   above and the step buttons below. pointer-events stay off.
+   ========================================================== */
+#chain{
+  position:fixed; inset:0; z-index:2;
+  /* A canvas is a replaced element, so inset:0 with width:auto resolves to
+     its intrinsic (backing store) size rather than stretching to the
+     viewport. Without these two the element renders at DPR times the
+     viewport and everything lands off screen to the right. */
+  width:100%; height:100%;
+  pointer-events:none;
+  transition:opacity 240ms linear;
 }
 
-.panel__scroll{
-  height:100%;
-  overflow-y:auto;
-  overscroll-behavior:contain;
-  -webkit-overflow-scrolling:touch;
+/* ==========================================================
+   CARD STACK
+   Each card pins to the top while the next slides over it.
+   ========================================================== */
+.stack{ position:relative; z-index:1; }
+
+.card{
+  position:sticky; top:0;
+  height:100vh; height:100svh;
+}
+.card__box{
+  position:relative; overflow:hidden;
+  height:calc(100% - (var(--gut) * 2));
+  margin:var(--gut);
+  border:1px solid var(--hair);
+  border-radius:var(--r);
   display:flex; flex-direction:column;
-  padding:var(--pad);
-  scrollbar-width:none;
+  transform-origin:50% 42%;
+  will-change:transform;
+  transition:border-color 260ms var(--ease);
 }
-.panel__scroll::-webkit-scrollbar{ display:none; }
-.panel__inner{ width:min(1180px,100%); margin-inline:auto; margin-block:auto; }
+/* Dark overlay that composites, rather than a filter on a full
+   viewport layer, which repaints every frame. */
+.card__dim{
+  position:absolute; inset:0; z-index:6;
+  background:#04070A; opacity:0; pointer-events:none;
+  will-change:opacity;
+}
+.card__in{
+  position:relative; z-index:3;
+  flex:1; min-height:0;
+  display:flex; flex-direction:column;
+  padding:clamp(58px,9vh,94px) clamp(30px,9vw,150px) clamp(50px,8vh,90px) clamp(32px,6vw,88px);
+}
 
-/* ============================================================
-   TYPE
-   ============================================================ */
-.eyebrow{
-  font-family:var(--f-mono); font-size:11px; font-weight:500;
-  letter-spacing:.2em; text-transform:uppercase; color:var(--accent);
-  margin:0 0 22px;
+.card[data-i="0"] .card__box{ background:linear-gradient(150deg,#111A22,#080D11 60%); }
+.card[data-i="1"] .card__box{ background:linear-gradient(165deg,#0E141A,#0A0F14 70%); }
+.card[data-i="2"] .card__box{ background:linear-gradient(165deg,#111820,#0A0F14 70%); }
+.card[data-i="3"] .card__box{ background:linear-gradient(165deg,#0E141A,#0A0F14 70%); }
+.card[data-i="4"] .card__box{ background:linear-gradient(165deg,#111820,#0A0F14 70%); }
+.card[data-i="5"] .card__box{ background:linear-gradient(165deg,#0F1A18,#0A0F14 68%); }
+
+@media (hover:hover){
+  .card__box:hover{ border-color:rgba(60,210,145,0.42); }
 }
-.eyebrow span{ color:var(--muted); }
-h1,h2,h3{ font-family:var(--f-display); font-weight:600; margin:0; letter-spacing:-.028em; line-height:.98; }
-h1{ font-size:clamp(2.9rem,7.4vw,6rem); font-weight:800; }
-h2{ font-size:clamp(2.1rem,4.6vw,3.6rem); }
-h3{ font-size:clamp(1.15rem,1.7vw,1.4rem); letter-spacing:-.015em; line-height:1.15; }
+
+/* ==========================================================
+   TYPE
+   Every size is fluid against both axes. The stack is height
+   constrained, so the middle term is vh wherever it can be.
+   ========================================================== */
+.label{ color:var(--faint); margin:0; }
+.label b{ color:var(--green); font-weight:500; }
+.label span{ color:var(--faint-2); padding:0 .5em; }
+
+h1,h2{
+  margin:0; font-weight:700;
+  letter-spacing:-.042em; line-height:.92;
+  font-size:clamp(2.3rem,6.2vh,4.5rem);
+}
+h1{ font-size:clamp(2.6rem,7.6vh,5.5rem); letter-spacing:-.045em; line-height:.88; }
+h1 i{ font-style:italic; color:var(--green); }
+h3{
+  margin:0; font-weight:600; letter-spacing:-.02em; line-height:1.06;
+  font-size:clamp(15px,2.1vh,19px);
+}
 p{ margin:0; }
 .lead{
-  font-size:clamp(1.02rem,1.35vw,1.22rem); line-height:1.6; color:var(--muted);
-  max-width:60ch;
+  color:var(--ink-2); max-width:52ch;
+  font-size:clamp(13.5px,1.85vh,17px); line-height:1.55;
 }
-.body{ font-size:clamp(.95rem,1.1vw,1.03rem); line-height:1.68; color:var(--muted); max-width:64ch; }
-.rule{ height:1px; background:var(--rule); border:0; margin:0; }
-
-/* ============================================================
-   SIGNATURE ELEMENT — the chain
-   ============================================================ */
-.chain{ display:block; overflow:visible; }
-/* .lk is used by the hero chain AND the per-step glyphs, so it must not be
-   scoped to .chain — an unscoped SVG rect would otherwise paint solid black. */
-.lk{ fill:none; stroke:currentColor; stroke-width:7; }
-.lk--hot{ stroke:var(--accent); }
-@media (prefers-reduced-motion: no-preference){
-  .chain--hero .lk{ animation:drift 7s var(--ease) infinite alternate; }
-  .chain--hero .lk:nth-child(2){ animation-delay:.35s; }
-  .chain--hero .lk:nth-child(3){ animation-delay:.7s; }
-  .chain--hero .lk:nth-child(4){ animation-delay:1.05s; }
+.body{
+  color:var(--muted);
+  font-size:clamp(12.5px,1.5vh,14px); line-height:1.55;
 }
-@keyframes drift{ from{ transform:translateY(0) } to{ transform:translateY(-6px) } }
+.head{ display:flex; flex-direction:column; gap:clamp(14px,2.4vh,26px); }
+.grow{ margin-top:auto; }
+.center{ margin-block:auto; }
+/* Label sits at the top, the headline under it, and the content row
+   pins to the bottom of the card rather than leaving a void beneath
+   the label. */
+.tiles,.steps,.pillars,.chips{ margin-top:auto; }
 
-/* ============================================================
-   PANEL 1 — HERO
-   ============================================================ */
-.hero{ display:grid; gap:clamp(28px,4vw,56px); }
-.hero__mark{ display:flex; align-items:center; gap:18px; }
-.hero__mark .chain{ width:clamp(150px,17vw,230px); color:var(--fg); }
-.hero h1 em{ font-style:normal; color:var(--accent); }
-.hero__foot{ display:flex; flex-wrap:wrap; gap:14px; align-items:center; }
-
-.btn{
-  display:inline-flex; align-items:center; gap:10px;
-  font-family:var(--f-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase;
-  padding:15px 24px; border-radius:999px; text-decoration:none;
-  background:var(--accent); color:#fff;
-  transition:transform var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+/* ==========================================================
+   01 WHAT WE DO
+   ========================================================== */
+/* Flex, not grid: the connectors sit between the tiles, so as grid
+   children they would each consume a column and wrap the row. */
+.tiles{
+  display:flex; align-items:stretch; min-height:0;
+  margin-top:clamp(20px,3.6vh,44px);
+  gap:0;
 }
-.btn:hover{ transform:translateY(-2px); background:#C9542C; }
-.btn--ghost{ background:transparent; color:var(--fg); border:1px solid var(--rule); }
-.btn--ghost:hover{ background:var(--chip); }
-
-/* ============================================================
-   PANEL 2 — FOUNDERS / WHO
-   ============================================================ */
-.split{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(30px,5vw,72px); align-items:start; }
-.stack{ display:grid; gap:26px; }
-.pairs{ display:grid; gap:0; border-top:1px solid var(--rule); }
-.pair{
-  display:grid; grid-template-columns:auto 1fr; gap:20px;
-  padding:20px 0; border-bottom:1px solid var(--rule); align-items:baseline;
+.tile{
+  flex:1 1 0; min-width:0;
+  background:var(--panel); border:1px solid var(--hair); border-radius:14px;
+  padding:clamp(14px,2.4vh,24px);
+  display:flex; flex-direction:column; gap:clamp(7px,1.2vh,12px);
+  min-height:0;
 }
-.pair__k{ font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:var(--accent); }
-.pair__v{ font-size:.98rem; line-height:1.55; color:var(--muted); }
-.pair__v strong{ color:var(--fg); font-weight:500; }
+.tile .mono{ color:var(--green); }
 
-/* ============================================================
-   PANEL 3 — WHAT WE BUILD
-   ============================================================ */
-.cards{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--rule); border:1px solid var(--rule); }
-.card{ background:var(--bg); padding:clamp(22px,2.4vw,34px); display:grid; gap:14px; align-content:start; min-height:230px; }
-.card__n{ font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:var(--accent); }
-.card p{ font-size:.92rem; line-height:1.6; color:var(--muted); }
-
-/* ============================================================
-   PANEL 4 — THE MODEL (4 links = 4 steps)
-   ============================================================ */
-.steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(18px,2.4vw,34px); }
-.step{ display:grid; gap:16px; align-content:start; position:relative; padding-top:26px; }
-.step::before{
-  content:""; position:absolute; top:0; left:0; right:0; height:2px; background:var(--rule);
+/* The miniature of the same idea, between each pair of tiles. */
+.conn{
+  position:relative; align-self:center;
+  width:clamp(22px,3.4vw,54px); height:18px;
+  flex:0 0 auto;
 }
-.step--live::before{ background:var(--accent); }
-.step__n{ font-family:var(--f-mono); font-size:11px; letter-spacing:.18em; color:var(--accent); }
-.step__link{ width:52px; color:var(--fg); opacity:.55; }
-.step--live .step__link{ opacity:1; color:var(--accent); }
-.step p{ font-size:.92rem; line-height:1.62; color:var(--muted); }
-.model__note{
-  margin-top:clamp(28px,3.4vw,46px); padding:20px 24px; border-left:2px solid var(--accent);
-  background:var(--chip); font-size:.94rem; line-height:1.6; color:var(--muted); max-width:70ch;
+.conn::before{
+  content:""; position:absolute; top:50%; left:0; right:0; height:1px;
+  transform:translateY(-50%);
+  background:repeating-linear-gradient(90deg,var(--amber) 0 3px,transparent 3px 7px);
+  opacity:.5;
+}
+.conn::after{
+  content:""; position:absolute; top:50%; left:0; height:1px; width:0;
+  transform:translateY(-50%); background:var(--green);
+  animation:mcSeal 4s var(--ease) infinite;
+}
+.conn i{
+  position:absolute; top:50%; left:50%; width:7px; height:7px;
+  margin:-3.5px 0 0 -3.5px; border-radius:2px;
+  border:1px solid var(--amber); background:transparent;
+  animation:mcNode 4s var(--ease) infinite;
+}
+.conn:nth-of-type(2)::after,.conn:nth-of-type(2) i{ animation-delay:.4s; }
+.conn:nth-of-type(3)::after,.conn:nth-of-type(3) i{ animation-delay:.8s; }
+@keyframes mcSeal{
+  0%,10%{ width:0 } 45%,72%{ width:100% } 88%,100%{ width:0 }
+}
+@keyframes mcNode{
+  0%,10%{ border-color:var(--amber); background:transparent }
+  45%,72%{ border-color:var(--mint); background:var(--mint) }
+  88%,100%{ border-color:var(--amber); background:transparent }
 }
 
-/* ============================================================
-   PANEL 5 — WORK
-   ============================================================ */
-.worklist{ border-top:1px solid var(--rule); }
-.work{
-  width:100%; text-align:left; display:grid;
-  grid-template-columns:auto 1fr auto auto; gap:clamp(16px,3vw,44px);
-  align-items:center; padding:clamp(20px,2.4vw,30px) 6px;
-  border-bottom:1px solid var(--rule);
-  transition:padding-left var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+/* ==========================================================
+   02 HOW IT WORKS
+   ========================================================== */
+.steps{
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(14px,2.2vw,30px); min-height:0;
+  margin-top:clamp(20px,3.4vh,42px);
 }
-.work:hover{ padding-left:20px; background:var(--chip); }
-.work__n{ font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:var(--accent); }
-.work__t{ font-family:var(--f-display); font-size:clamp(1.1rem,2vw,1.65rem); font-weight:600; letter-spacing:-.02em; }
-.work__tag{ font-family:var(--f-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); border:1px solid var(--rule); padding:6px 11px; border-radius:999px; white-space:nowrap; }
-.work__go{ font-family:var(--f-mono); font-size:15px; color:var(--muted); }
-.work:hover .work__go{ color:var(--accent); }
+.step{
+  display:flex; flex-direction:column; gap:clamp(7px,1.2vh,12px);
+  padding-top:clamp(12px,1.8vh,18px); border-top:1px solid var(--hair);
+  min-height:0;
+}
+.step[data-free] { border-top-color:var(--green); }
+.step .mono{ color:var(--faint); }
+.step[data-free] .mono{ color:var(--green); }
+.reversal{
+  margin-top:clamp(18px,3vh,36px);
+  border-left:1px solid var(--green);
+  background:var(--panel);
+  padding:clamp(13px,2.1vh,20px) clamp(16px,2.4vh,24px);
+  border-radius:0 14px 14px 0;
+  color:var(--ink-2);
+  font-size:clamp(12.5px,1.55vh,15px); line-height:1.5;
+  max-width:64ch;
+}
 
-/* ============================================================
-   PANEL 6 — CONTACT
-   ============================================================ */
-.contact{ display:grid; gap:clamp(26px,3.4vw,48px); }
-.contact__grid{ display:grid; grid-template-columns:1.3fr 1fr; gap:clamp(28px,5vw,70px); align-items:start; }
-.big-link{
-  font-family:var(--f-display); font-weight:600; letter-spacing:-.03em;
-  font-size:clamp(1.6rem,3.6vw,2.9rem); text-decoration:none; line-height:1.1;
-  display:inline-block; border-bottom:2px solid var(--rule); padding-bottom:6px;
-  transition:border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+/* ==========================================================
+   03 WHO WE ARE
+   ========================================================== */
+.pillars{
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(14px,2.2vw,32px); min-height:0;
+  margin-top:clamp(20px,3.4vh,42px);
 }
-.big-link:hover{ color:var(--accent); border-color:var(--accent); }
-.colophon{ margin-top:clamp(30px,4vw,60px); display:flex; flex-wrap:wrap; gap:18px; justify-content:space-between;
-  font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; color:var(--muted); text-transform:uppercase; }
+.pillar{
+  background:var(--panel); border:1px solid var(--hair); border-radius:14px;
+  padding:clamp(15px,2.4vh,26px);
+  display:flex; flex-direction:column; gap:clamp(8px,1.3vh,13px);
+  min-height:0;
+}
+.pillar .mono{ color:var(--green); }
 
-/* ============================================================
-   DESKTOP CHROME — dots, arrows, rotated label
-   ============================================================ */
-.chrome{ position:fixed; z-index:40; color:var(--chrome-fg); transition:color var(--dur) var(--ease); }
-.chrome--label{
-  left:clamp(14px,2vw,28px); top:50%; transform:translateY(-50%) rotate(180deg);
-  writing-mode:vertical-rl; font-family:var(--f-mono); font-size:11px;
-  letter-spacing:.24em; text-transform:uppercase; pointer-events:none;
+/* ==========================================================
+   04 OUR CLIENTS
+   ========================================================== */
+.chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:clamp(16px,2.6vh,30px); }
+.chip{
+  border:1px solid var(--hair); border-radius:999px;
+  padding:7px 13px; color:var(--muted);
 }
-.chrome--label b{ color:var(--accent); font-weight:500; }
-.chrome--nav{ right:clamp(14px,2vw,28px); top:50%; transform:translateY(-50%); display:grid; gap:16px; justify-items:center; }
-.dots{ display:grid; gap:12px; justify-items:center; }
-.dot{ width:8px; height:8px; border-radius:999px; background:currentColor; opacity:.28; padding:0;
-  transition:opacity var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease); }
-.dot:hover{ opacity:.6; }
-.dot.on{ opacity:1; background:var(--accent); transform:scale(1.5); }
-.arrow{ width:34px; height:34px; border:1px solid currentColor; border-radius:999px; opacity:.4;
-  display:grid; place-items:center; font-size:12px; font-family:var(--f-mono);
-  transition:opacity var(--dur-fast) var(--ease); }
-.arrow:hover:not(:disabled){ opacity:1; }
-.arrow:disabled{ opacity:.12; cursor:default; }
+.clients{
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:1px; background:var(--hair);
+  border:1px solid var(--hair); border-radius:14px; overflow:hidden;
+  margin-top:clamp(18px,3vh,38px); min-height:0;
+}
+.client{
+  background:var(--panel);
+  padding:clamp(15px,2.6vh,28px) clamp(12px,1.6vw,22px);
+  display:flex; align-items:center;
+  /* A client name must never wrap or break at its own hyphen. */
+  white-space:nowrap;
+  font-size:clamp(12px,1.5vh,15px); font-weight:500; color:var(--ink-2);
+  letter-spacing:-.01em;
+}
+.client em{ font-style:normal; color:var(--faint-2); }
 
-/* ============================================================
-   MOBILE CHROME — opaque themed bottom bar
-   ============================================================ */
-.bar{
-  position:fixed; left:0; right:0; bottom:0; z-index:45; display:none;
-  height:calc(var(--bar-h) + env(safe-area-inset-bottom));
-  padding:0 16px env(safe-area-inset-bottom);
-  background:var(--bar-bg,#0C1116); color:var(--bar-fg,#F2EEE6);
-  align-items:center; gap:14px;
-  border-top:1px solid rgba(128,128,128,.22);
-  transition:background var(--dur) var(--ease), color var(--dur) var(--ease);
+/* ==========================================================
+   05 CONTACT
+   ========================================================== */
+.big{
+  display:inline-block; font-weight:600; letter-spacing:-.035em;
+  font-size:clamp(1.3rem,3.8vh,2.4rem); line-height:1.1;
+  border-bottom:1px solid var(--hair); padding-bottom:5px;
+  transition:color 200ms var(--ease), border-color 200ms var(--ease);
 }
-.bar__label{ font-family:var(--f-mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase; white-space:nowrap; }
-.bar__dots{ display:flex; gap:9px; margin-inline:auto; }
-.bar .dot{ background:var(--bar-dot,#4A5765); opacity:1; }
-.bar .dot.on{ background:var(--bar-dot-on,#E2643A); }
-.bar__cta{ font-family:var(--f-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase;
-  border:1px solid currentColor; border-radius:999px; padding:9px 14px; white-space:nowrap; }
+.big:hover{ color:var(--green); border-color:var(--green); }
+.contact-grid{
+  display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);
+  gap:clamp(22px,4vw,64px); align-items:start; min-height:0;
+  margin-top:clamp(18px,3vh,38px);
+}
+.foot{
+  margin-top:auto; padding-top:clamp(16px,2.6vh,30px);
+  border-top:1px solid var(--hair);
+  display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between;
+  align-items:baseline; color:var(--faint-2);
+}
+.foot-mark b{ color:var(--faint); font-weight:500; }
+.foot-mark i{ font-style:normal; color:var(--green); font-weight:500; }
 
-/* ============================================================
-   OVERLAYS
-   ============================================================ */
-.ov{
-  position:fixed; inset:0; z-index:60; visibility:hidden;
-  transform:translate3d(100%,0,0);
-  transition:transform var(--dur) var(--ease), visibility 0s linear var(--dur);
-  background:var(--ink); color:var(--paper);
-  --muted:#8A97A3; --rule:#27323D; --chip:#151D25;
+/* ==========================================================
+   WORDMARK
+   One word, two tones, plus the mint node. Never flat text.
+   ========================================================== */
+.mark{
+  display:inline-flex; align-items:baseline; gap:0;
+  font-weight:700; letter-spacing:-.03em; line-height:1;
+  font-size:15px;
 }
-.ov.open{ transform:none; visibility:visible; transition-delay:0s,0s; }
-.ov--2{ z-index:70; background:var(--paper); color:var(--ink); --muted:#6B7078; --rule:#D6CFC1; --chip:#E5DFD3; }
-@media (min-width:861px){ .ov--2{ left:auto; width:min(620px,52vw); box-shadow:-40px 0 90px rgba(0,0,0,.4); } }
+.mark u{ text-decoration:none; color:var(--ink); }
+.mark s{ text-decoration:none; color:var(--green); }
+.mark em{
+  width:4.5px; height:4.5px; border-radius:1.5px;
+  background:var(--mint); align-self:flex-end;
+  margin:0 0 1px 3px;
+  flex:0 0 auto;
+}
+/* Below about 13px the node stops reading and is dropped. */
+.mark--sm{ font-size:12px; }
+.mark--sm em{ display:none; }
+
+/* ==========================================================
+   FIXED CHROME
+   Solid backgrounds. A backdrop-filter over the animating canvas
+   re-runs the blur on every repaint and locks the main thread.
+   ========================================================== */
+.chrome{
+  position:fixed; z-index:20;
+  background:var(--chrome-bg);
+  border:1px solid var(--hair); border-radius:999px;
+}
+.pill{
+  top:calc(var(--gut) + 14px);
+  padding:10px 16px; min-height:40px;
+  display:flex; align-items:center;
+  transition:background 200ms var(--ease), color 200ms var(--ease), border-color 200ms var(--ease);
+}
+.pill--logo{ left:calc(var(--gut) + 14px); }
+.pill--cta{ right:calc(var(--gut) + 14px); color:var(--ink-2); }
+.pill--cta:hover{ background:var(--green); color:#07120C; border-color:var(--green); }
+.pill--logo:hover{ border-color:rgba(60,210,145,0.42); }
+
+.readout{
+  left:calc(var(--gut) + 14px); bottom:calc(var(--gut) + 14px);
+  border-radius:14px; padding:10px 14px;
+  display:flex; gap:18px; align-items:center;
+}
+.ro{ display:flex; flex-direction:column; gap:3px; }
+.ro-k{ color:var(--faint-2); font-family:var(--m); font-size:9px; letter-spacing:.16em; text-transform:uppercase; }
+.ro-v{
+  font-family:var(--m); font-weight:500; font-size:12px; color:var(--ink-2);
+  font-variant-numeric:tabular-nums;
+  /* Fixed width so a digit change never shifts the row. */
+  min-width:7ch;
+}
+.ro-v[data-k="captured"]{ color:var(--green); }
+.ro-v[data-k="chain"]{ color:var(--mint); min-width:4ch; }
+.ro-status{
+  border-left:1px solid var(--hair); padding-left:16px;
+  color:var(--faint); font-family:var(--m); font-size:9px;
+  letter-spacing:.16em; text-transform:uppercase; min-width:17ch;
+}
+
+.steps-nav{
+  right:calc(var(--gut) + 14px); bottom:calc(var(--gut) + 14px);
+  border-radius:999px; padding:6px; display:flex; gap:4px;
+}
+.stepbtn{
+  width:36px; height:36px; border-radius:999px;
+  display:grid; place-items:center; color:var(--muted);
+  transition:background 180ms var(--ease), color 180ms var(--ease);
+}
+.stepbtn:hover:not(:disabled){ background:rgba(255,255,255,.06); color:var(--ink); }
+.stepbtn:disabled{ opacity:.25; cursor:default; }
+.stepbtn svg{ width:13px; height:13px; }
+
+/* Rail. Fades in only once the hero has been left behind. */
+.rail{
+  position:fixed; z-index:20; right:0; top:50%;
+  transform:translateY(-50%);
+  display:flex; flex-direction:column; align-items:flex-end;
+  padding-right:calc(var(--gut) + 8px);
+  opacity:0; visibility:hidden;
+  transition:opacity 400ms var(--ease), visibility 0s linear 400ms;
+}
+.rail.on{ opacity:1; visibility:visible; transition-delay:0s,0s; }
+.mk{
+  display:flex; align-items:center; justify-content:flex-end; gap:9px;
+  height:44px; padding-left:12px; color:var(--faint-2);
+}
+.mk-l{
+  font-family:var(--m); font-size:9px; letter-spacing:.16em; text-transform:uppercase;
+  opacity:0; transform:translateX(4px); white-space:nowrap;
+  transition:opacity 200ms var(--ease), transform 200ms var(--ease);
+  color:var(--muted);
+}
+.mk:hover .mk-l{ opacity:1; transform:none; }
+.mk-n{ font-family:var(--m); font-size:9px; letter-spacing:.1em; width:2ch; text-align:right; }
+.mk-d{ width:14px; height:1px; background:currentColor; transition:width 200ms var(--ease), background 200ms var(--ease); }
+.mk:hover .mk-d{ width:22px; }
+.mk.on{ color:var(--green); }
+.mk.on .mk-d{ width:26px; }
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+@media (max-width:760px){
+  html{ scroll-snap-type:y mandatory; }
+  html.no-snap{ scroll-snap-type:none; }
+  .card{ scroll-snap-align:start; scroll-snap-stop:always; }
+
+  .card__in{ padding:clamp(64px,10vh,84px) 20px clamp(78px,11vh,96px) 20px; }
+  h1{ font-size:clamp(2.1rem,6.4vh,3.2rem); }
+  h2{ font-size:clamp(1.75rem,5vh,2.6rem); }
+
+  .tiles{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .conn{ display:none; }
+  .steps,.pillars{ grid-template-columns:minmax(0,1fr); gap:clamp(9px,1.6vh,16px); }
+  .clients{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .contact-grid{ grid-template-columns:minmax(0,1fr); }
+
+  /* Every tap target at least 44px. */
+  .pill{ min-height:44px; padding:12px 16px; }
+  .stepbtn{ width:44px; height:44px; }
+  .steps-nav{ padding:4px; }
+  .big{ padding-bottom:10px; }
+  .readout{ right:calc(var(--gut) + 14px); gap:12px; padding:9px 12px; }
+  .ro{ flex-direction:row; align-items:baseline; gap:6px; }
+  .ro-status{ display:none; }
+  .ro-v{ min-width:6ch; font-size:11px; }
+  .steps-nav{ bottom:calc(var(--gut) + 72px); }
+  .rail{ padding-right:6px; }
+  .mk-n{ display:none; }
+}
+@media (max-width:359px){
+  .ro:nth-child(2){ display:none; }
+}
+
 @media (prefers-reduced-motion: reduce){
-  .ov{ transform:none !important; opacity:0; }
-  .ov.open{ opacity:1; }
-}
-.ov__scroll{ height:100svh; overflow-y:auto; overscroll-behavior:contain; padding:var(--pad); scrollbar-width:none; }
-.ov__scroll::-webkit-scrollbar{ display:none; }
-.ov__wrap{ width:min(1040px,100%); margin-inline:auto; }
-.ov__top{ display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:clamp(26px,4vw,52px); }
-.ov__close{ font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
-  border:1px solid var(--rule); border-radius:999px; padding:10px 16px; }
-.ov__close:hover{ border-color:var(--accent); color:var(--accent); }
-.ov h2{ margin-bottom:18px; }
-
-/* Detail grid: desktop 2 cols TOP-ALIGNED (never centered — a tall
-   media element centered against short text reads as a crop).
-   Mobile: single column, media forced BETWEEN the two text blocks
-   via display:contents + order, so the DOM never moves. */
-.ov__grid{
-  display:grid; grid-template-columns:1fr minmax(0,.85fr);
-  gap:clamp(26px,4vw,60px); align-items:start; margin-top:clamp(24px,3vw,40px);
-}
-.ov__grid.is-solo{ grid-template-columns:1fr; }
-.ov__text{ display:grid; gap:20px; align-content:start; }
-.ov__media{ align-self:start; }
-.ov__grid.is-solo .ov__media{ display:none; }
-
-@media (max-width:860px){
-  .ov__grid{ grid-template-columns:1fr; }
-  .ov__text{ display:contents; }
-  .ov__sum{ order:1; }
-  .ov__media{ order:2; }
-  .ov__rest{ order:3; }
-  .ov__act{ order:4; }
-}
-
-/* Reusable media frame: a well + a browser bezel. Never ship a bare
-   screenshot; never double-bezel one that already has chrome baked in
-   (set data-frame="plain" for those). */
-.frame{ background:var(--chip); border:1px solid var(--rule); border-radius:14px; padding:clamp(14px,2vw,26px); }
-.frame__win{ border-radius:9px; overflow:hidden; border:1px solid var(--rule); background:#fff; }
-.frame__bar{ display:flex; align-items:center; gap:6px; padding:9px 12px; background:var(--rule); }
-.frame__bar i{ width:9px; height:9px; border-radius:999px; background:currentColor; opacity:.35; }
-.frame[data-frame="plain"] .frame__bar{ display:none; }
-.frame[data-frame="plain"] .frame__win{ border:0; }
-.frame figcaption{ font-family:var(--f-mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-top:12px; }
-
-.meta{ display:flex; flex-wrap:wrap; gap:10px; }
-.meta span{ font-family:var(--f-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); border:1px solid var(--rule); padding:6px 11px; border-radius:999px; }
-
-/* ============================================================
-   RESPONSIVE — one breakpoint, two chrome systems
-   ============================================================ */
-@media (max-width:860px){
-  .chrome{ display:none; }
-  .bar{ display:flex; }
-  /* svh, not dvh: mobile Safari can re-expand its toolbar after a
-     scroll settles, which would strand the last element behind the bar. */
-  .panel__scroll{ height:calc(100svh - var(--bar-h)); padding-top:clamp(28px,9vh,64px); padding-bottom:34px; }
-  .panel__inner{ margin-block:0 auto; }
-  .ov__scroll{ height:100svh; }
-  .split,.contact__grid{ grid-template-columns:1fr; }
-  .cards{ grid-template-columns:1fr 1fr; }
-  .steps{ grid-template-columns:1fr; gap:26px; }
-  .step{ padding-top:20px; }
-  .work{ grid-template-columns:auto 1fr auto; gap:14px; }
-  .work__tag{ display:none; }
-}
-@media (max-width:520px){
-  .cards{ grid-template-columns:1fr; }
-  .card{ min-height:0; }
-  .bar__label{ display:none; }
+  .conn::after,.conn i{ animation:none; }
+  .conn::after{ width:100%; }
+  *{ transition-duration:1ms !important; }
 }
 </style>
 </head>
 <body>
-<a class="skip" href="#p-0">Skip to content</a>
 
-<main class="deck" id="deck">
+<canvas id="chain" aria-hidden="true"></canvas>
 
-  <!-- 1 — HERO -->
-  <section class="panel" id="p-0" data-theme="ink" data-label="Index" aria-label="Index">
-    <div class="panel__scroll">
-      <div class="panel__inner hero">
-        <div class="hero__mark">
-          <svg class="chain chain--hero" viewBox="0 0 260 74" aria-hidden="true">
-            <rect class="lk" x="4" y="14" width="76" height="46" rx="23"/>
-            <rect class="lk" x="62" y="14" width="76" height="46" rx="23"/>
-            <rect class="lk" x="120" y="14" width="76" height="46" rx="23"/>
-            <rect class="lk lk--hot" x="178" y="14" width="76" height="46" rx="23"/>
-          </svg>
-          <span class="eyebrow" style="margin:0">MoreChain</span>
-        </div>
-        <h1>Lorem ipsum dolor sit amet, <em>consectetur</em> adipiscing elit.</h1>
-        <p class="lead">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.</p>
-        <div class="hero__foot">
-          <a class="btn" href="#p-5" data-goto="5">Book the free discovery <span aria-hidden="true">&#8594;</span></a>
-          <a class="btn btn--ghost" href="#p-3" data-goto="3">See how we price</a>
-        </div>
-      </div>
-    </div>
-  </section>
+<a class="chrome pill pill--logo" href="#p-0" data-go="0" aria-label="MoreChain, back to the top">
+  <span class="mark"><u>More</u><s>Chain</s><em></em></span>
+</a>
+<a class="chrome pill pill--cta mono" href="#p-5" data-go="5">Book discovery</a>
 
-  <!-- 2 — WHO -->
-  <section class="panel" id="p-1" data-theme="paper" data-label="Founders" aria-label="Founders">
-    <div class="panel__scroll">
-      <div class="panel__inner">
-        <p class="eyebrow">01 <span>/ Who is behind it</span></p>
-        <div class="split">
-          <div class="stack">
-            <h2>Lorem ipsum dolor sit amet consectetur.</h2>
-            <p class="body">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
-            <p class="body">Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
-          </div>
-          <div class="pairs">
-            <div class="pair"><span class="pair__k">ENG</span><span class="pair__v"><strong>Lorem ipsum dolor</strong> — sit amet consectetur adipiscing elit sed do eiusmod tempor.</span></div>
-            <div class="pair"><span class="pair__k">OPS</span><span class="pair__v"><strong>Incididunt ut labore</strong> — et dolore magna aliqua ut enim ad minim veniam quis.</span></div>
-            <div class="pair"><span class="pair__k">BIZ</span><span class="pair__v"><strong>Nostrud exercitation</strong> — ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></div>
-            <div class="pair"><span class="pair__k">P&amp;L</span><span class="pair__v"><strong>Duis aute irure</strong> — dolor in reprehenderit in voluptate velit esse cillum dolore.</span></div>
+<main class="stack" id="stack">
+
+  <!-- 0 HERO -->
+  <section class="card" data-card data-i="0" id="p-0" data-label="Hero">
+    <div class="card__box">
+      <div class="card__dim"></div>
+      <div class="card__in">
+        <p class="label mono"><b>MoreChain</b></p>
+        <div class="head center">
+          <h1>Systems that pay for<br><i>themselves.</i></h1>
+          <p class="lead">Every operation has headroom. We find where it sits, build the system that captures it, and take our fee out of the gain. Every system is built for your operation alone.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(6px,1.4vh,16px)">
+            <a class="chrome pill mono" style="position:static;background:var(--green);color:#07120C;border-color:var(--green)" href="#p-5" data-go="5">Book the free discovery</a>
+            <a class="chrome pill mono" style="position:static" href="#p-2" data-go="2">See how it works</a>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3 — WHAT WE BUILD -->
-  <section class="panel" id="p-2" data-theme="ink" data-label="Capabilities" aria-label="Capabilities">
-    <div class="panel__scroll">
-      <div class="panel__inner stack">
-        <p class="eyebrow">02 <span>/ What we build</span></p>
-        <h2>Lorem ipsum dolor sit amet, consectetur adipiscing.</h2>
-        <div class="cards">
-          <article class="card"><span class="card__n">A</span><h3>Lorem automation</h3><p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim.</p></article>
-          <article class="card"><span class="card__n">B</span><h3>Ipsum applications</h3><p>Veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.</p></article>
-          <article class="card"><span class="card__n">C</span><h3>Dolor system design</h3><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu.</p></article>
-          <article class="card"><span class="card__n">D</span><h3>Sit amet strategy</h3><p>Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt.</p></article>
+  <!-- 1 WHAT WE DO -->
+  <section class="card" data-card data-i="1" id="p-1" data-label="What we do">
+    <div class="card__box">
+      <div class="card__dim"></div>
+      <div class="card__in">
+        <p class="label mono"><b>01</b><span>/</span>What we do</p>
+        <div class="head" style="margin-top:clamp(18px,3.2vh,40px)">
+          <h2>Custom systems, built<br>for one operation.</h2>
+          <p class="lead">We do not install software. We study how your business actually runs, then build the system that captures the headroom we find in it. Nothing off the shelf, nothing shared with another client.</p>
+        </div>
+        <div class="tiles">
+          <article class="tile">
+            <span class="mono">A</span>
+            <h3>Operations automation</h3>
+            <p class="body">The repeat work your team does by hand, rebuilt as a system that runs itself.</p>
+          </article>
+          <span class="conn" aria-hidden="true"><i></i></span>
+          <article class="tile">
+            <span class="mono">B</span>
+            <h3>Internal tools</h3>
+            <p class="body">Software shaped around your process, not a template you bend to fit.</p>
+          </article>
+          <span class="conn" aria-hidden="true"><i></i></span>
+          <article class="tile">
+            <span class="mono">C</span>
+            <h3>Process redesign</h3>
+            <p class="body">The sequence itself, rebuilt around where the gain actually sits.</p>
+          </article>
+          <span class="conn" aria-hidden="true"><i></i></span>
+          <article class="tile">
+            <span class="mono">D</span>
+            <h3>Data and reporting</h3>
+            <p class="body">One number you trust, built from the sources you already own.</p>
+          </article>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 4 — THE MODEL -->
-  <section class="panel" id="p-3" data-theme="paper" data-label="The model" aria-label="The model">
-    <div class="panel__scroll">
-      <div class="panel__inner stack">
-        <p class="eyebrow">03 <span>/ How we price</span></p>
-        <h2>You pay a share of what we save you. Not before.</h2>
+  <!-- 2 HOW IT WORKS -->
+  <section class="card" data-card data-i="2" id="p-2" data-label="How it works">
+    <div class="card__box">
+      <div class="card__dim"></div>
+      <div class="card__in">
+        <p class="label mono"><b>02</b><span>/</span>How it works</p>
+        <div class="head" style="margin-top:clamp(18px,3.2vh,40px)">
+          <h2>You see the number<br>before you pay for it.</h2>
+        </div>
         <div class="steps">
-          <div class="step step--live">
-            <svg class="step__link" viewBox="0 0 60 46" aria-hidden="true"><rect class="lk lk--hot" x="4" y="4" width="52" height="38" rx="19"/></svg>
-            <span class="step__n">STEP 01 / FREE</span>
+          <div class="step" data-free>
+            <span class="mono">Step 01, free</span>
             <h3>Discovery</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt.</p>
+            <p class="body">We map how your operation runs today and where the headroom sits. No cost, no commitment.</p>
           </div>
           <div class="step">
-            <svg class="step__link" viewBox="0 0 60 46" aria-hidden="true"><rect class="lk" x="4" y="4" width="52" height="38" rx="19"/></svg>
-            <span class="step__n">STEP 02</span>
-            <h3>Quantify</h3>
-            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
+            <span class="mono">Step 02</span>
+            <h3>The number</h3>
+            <p class="body">We put a figure on the annual gain, built from your own baseline, and show the work behind it.</p>
           </div>
           <div class="step">
-            <svg class="step__link" viewBox="0 0 60 46" aria-hidden="true"><rect class="lk" x="4" y="4" width="52" height="38" rx="19"/></svg>
-            <span class="step__n">STEP 03</span>
-            <h3>Price</h3>
-            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat.</p>
+            <span class="mono">Step 03</span>
+            <h3>Build</h3>
+            <p class="body">We build the system for your operation alone, from scratch, around the gain we found.</p>
           </div>
           <div class="step">
-            <svg class="step__link" viewBox="0 0 60 46" aria-hidden="true"><rect class="lk" x="4" y="4" width="52" height="38" rx="19"/></svg>
-            <span class="step__n">STEP 04</span>
-            <h3>Retainer</h3>
-            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p>
+            <span class="mono">Step 04</span>
+            <h3>Share of the gain</h3>
+            <p class="body">You pay a share of the verified saving, monthly, once the gain is running.</p>
           </div>
         </div>
-        <p class="model__note">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua — placeholder for the plain-English statement of the risk reversal.</p>
+        <p class="reversal">If the gain does not show up in your numbers, there is nothing to share and nothing to pay.</p>
       </div>
     </div>
   </section>
 
-  <!-- 5 — WORK -->
-  <section class="panel" id="p-4" data-theme="ink" data-label="Work" aria-label="Work">
-    <div class="panel__scroll">
-      <div class="panel__inner stack">
-        <p class="eyebrow">04 <span>/ Selected systems</span></p>
-        <h2>Lorem ipsum, dolor sit amet.</h2>
-        <div class="worklist" id="worklist"></div>
+  <!-- 3 WHO WE ARE -->
+  <section class="card" data-card data-i="3" id="p-3" data-label="Who we are">
+    <div class="card__box">
+      <div class="card__dim"></div>
+      <div class="card__in">
+        <p class="label mono"><b>03</b><span>/</span>Who we are</p>
+        <div class="head" style="margin-top:clamp(18px,3.2vh,40px)">
+          <h2>Operators and builders,<br>on your side of the table.</h2>
+          <p class="lead">One side of the founding team has started and run companies. The other builds product and systems. Both sides work on your operation directly, and every system leaves our hands built for you alone.</p>
+        </div>
+        <div class="pillars">
+          <article class="pillar">
+            <span class="mono">01</span>
+            <h3>We have run the business</h3>
+            <p class="body">Companies started, staffed and grown. We know what a payroll week feels like from the inside.</p>
+          </article>
+          <article class="pillar">
+            <span class="mono">02</span>
+            <h3>We build the system</h3>
+            <p class="body">Product and engineering depth, pointed at your operation rather than at a product roadmap.</p>
+          </article>
+          <article class="pillar">
+            <span class="mono">03</span>
+            <h3>We carry the risk</h3>
+            <p class="body">Our fee comes out of the gain, so a system that does not earn does not bill.</p>
+          </article>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 6 — CONTACT -->
-  <section class="panel" id="p-5" data-theme="paper" data-label="Contact" aria-label="Contact">
-    <div class="panel__scroll">
-      <div class="panel__inner contact">
-        <p class="eyebrow">05 <span>/ Start with the free part</span></p>
-        <div class="contact__grid">
-          <div class="stack">
-            <h2>Lorem ipsum dolor sit amet consectetur adipiscing elit.</h2>
-            <p class="body">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
-          </div>
-          <div class="stack">
-            <a class="big-link" href="mailto:hello@example.com">hello@example.com</a>
-            <a class="big-link" href="#">LinkedIn</a>
+  <!-- 4 OUR CLIENTS -->
+  <section class="card" data-card data-i="4" id="p-4" data-label="Our clients">
+    <div class="card__box">
+      <div class="card__dim"></div>
+      <div class="card__in">
+        <p class="label mono"><b>04</b><span>/</span>Our clients</p>
+        <div class="head" style="margin-top:clamp(18px,3.2vh,40px)">
+          <h2>Built for operations<br>like these.</h2>
+          <p class="lead">Owner-run operations where the headroom is real and nobody has had the time to go and capture it.</p>
+        </div>
+        <div class="chips">
+          <span class="chip mono">Logistics</span>
+          <span class="chip mono">Retail</span>
+          <span class="chip mono">Professional services</span>
+          <span class="chip mono">Manufacturing</span>
+          <span class="chip mono">Hospitality</span>
+          <span class="chip mono">Field service</span>
+        </div>
+        <div class="clients">
+          <div class="client">dereh-haski.co.il</div>
+          <div class="client"><em>Client name 02</em></div>
+          <div class="client"><em>Client name 03</em></div>
+          <div class="client"><em>Client name 04</em></div>
+          <div class="client"><em>Client name 05</em></div>
+          <div class="client"><em>Client name 06</em></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 CONTACT -->
+  <section class="card" data-card data-i="5" id="p-5" data-label="Start with the free part">
+    <div class="card__box">
+      <div class="card__dim"></div>
+      <div class="card__in">
+        <p class="label mono"><b>05</b><span>/</span>Start with the free part</p>
+        <div class="head" style="margin-top:clamp(18px,3.2vh,40px)">
+          <h2>Start with the<br>free part.</h2>
+        </div>
+        <div class="contact-grid">
+          <p class="lead">Discovery costs nothing. You leave it with a map of where your headroom sits and a number attached to it, whether or not you build the system with us.</p>
+          <div style="display:flex;flex-direction:column;gap:clamp(10px,1.8vh,20px);align-items:flex-start">
+            <a class="big" href="mailto:hello@morechain.co">hello@morechain.co</a>
+            <a class="big" href="#" data-pending="linkedin">LinkedIn</a>
           </div>
         </div>
-        <hr class="rule">
-        <div class="colophon">
-          <span>MoreChain</span>
-          <span>Lorem ipsum &#183; Dolor sit</span>
+        <div class="foot mono">
+          <span class="foot-mark"><b>MORE</b><i>CHAIN</i></span>
+          <span>Systems that pay for themselves</span>
           <span>&#169; 2026</span>
         </div>
       </div>
@@ -522,61 +649,32 @@ p{ margin:0; }
 
 </main>
 
-<!-- Persistent chrome: outside the deck, survives navigation -->
-<div class="chrome chrome--label" id="label-d" aria-hidden="true"></div>
-<nav class="chrome chrome--nav" aria-label="Section navigation">
-  <button class="arrow" id="prev" aria-label="Previous section">&#9650;</button>
-  <div class="dots" id="dots-d"></div>
-  <button class="arrow" id="next" aria-label="Next section">&#9660;</button>
-</nav>
-
-<div class="bar" id="bar">
-  <span class="bar__label" id="label-m"></span>
-  <div class="bar__dots" id="dots-m"></div>
-  <button class="bar__cta" data-goto="5">Contact</button>
-</div>
-
-<!-- Overlay 1: summary -->
-<div class="ov ov--1" id="ov1" role="dialog" aria-modal="true" aria-labelledby="ov1-title">
-  <div class="ov__scroll">
-    <div class="ov__wrap">
-      <div class="ov__top">
-        <span class="eyebrow" style="margin:0" id="ov1-n"></span>
-        <button class="ov__close" data-close="1">Close <span aria-hidden="true">&#215;</span></button>
-      </div>
-      <h2 id="ov1-title"></h2>
-      <div class="meta" id="ov1-meta"></div>
-      <div class="ov__grid" id="ov1-grid">
-        <div class="ov__text">
-          <p class="body ov__sum" id="ov1-sum"></p>
-          <p class="body ov__rest" id="ov1-rest"></p>
-          <div class="ov__act"><button class="btn" id="ov1-more">Read the full breakdown <span aria-hidden="true">&#8594;</span></button></div>
-        </div>
-        <figure class="ov__media frame" id="ov1-frame" style="margin:0">
-          <div class="frame__win">
-            <div class="frame__bar"><i></i><i></i><i></i></div>
-            <img id="ov1-img" alt="">
-          </div>
-          <figcaption id="ov1-cap"></figcaption>
-        </figure>
-      </div>
-    </div>
+<div class="chrome readout" id="readout">
+  <div class="ro">
+    <span class="ro-k">Uncaptured</span>
+    <span class="ro-v" data-k="uncaptured" id="ro-un">0</span>
   </div>
+  <div class="ro">
+    <span class="ro-k">Captured</span>
+    <span class="ro-v" data-k="captured" id="ro-cap">0</span>
+  </div>
+  <div class="ro">
+    <span class="ro-k">Chain</span>
+    <span class="ro-v" data-k="chain" id="ro-ch">0%</span>
+  </div>
+  <span class="ro-status" id="ro-st">Mapping baseline</span>
 </div>
 
-<!-- Overlay 2: full detail, stacked on top of overlay 1 -->
-<div class="ov ov--2" id="ov2" role="dialog" aria-modal="true" aria-labelledby="ov2-title">
-  <div class="ov__scroll">
-    <div class="ov__wrap">
-      <div class="ov__top">
-        <span class="eyebrow" style="margin:0">Full breakdown</span>
-        <button class="ov__close" data-close="2"><span aria-hidden="true">&#8592;</span> Back</button>
-      </div>
-      <h2 id="ov2-title"></h2>
-      <div class="stack" id="ov2-body" style="margin-top:26px"></div>
-    </div>
-  </div>
+<div class="chrome steps-nav">
+  <button class="stepbtn" id="up" aria-label="Previous screen">
+    <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 7.5L6 3.5L10 7.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="stepbtn" id="down" aria-label="Next screen">
+    <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
 </div>
+
+<nav class="rail" id="rail" aria-label="Screens"></nav>
 
 <script type="application/ld+json">
 {
@@ -584,382 +682,480 @@ p{ margin:0; }
   "@type":"ProfessionalService",
   "name":"MoreChain",
   "url":"https://liav-chanoch.github.io/morechain/",
-  "description":"MoreChain identifies operational pain points, builds tailor-made automation and software systems, and prices its work as a share of the money those systems save.",
-  "serviceType":["Business process automation","Custom software development","Systems design","Business operations consulting"],
+  "description":"MoreChain builds custom operational systems for owner-run businesses (automation, internal tools, process redesign) and prices itself as a share of the verified saving.",
+  "slogan":"Systems that pay for themselves",
+  "serviceType":["Operations automation","Internal tools","Process redesign","Data and reporting"],
   "areaServed":"Worldwide",
+  "email":"hello@morechain.co",
   "offers":{
     "@type":"Offer",
-    "name":"Free discovery",
+    "name":"Discovery",
     "price":"0",
     "priceCurrency":"USD",
-    "description":"A no-cost discovery engagement that identifies pain points and quantifies the savings a tailor-made system would produce."
+    "description":"A free discovery engagement that maps where an operation's headroom sits and puts a number on the annual gain."
   }
 }
 </script>
 
 <script>
 (function(){
-  'use strict';
+'use strict';
 
-  /* ---------- Case data (lorem placeholders) ---------- */
-  var CASES = [
-    { n:'01', title:'Lorem ipsum dolor sit', tag:'Automation',
-      sum:'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa quae ab illo inventore.',
-      rest:'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.',
-      meta:['Ops','6 weeks','Retainer'],
-      img:"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 520'><rect width='800' height='520' fill='rgb(242,238,230)'/><rect x='0' y='0' width='800' height='64' fill='rgb(229,223,211)'/><rect x='40' y='110' width='300' height='26' rx='6' fill='rgb(12,17,22)'/><rect x='40' y='158' width='500' height='12' rx='6' fill='rgb(180,175,165)'/><rect x='40' y='182' width='430' height='12' rx='6' fill='rgb(180,175,165)'/><rect x='40' y='240' width='340' height='200' rx='10' fill='rgb(226,100,58)'/><rect x='410' y='240' width='350' height='94' rx='10' fill='rgb(229,223,211)'/><rect x='410' y='348' width='350' height='92' rx='10' fill='rgb(229,223,211)'/></svg>",
-      cap:'Placeholder — swap for a real screenshot', frame:'browser',
-      body:['Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.','Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.','At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores.'] },
+/* ============================================================
+   Cached references and constants. Nothing here is re-queried
+   or re-measured inside the frame loop.
+   ============================================================ */
+var cv     = document.getElementById('chain');
+var ctx    = cv.getContext('2d', { alpha:true });
+var stack  = document.getElementById('stack');
+var cards  = Array.prototype.slice.call(stack.querySelectorAll('[data-card]'));
+var boxes  = cards.map(function(c){ return c.querySelector('.card__box'); });
+var dims   = cards.map(function(c){ return c.querySelector('.card__dim'); });
+var rail   = document.getElementById('rail');
+var upBtn  = document.getElementById('up');
+var dnBtn  = document.getElementById('down');
+var roUn   = document.getElementById('ro-un');
+var roCap  = document.getElementById('ro-cap');
+var roCh   = document.getElementById('ro-ch');
+var roSt   = document.getElementById('ro-st');
+var N      = cards.length;
 
-    { n:'02', title:'Consectetur adipiscing elit', tag:'Internal app',
-      sum:'Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt.',
-      rest:'Ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.',
-      meta:['Finance','9 weeks','Retainer'],
-      img:null, cap:'', frame:'browser',
-      body:['Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.','Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.'] },
+var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+var mqMob  = window.matchMedia('(max-width: 760px)');
 
-    { n:'03', title:'Sed do eiusmod tempor', tag:'System design',
-      sum:'Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.',
-      rest:'Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.',
-      meta:['Logistics','12 weeks','Retainer'],
-      img:null, cap:'', frame:'browser',
-      body:['Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.','Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'] },
+var NODES  = 13;
+var OPEN   = [3,7,10];
+var isOpen = [];
+for(var q=0;q<NODES;q++){ isOpen[q] = OPEN.indexOf(q) !== -1; }
 
-    { n:'04', title:'Incididunt ut labore magna', tag:'Automation',
-      sum:'On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment.',
-      rest:'These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and nothing prevents our being able to do what we like best.',
-      meta:['Retail','4 weeks','Retainer'],
-      img:null, cap:'', frame:'browser',
-      body:['Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure some great pleasure.','But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated.'] }
-  ];
+var LOOP = 8400, SWEEP = 5200, HOLD = 2000, REL = 700;
+var RETAIN = 0.30;
+var UNCAP_MAX = 48000;
 
-  /* ---------- Elements ---------- */
-  var deck    = document.getElementById('deck');
-  var panels  = Array.prototype.slice.call(deck.querySelectorAll('.panel'));
-  var N       = panels.length;
-  var dotsD   = document.getElementById('dots-d');
-  var dotsM   = document.getElementById('dots-m');
-  var labelD  = document.getElementById('label-d');
-  var labelM  = document.getElementById('label-m');
-  var bar     = document.getElementById('bar');
-  var prevBtn = document.getElementById('prev');
-  var nextBtn = document.getElementById('next');
-  var themeMeta = document.querySelector('meta[name="theme-color"]');
-  var ov1 = document.getElementById('ov1');
-  var ov2 = document.getElementById('ov2');
+var GREEN = [60,210,145], MINT = [126,232,196], AMBER = [232,160,80], SLATE = [168,190,208];
 
-  /* Per-panel theme table — drives the mobile bar and the browser chrome tint */
-  var THEMES = {
-    ink:   { bg:'#0C1116', fg:'#F2EEE6', dot:'#49555F', dotOn:'#E2643A' },
-    paper: { bg:'#F2EEE6', fg:'#0C1116', dot:'#C9C1B2', dotOn:'#E2643A' }
-  };
+function rgba(c,a){ return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+function clamp(v,a,b){ return v < a ? a : (v > b ? b : v); }
+function lerp(a,b,t){ return a + (b - a) * t; }
+function easeInOutCubic(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
 
-  /* ---------- Single source of truth ---------- */
-  var current = 0;
+/* ============================================================
+   Layout. Measured on resize only.
+   ============================================================ */
+var W = 0, H = 0, DPR = 1, CARD_H = 0, MAX_SCROLL = 0, MOBILE = false;
 
-  function buildDots(host){
-    for(var i=0;i<N;i++){
-      var b = document.createElement('button');
-      b.className = 'dot';
-      b.type = 'button';
-      b.setAttribute('aria-label','Go to ' + panels[i].dataset.label);
-      (function(idx){ b.addEventListener('click', function(){ goTo(idx); }); })(i);
-      host.appendChild(b);
-    }
+function measure(){
+  W = window.innerWidth;
+  H = window.innerHeight;
+  DPR = Math.min(1.5, window.devicePixelRatio || 1);
+  cv.width  = Math.round(W * DPR);
+  cv.height = Math.round(H * DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  CARD_H = cards[0].getBoundingClientRect().height || H;
+  MAX_SCROLL = Math.max(1, document.documentElement.scrollHeight - H);
+  MOBILE = mqMob.matches;
+}
+
+/* ============================================================
+   Chain state
+   ============================================================ */
+var particles = [];
+var rings = [];
+var sealedAt = [];
+for(var r=0;r<NODES;r++){ sealedAt[r] = -1; }
+
+var uncaptured = 0, captured = 0;
+var lastUn = '', lastCap = '', lastCh = '', lastSt = '';
+var spawnAcc = 0;
+var loopT = 0, prevAuto = 0;
+
+function roundRect(x,y,w,h,rad){
+  ctx.beginPath();
+  ctx.moveTo(x+rad,y);
+  ctx.lineTo(x+w-rad,y); ctx.quadraticCurveTo(x+w,y,x+w,y+rad);
+  ctx.lineTo(x+w,y+h-rad); ctx.quadraticCurveTo(x+w,y+h,x+w-rad,y+h);
+  ctx.lineTo(x+rad,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-rad);
+  ctx.lineTo(x,y+rad); ctx.quadraticCurveTo(x,y,x+rad,y);
+  ctx.closePath();
+}
+
+/* Glow is a two pass stroke of the same path. Canvas shadowBlur on
+   every node on every frame was a measured performance problem. */
+function twoPass(color, glowA){
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = rgba(color, glowA);
+  ctx.stroke();
+  ctx.lineWidth = 1.1;
+  ctx.strokeStyle = rgba(color, 1);
+  ctx.stroke();
+}
+
+function draw(seal, dockP, dt){
+  ctx.clearRect(0,0,W,H);
+
+  var heroLen = Math.max(220, Math.min(H - 190, 940));
+  var dockLen = H * 1.02;
+  var len = lerp(heroLen, dockLen, dockP);
+  /* On a 390px card a centred chain sits straight through the headline, so
+     the phone hero holds it off to the right before it docks. */
+  var cx  = MOBILE ? lerp(W * 0.74, W * 0.90, dockP) : lerp(W * 0.70, W * 0.865, dockP);
+  var top = (H - len) / 2;
+  var gap = len / (NODES - 1);
+  var size = clamp(gap * 0.52, 9, 17);
+  var half = size / 2;
+  var sealY = top + seal * len;
+
+  /* Spine */
+  ctx.beginPath();
+  ctx.moveTo(cx, top);
+  ctx.lineTo(cx, top + len);
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = rgba(SLATE, 0.18);
+  ctx.stroke();
+
+  /* Sealed band: a soft gradient centred on the spine, never a hard edge. */
+  if(seal > 0.001){
+    var bandW = Math.max(40, size * 4);
+    var g = ctx.createLinearGradient(cx - bandW, 0, cx + bandW, 0);
+    g.addColorStop(0,   rgba(GREEN, 0));
+    g.addColorStop(0.5, rgba(GREEN, 0.075));
+    g.addColorStop(1,   rgba(GREEN, 0));
+    ctx.fillStyle = g;
+    ctx.fillRect(cx - bandW, top, bandW * 2, sealY - top);
+    var vg = ctx.createLinearGradient(0, sealY - gap, 0, sealY);
+    vg.addColorStop(0, rgba(GREEN, 0.05));
+    vg.addColorStop(1, rgba(GREEN, 0));
+    ctx.fillStyle = vg;
+    ctx.fillRect(cx - bandW, sealY - gap, bandW * 2, gap);
   }
-  buildDots(dotsD); buildDots(dotsM);
 
-  /* render() is the ONLY place that decides what is showing. */
-  function render(){
-    for(var i=0;i<N;i++){
-      var p = panels[i];
-      p.classList.toggle('is-current', i === current);
-      p.classList.toggle('is-above',   i <  current);
-      p.classList.toggle('is-below',   i >  current);
-      p.setAttribute('aria-hidden', i === current ? 'false' : 'true');
-      if('inert' in p) p.inert = (i !== current);
+  /* Nodes */
+  for(var i=0;i<NODES;i++){
+    var y = top + i * gap;
+    var sealedNow = (i / (NODES - 1)) <= seal + 0.0001;
+
+    if(sealedNow && sealedAt[i] < 0){
+      sealedAt[i] = 1;
+      rings.push({ x:cx, y:y, t:0, mint:isOpen[i] });
+    } else if(!sealedNow && sealedAt[i] > 0){
+      sealedAt[i] = -1;
     }
-    var cur = panels[current];
-    var label = cur.dataset.label;
-    labelD.innerHTML = '<b>' + String(current+1).padStart(2,'0') + '</b> &#183; ' + label;
-    labelM.textContent = label;
 
-    var t = THEMES[cur.dataset.theme] || THEMES.ink;
-    bar.style.setProperty('--bar-bg',     t.bg);
-    bar.style.setProperty('--bar-fg',     t.fg);
-    bar.style.setProperty('--bar-dot',    t.dot);
-    bar.style.setProperty('--bar-dot-on', t.dotOn);
-    document.documentElement.style.setProperty('--chrome-fg', t.fg);
-    if(themeMeta) themeMeta.setAttribute('content', t.bg);
+    if(!sealedNow && isOpen[i] && i < NODES - 1){
+      ctx.save();
+      ctx.setLineDash([3,4]);
+      ctx.beginPath();
+      ctx.moveTo(cx, y + half);
+      ctx.lineTo(cx, y + gap - half);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = rgba(AMBER, 0.55);
+      ctx.stroke();
+      ctx.restore();
+    }
 
-    [dotsD,dotsM].forEach(function(host){
-      for(var j=0;j<host.children.length;j++){
-        host.children[j].classList.toggle('on', j === current);
-        host.children[j].setAttribute('aria-current', j === current ? 'true' : 'false');
+    roundRect(cx - half, y - half, size, size, 2.5);
+
+    if(!sealedNow){
+      if(isOpen[i]){ twoPass(AMBER, 0.18); }
+      else{
+        ctx.lineWidth = 1.1;
+        ctx.strokeStyle = rgba(SLATE, 0.26);
+        ctx.stroke();
       }
-    });
-
-    prevBtn.disabled = current === 0;
-    nextBtn.disabled = current === N-1;
-
-    try{ history.replaceState(null, '', '#' + cur.id); }catch(e){}
-  }
-
-  /* Every navigation trigger funnels through here. */
-  function goTo(i){
-    var n = Math.max(0, Math.min(N-1, i));
-    if(n === current) return;
-    current = n;
-    render();
-    var sc = panels[current].querySelector('.panel__scroll');
-    if(sc) sc.scrollTop = 0;
-  }
-
-  /* ---------- Inner-scroll boundary check ---------- */
-  function scroller(){ return panels[current].querySelector('.panel__scroll'); }
-  function canConsume(dir){
-    var el = scroller();
-    if(!el) return false;
-    var max = el.scrollHeight - el.clientHeight;
-    if(max <= 2) return false;
-    return dir > 0 ? (el.scrollTop < max - 2) : (el.scrollTop > 2);
-  }
-  function overlayOpen(){ return ov1.classList.contains('open') || ov2.classList.contains('open'); }
-
-  /* ---------- Wheel ----------
-     Fire the moment the threshold is crossed, then lock. While locked we
-     return BEFORE touching lockUntil, so incoming events can never extend
-     it — that feedback loop is what makes a deck feel stuck. Lock length
-     scales with how fast the gesture accumulated.
-
-     The lock alone is not enough on a trackpad: momentum keeps delivering
-     events for ~1s after the fingers lift, so the lock expires mid-tail,
-     `acc` restarts from zero and the leftover deltas trip the threshold a
-     second time — one flick, two panels. So there is a SEPARATE settling
-     gate: after a fire, wheel input is ignored until either the stream
-     goes quiet (momentum died) or the deltas start rising again (the user
-     deliberately pushed a second time). It gates accumulation; it never
-     touches lockUntil, and a real second gesture escapes it immediately,
-     so it cannot produce the stuck feeling the lock rule guards against.
-
-     Momentum decays monotonically, which is what separates it from a real
-     gesture. A mouse wheel has no momentum at all and emits near-constant
-     notch deltas, so two consecutive non-decaying large deltas count as
-     deliberate and release the gate on the second notch. */
-  /* LOCK_MIN sits just above the 700ms panel transition so a second advance
-     can never begin while the first is still animating. */
-  var TH = 50, QUIET = 110, LOCK_MIN = 520, LOCK_MAX = 900;
-  var acc = 0, lockUntil = 0, lastEvt = 0, gestStart = 0, gestEvents = 0;
-  var settling = false, settleUntil = 0, prevAbs = 0, riseCount = 0;
-
-  window.addEventListener('wheel', function(e){
-    if(overlayOpen()) return;
-    var now = (window.performance && performance.now) ? performance.now() : Date.now();
-    var abs = Math.abs(e.deltaY);
-
-    /* Hard floor. Swallow everything, record nothing that could extend it. */
-    if(now < lockUntil){
-      lastEvt = now; prevAbs = abs; riseCount = 0;
-      if(e.cancelable) e.preventDefault();
-      return;
-    }
-
-    /* Settling gate: is this still the tail of the gesture that just fired?
-       Three ways out, and the hard deadline is the important one — without
-       it, continuous low-amplitude input after a flick never goes quiet and
-       never rises, so the gate would hold forever and the deck would feel
-       exactly as stuck as a self-renewing lock. */
-    if(settling){
-      if(abs > prevAbs + 8){ riseCount++; } else { riseCount = 0; }
-      var quiet    = (now - lastEvt) > QUIET;   // momentum died
-      var pushed   = riseCount >= 2;            // deltas rising: a real second gesture
-      var expired  = now > settleUntil;         // hard deadline, never renewed
-      if(quiet || pushed || expired){
-        settling = false; acc = 0; gestStart = now;
-      } else {
-        lastEvt = now; prevAbs = abs;
-        if(e.cancelable) e.preventDefault();
-        return;
-      }
-    }
-
-    var dir = e.deltaY > 0 ? 1 : -1;
-    if(canConsume(dir)){ acc = 0; return; }
-    if(e.cancelable) e.preventDefault();
-
-    if(now - lastEvt > 180){ acc = 0; gestStart = now; gestEvents = 0; }
-    lastEvt = now;
-    prevAbs = abs;
-    acc += e.deltaY;
-    gestEvents++;
-
-    if(Math.abs(acc) >= TH){
-      /* A gesture that cleared the threshold in a single event is a discrete
-         mouse-wheel notch, not a hard flick: it has no momentum to outrun and
-         dividing by its ~0ms duration would pin it to the maximum lock, which
-         is backwards. Discrete input gets the floor; only a gesture built from
-         several events gets scaled by how fast it accumulated. */
-      var lock = LOCK_MIN;
-      if(gestEvents > 1){
-        var elapsed = Math.max(40, now - gestStart);
-        var speed = Math.abs(acc) / elapsed;
-        lock = Math.min(LOCK_MAX, Math.max(LOCK_MIN, LOCK_MIN + speed * 170));
-      }
-      lockUntil = now + lock;
-      /* Only continuous gestures leave a momentum tail to gate against. A
-         discrete notch has none, so gating it would just make a mouse wheel
-         feel sluggish for no benefit. */
-      settling = gestEvents > 1;
-      settleUntil = now + lock + 700;
-      riseCount = 0;
-      goTo(current + (acc > 0 ? 1 : -1));
-      acc = 0;
-    }
-  }, { passive:false });
-
-  /* ---------- Touch ----------
-     Ask the current panel's own scroller whether it still had room in
-     that direction before treating the gesture as panel navigation. */
-  var tY = 0, tX = 0, tT = 0;
-  deck.addEventListener('touchstart', function(e){
-    var t = e.touches[0];
-    tY = t.clientY; tX = t.clientX;
-    tT = (window.performance && performance.now) ? performance.now() : Date.now();
-  }, { passive:true });
-
-  deck.addEventListener('touchend', function(e){
-    if(overlayOpen()) return;
-    var t = e.changedTouches[0];
-    var dy = t.clientY - tY, dx = t.clientX - tX;
-    if(Math.abs(dy) < 54) return;
-    if(Math.abs(dx) > Math.abs(dy)) return;
-    var dir = dy < 0 ? 1 : -1;
-    if(canConsume(dir)) return;
-    var now = (window.performance && performance.now) ? performance.now() : Date.now();
-    if(now - tT > 900 && Math.abs(dy) < 130) return;
-    goTo(current + dir);
-  }, { passive:true });
-
-  /* ---------- Keyboard ---------- */
-  window.addEventListener('keydown', function(e){
-    if(overlayOpen()){
-      if(e.key === 'Escape'){ ov2.classList.contains('open') ? closeOv(2) : closeOv(1); }
-      return;
-    }
-    var k = e.key;
-    if(k === 'ArrowDown' || k === 'PageDown' || k === ' '){
-      if(!canConsume(1)){ e.preventDefault(); goTo(current+1); }
-    } else if(k === 'ArrowUp' || k === 'PageUp'){
-      if(!canConsume(-1)){ e.preventDefault(); goTo(current-1); }
-    } else if(k === 'Home'){ e.preventDefault(); goTo(0); }
-    else if(k === 'End'){ e.preventDefault(); goTo(N-1); }
-  });
-
-  prevBtn.addEventListener('click', function(){ goTo(current-1); });
-  nextBtn.addEventListener('click', function(){ goTo(current+1); });
-
-  /* Any element with data-goto is a nav trigger too. */
-  document.addEventListener('click', function(e){
-    var el = e.target.closest ? e.target.closest('[data-goto]') : null;
-    if(!el) return;
-    e.preventDefault();
-    goTo(parseInt(el.getAttribute('data-goto'), 10));
-  });
-
-  /* ---------- Work list ---------- */
-  var list = document.getElementById('worklist');
-  CASES.forEach(function(c, i){
-    var b = document.createElement('button');
-    b.className = 'work';
-    b.type = 'button';
-    b.innerHTML =
-      '<span class="work__n">' + c.n + '</span>' +
-      '<span class="work__t">' + c.title + '</span>' +
-      '<span class="work__tag">' + c.tag + '</span>' +
-      '<span class="work__go" aria-hidden="true">&#8594;</span>';
-    b.addEventListener('click', function(){ openOv1(i); });
-    list.appendChild(b);
-  });
-
-  /* ---------- Overlays ---------- */
-  var lastFocus = null, activeCase = 0;
-
-  function openOv1(i){
-    activeCase = i;
-    var c = CASES[i];
-    document.getElementById('ov1-n').textContent = 'Case ' + c.n;
-    document.getElementById('ov1-title').textContent = c.title;
-    document.getElementById('ov1-sum').textContent = c.sum;
-    document.getElementById('ov1-rest').textContent = c.rest;
-
-    var meta = document.getElementById('ov1-meta');
-    meta.innerHTML = '';
-    c.meta.forEach(function(m){
-      var s = document.createElement('span'); s.textContent = m; meta.appendChild(s);
-    });
-
-    /* No image => collapse the column entirely rather than reserving
-       space for an empty placeholder box. */
-    var grid = document.getElementById('ov1-grid');
-    var frame = document.getElementById('ov1-frame');
-    var img = document.getElementById('ov1-img');
-    if(c.img){
-      grid.classList.remove('is-solo');
-      frame.setAttribute('data-frame', c.frame || 'browser');
-      img.src = c.img;
-      img.alt = c.title + ' — interface';
-      document.getElementById('ov1-cap').textContent = c.cap || '';
+    } else if(isOpen[i]){
+      ctx.fillStyle = rgba(MINT, 0.16); ctx.fill();
+      twoPass(MINT, 0.20);
+      var inner = size * 0.34;
+      ctx.fillStyle = rgba(MINT, 0.95);
+      ctx.fillRect(cx - inner/2, y - inner/2, inner, inner);
     } else {
-      grid.classList.add('is-solo');
-      img.removeAttribute('src');
+      ctx.fillStyle = rgba(GREEN, 0.08); ctx.fill();
+      twoPass(GREEN, 0.15);
     }
-
-    lastFocus = document.activeElement;
-    ov2.classList.remove('open');
-    ov1.classList.add('open');
-    document.body.classList.add('is-locked');
-    ov1.querySelector('.ov__scroll').scrollTop = 0;
-    ov1.querySelector('[data-close="1"]').focus();
   }
 
-  function openOv2(){
-    var c = CASES[activeCase];
-    document.getElementById('ov2-title').textContent = c.title;
-    var host = document.getElementById('ov2-body');
-    host.innerHTML = '';
-    c.body.forEach(function(t){
-      var p = document.createElement('p'); p.className = 'body'; p.textContent = t; host.appendChild(p);
-    });
-    ov2.classList.add('open');
-    ov2.querySelector('.ov__scroll').scrollTop = 0;
-    ov2.querySelector('[data-close="2"]').focus();
+  /* Seal rings */
+  for(var k=rings.length-1;k>=0;k--){
+    var rg = rings[k];
+    rg.t += dt;
+    var p = rg.t / 620;
+    if(p >= 1){ rings.splice(k,1); continue; }
+    ctx.beginPath();
+    ctx.arc(rg.x, rg.y, size * 0.7 + p * size * 2.2, 0, Math.PI * 2);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = rgba(rg.mint ? MINT : GREEN, (1 - p) * 0.45);
+    ctx.stroke();
   }
 
-  function closeOv(which){
-    if(which === 2){
-      ov2.classList.remove('open');
-      ov1.querySelector('[data-close="1"]').focus();
-      return;
+  if(reduce.matches) return { len:len, gap:gap, size:size, top:top, cx:cx, sealY:sealY };
+
+  /* Particles travel down the spine and spill sideways at an open
+     node. A spill is bounded to about 3.2 node heights and fades
+     over exactly that distance, so nothing rains across the page. */
+  var travel = gap * 0.0022;
+  for(var pi=particles.length-1;pi>=0;pi--){
+    var pt = particles[pi];
+    if(pt.spill){
+      pt.x += pt.vx * dt;
+      pt.y += pt.vy * dt;
+      var dist = Math.abs(pt.x - pt.ox);
+      var maxD = size * 3.2;
+      if(dist >= maxD){ particles.splice(pi,1); continue; }
+      ctx.fillStyle = rgba(AMBER, (1 - dist / maxD) * 0.8);
+      ctx.fillRect(pt.x - 0.9, pt.y - 0.9, 1.8, 1.8);
+      continue;
     }
-    ov2.classList.remove('open');
-    ov1.classList.remove('open');
-    document.body.classList.remove('is-locked');
-    if(lastFocus && lastFocus.focus) lastFocus.focus();
+    pt.y += travel * dt * pt.sp;
+    if(pt.y > top + len){ particles.splice(pi,1); continue; }
+    var ni = Math.round((pt.y - top) / gap);
+    if(ni !== pt.last && ni >= 0 && ni < NODES){
+      pt.last = ni;
+      var nodeSealed = (ni / (NODES - 1)) <= seal + 0.0001;
+      if(isOpen[ni] && !nodeSealed && Math.random() < 0.55){
+        pt.spill = true;
+        pt.ox = pt.x;
+        pt.vx = (Math.random() < 0.5 ? -1 : 1) * (0.018 + Math.random() * 0.012);
+        pt.vy = (Math.random() - 0.35) * 0.012;
+        continue;
+      }
+    }
+    ctx.fillStyle = rgba(SLATE, 0.5);
+    ctx.fillRect(pt.x - 0.8, pt.y - 0.8, 1.6, 1.6);
   }
 
-  document.getElementById('ov1-more').addEventListener('click', openOv2);
-  document.addEventListener('click', function(e){
-    var el = e.target.closest ? e.target.closest('[data-close]') : null;
-    if(!el) return;
-    closeOv(parseInt(el.getAttribute('data-close'), 10));
-  });
-
-  /* ---------- Init ---------- */
-  var hash = location.hash.replace('#','');
-  if(hash){
-    for(var i=0;i<N;i++){ if(panels[i].id === hash){ current = i; break; } }
+  spawnAcc += dt;
+  if(spawnAcc > 95 && particles.length < 90){
+    spawnAcc = 0;
+    particles.push({ x:cx, y:top, sp:0.75 + Math.random()*0.6, last:-1, spill:false });
   }
-  render();
+
+  return { len:len, gap:gap, size:size, top:top, cx:cx, sealY:sealY };
+}
+
+/* ============================================================
+   Readouts
+   ============================================================ */
+function fmt(n){
+  var s = String(Math.round(n));
+  return s.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+function readouts(seal, dt, moving){
+  var openUnsealed = 0;
+  for(var i=0;i<NODES;i++){
+    if(isOpen[i] && (i / (NODES - 1)) > seal + 0.0001) openUnsealed++;
+  }
+  if(openUnsealed > 0 && uncaptured < UNCAP_MAX){
+    uncaptured = Math.min(UNCAP_MAX, uncaptured + openUnsealed * dt * 0.9);
+  }
+  if(moving && seal > 0.001){
+    captured = Math.min(UNCAP_MAX, captured + seal * dt * 1.6);
+  }
+
+  var un = fmt(uncaptured), cp = fmt(captured), ch = Math.round(seal * 100) + '%';
+  var st = seal < 0.02 ? 'Mapping baseline' : (seal < 0.985 ? 'Optimising' : 'Running optimised');
+
+  if(un !== lastUn){ roUn.textContent  = un; lastUn = un; }
+  if(cp !== lastCap){ roCap.textContent = cp; lastCap = cp; }
+  if(ch !== lastCh){ roCh.textContent  = ch; lastCh = ch; }
+  if(st !== lastSt){ roSt.textContent  = st; lastSt = st; }
+}
+
+/* ============================================================
+   Card coverage, derived from scrollY arithmetic. No rects.
+   ============================================================ */
+var lastScale = [], lastDim = [], lastOpacity = -1, lastRail = false, lastActive = -1;
+for(var z=0;z<N;z++){ lastScale[z] = -1; lastDim[z] = -1; }
+
+function paintCards(sy){
+  for(var i=0;i<N;i++){
+    var p = clamp((sy - i * CARD_H) / CARD_H, 0, 1);
+    var sc = Math.round((1 - p * 0.045) * 1000) / 1000;
+    var dm = Math.round(p * 0.55 * 100) / 100;
+    if(sc !== lastScale[i]){ boxes[i].style.transform = 'scale(' + sc + ')'; lastScale[i] = sc; }
+    if(dm !== lastDim[i]){ dims[i].style.opacity = dm; lastDim[i] = dm; }
+  }
+}
+
+/* ============================================================
+   Frame loop
+   ============================================================ */
+var scrollY = 0, ticking = false, lastT = 0;
+
+function frame(ts){
+  var dt = lastT ? Math.min(48, ts - lastT) : 16;
+  lastT = ts;
+
+  var dockP = clamp(scrollY / (CARD_H * 0.9), 0, 1);
+  var scrollProg = clamp(scrollY / MAX_SCROLL, 0, 1);
+
+  loopT += dt;
+  if(loopT >= LOOP) loopT -= LOOP;
+  var auto;
+  if(loopT < SWEEP) auto = easeInOutCubic(loopT / SWEEP);
+  else if(loopT < SWEEP + HOLD) auto = 1;
+  else if(loopT < SWEEP + HOLD + REL) auto = 1 - (loopT - SWEEP - HOLD) / REL;
+  else auto = 0;
+
+  /* On the hero the tally resets at the end of each loop, so the
+     numbers stay legible instead of running away. */
+  if(dockP < 0.02 && auto === 0 && prevAuto > 0){ uncaptured = 0; captured = 0; }
+  prevAuto = auto;
+
+  /* Hand over from the self running loop to scroll, keeping a
+     baseline so it never resets to zero. */
+  var seal = lerp(auto, RETAIN + (1 - RETAIN) * scrollProg, dockP);
+
+  var op = MOBILE ? lerp(0.55, 0.10, dockP) : lerp(1, 0.30, dockP);
+  op = Math.round(op * 100) / 100;
+  if(op !== lastOpacity){ cv.style.opacity = op; lastOpacity = op; }
+
+  paintCards(scrollY);
+  draw(seal, dockP, dt);
+  readouts(seal, dt, dockP > 0.02 || auto > 0);
+
+  var railOn = dockP > 0.55;
+  if(railOn !== lastRail){ rail.classList.toggle('on', railOn); lastRail = railOn; }
+
+  var active = clamp(Math.round(scrollY / CARD_H), 0, N - 1);
+  if(active !== lastActive){
+    for(var i=0;i<N;i++){ marks[i].classList.toggle('on', i === active); }
+    upBtn.disabled = active === 0;
+    dnBtn.disabled = active === N - 1;
+    lastActive = active;
+  }
+
+  if(reduce.matches){ ticking = false; return; }
+  requestAnimationFrame(frame);
+}
+
+function staticFrame(){
+  var dockP = clamp(scrollY / (CARD_H * 0.9), 0, 1);
+  var scrollProg = clamp(scrollY / MAX_SCROLL, 0, 1);
+  var seal = lerp(0, RETAIN + (1 - RETAIN) * scrollProg, dockP);
+  var op = MOBILE ? lerp(0.55, 0.10, dockP) : lerp(1, 0.30, dockP);
+  cv.style.opacity = Math.round(op * 100) / 100;
+  paintCards(scrollY);
+  draw(seal, dockP, 16);
+  readouts(seal, 0, false);
+  var active = clamp(Math.round(scrollY / CARD_H), 0, N - 1);
+  for(var i=0;i<N;i++){ marks[i].classList.toggle('on', i === active); }
+  upBtn.disabled = active === 0;
+  dnBtn.disabled = active === N - 1;
+  rail.classList.toggle('on', dockP > 0.55);
+}
+
+/* ============================================================
+   Rail
+   ============================================================ */
+var marks = [];
+for(var m=0;m<N;m++){
+  (function(i){
+    var b = document.createElement('button');
+    b.className = 'mk';
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Go to ' + cards[i].dataset.label);
+    b.innerHTML = '<span class="mk-l">' + cards[i].dataset.label + '</span>' +
+                  '<span class="mk-n">' + String(i).padStart(2,'0') + '</span>' +
+                  '<span class="mk-d"></span>';
+    b.addEventListener('click', function(){ goTo(i); });
+    rail.appendChild(b);
+    marks.push(b);
+  })(m);
+}
+
+/* ============================================================
+   Navigation. One goTo for every affordance.
+   ============================================================ */
+var tweenId = 0;
+
+function goTo(index){
+  /* The cards are sticky, so a stuck card reports its stuck offset
+     rather than its layout position. Deriving the target from the
+     stack geometry is the only thing that survives a backward jump. */
+  var target = Math.min(index * CARD_H, document.documentElement.scrollHeight - H);
+  target = Math.max(0, target);
+  tweenTo(target);
+}
+
+function tweenTo(target){
+  var id = ++tweenId;
+  var start = window.pageYOffset;
+  var dist = Math.abs(target - start);
+  if(dist < 2) return;
+  var dur = Math.min(900, 260 + dist * 0.35);
+  var t0 = 0, fired = false;
+
+  /* Native smooth scrolling proved unreliable in embedded views.
+     The easing is a bonus, the landing is guaranteed by this guard. */
+  var guard = setTimeout(function(){
+    if(!fired && id === tweenId){ tweenId++; window.scrollTo(0, target); snapOn(); }
+  }, 110);
+
+  snapOff();
+  function step(ts){
+    if(id !== tweenId){ clearTimeout(guard); return; }
+    fired = true;
+    if(!t0) t0 = ts;
+    var p = Math.min(1, (ts - t0) / dur);
+    window.scrollTo(0, start + (target - start) * easeInOutCubic(p));
+    if(p < 1){ requestAnimationFrame(step); }
+    else { clearTimeout(guard); snapOn(); }
+  }
+  requestAnimationFrame(step);
+}
+
+/* Mandatory snap fights a programmatic tween, so it stands down
+   for the duration of one. */
+var snapT = 0;
+function snapOff(){ clearTimeout(snapT); document.documentElement.classList.add('no-snap'); }
+function snapOn(){ clearTimeout(snapT); snapT = setTimeout(function(){ document.documentElement.classList.remove('no-snap'); }, 60); }
+
+document.addEventListener('click', function(e){
+  var el = e.target.closest ? e.target.closest('[data-go]') : null;
+  if(!el) return;
+  e.preventDefault();
+  goTo(parseInt(el.getAttribute('data-go'), 10));
+});
+upBtn.addEventListener('click', function(){ goTo(clamp(Math.round(scrollY / CARD_H) - 1, 0, N - 1)); });
+dnBtn.addEventListener('click', function(){ goTo(clamp(Math.round(scrollY / CARD_H) + 1, 0, N - 1)); });
+
+window.addEventListener('keydown', function(e){
+  if(e.key === 'PageDown'){ e.preventDefault(); goTo(clamp(Math.round(scrollY / CARD_H) + 1, 0, N - 1)); }
+  else if(e.key === 'PageUp'){ e.preventDefault(); goTo(clamp(Math.round(scrollY / CARD_H) - 1, 0, N - 1)); }
+  else if(e.key === 'Home'){ e.preventDefault(); goTo(0); }
+  else if(e.key === 'End'){ e.preventDefault(); goTo(N - 1); }
+});
+
+/* ============================================================
+   Scroll and resize
+   ============================================================ */
+function onScroll(){
+  scrollY = window.pageYOffset;
+  if(reduce.matches && !ticking){
+    ticking = true;
+    requestAnimationFrame(function(){ ticking = false; staticFrame(); });
+  }
+}
+window.addEventListener('scroll', onScroll, { passive:true });
+
+var rzT = 0;
+window.addEventListener('resize', function(){
+  clearTimeout(rzT);
+  rzT = setTimeout(function(){
+    measure();
+    for(var i=0;i<N;i++){ lastScale[i] = -1; lastDim[i] = -1; }
+    lastOpacity = -1; lastActive = -1;
+    if(reduce.matches) staticFrame();
+  }, 120);
+});
+
+/* ============================================================
+   Start
+   ============================================================ */
+measure();
+scrollY = window.pageYOffset;
+if(reduce.matches){ staticFrame(); }
+else{ requestAnimationFrame(frame); }
 })();
 </script>
 </body>

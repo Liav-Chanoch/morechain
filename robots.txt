@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-# Staging sandboxes — noindex meta is on the pages too, but a crawler can
+# Staging sandboxes. The noindex meta is on those pages too, but a crawler can
 # reach the path without ever parsing the meta, so disallow it here as well.
 Disallow: /v2/
 Disallow: /v3/

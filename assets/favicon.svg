@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="MoreChain">
+  <title>MoreChain</title>
+  <rect width="1024" height="1024" rx="256" ry="256" fill="#3cd291"/>
+  <!-- Archivo 700 "M", traced from the rendered glyph as an exact polygon:
+       three counters (left and right open at the foot, middle apex pointing
+       down at the arm merge), so the icon needs no font to render. -->
+  <path fill="#07120C" d="M296 729 L296 294 L439 294 L523 590 L612 294 L753 294 L753 729 L660 729 L660 376 L562 729 L481 729 L384 378 L384 729 Z"/>
+</svg>

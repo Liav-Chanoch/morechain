@@ -1,60 +1,101 @@
 # MoreChain
 
-Marketing site for **MoreChain** — a systems consultancy that finds where an
-operation is bleeding money, builds the automation/software that stops it, and
-prices itself as a share of the savings rather than as an hourly rate.
+Marketing site for **MoreChain**, which builds custom operational systems
+(automation, internal tools, process redesign) for owner-run businesses and
+prices itself as a share of the verified gain.
 
-The commercial model the site has to communicate:
+Built to the brief in `HANDOFF - morechain.md`. Live at
+<https://liav-chanoch.github.io/morechain/>.
 
-1. **Discovery** — pain points identified, at no cost to the client.
-2. **Quantify** — how much money a tailor-made system would actually save.
-3. **Price** — the system is priced as a percentage of that saved money.
-4. **Retainer** — the client pays monthly, only after the cost efficiency is proven.
-
-> Copy is currently lorem ipsum placeholder. Structure, layout, interaction and
-> SEO scaffold are real; wording is not.
+> **Copy status.** The hero is verbatim from the brief. Screens 01 to 05 carry
+> provisional copy written to the tone rules below, because the approved
+> prototypes (`MoreChain Site v5.dc.html`, `MoreChain Mobile.dc.html`) were not
+> available at build time. Replace those strings with the exact ones from v5
+> before launch.
 
 ## Why it exists
 
-Two audiences land here: an operator who wants to know what breaks in their
-business and what it costs, and a buyer who needs to understand a pricing model
-that is unusual enough to need explaining before it can be trusted. The site is
-one continuous argument from "here is the leak" to "here is why you pay nothing
-until it's proven", which is why it is a linear deck rather than a nav-driven
-brochure site.
+Two audiences land here: an owner who wants to know where their operation is
+running below what it could, and a buyer who has to understand a fee model
+unusual enough to need explaining before it can be trusted. The site is one
+continuous argument, hero through contact, which is why it is a linear card
+stack rather than a nav-driven brochure.
 
-## Architecture
+## Content rules, non-negotiable
 
-A single-page **card-stack deck**: one `.deck` container holding N
-full-viewport `.panel` elements stacked by z-index, plus persistent chrome
-rendered *outside* the deck so it survives navigation, plus two independent
-overlay layers for case detail.
+| Rule | Detail |
+| --- | --- |
+| No em dash | Not in copy, headings, labels, alt text, comments or commit messages. Use a comma, a colon, a period or parentheses. |
+| Optimisation, never repair | The client is not broken, they have untapped headroom. Banned: fix, repair, broken, leak, bleeding money, problem, damage, what is wrong. Preferred: headroom, upside, opportunity, gain, capture, unlock, optimise, improve, compounding. Internal code identifiers may use any name. |
+| Custom-built throughline | Every screen carries the claim that systems are built from scratch for that one operation. |
 
-The parts that are load-bearing and easy to break:
+## Structure
+
+Six full-viewport cards. Each pins to the top while the next slides over it;
+the covered card scales down and darkens.
+
+| # | id | Label | Purpose |
+|---|----|-------|---------|
+| 0 | `p-0` | (hero) | Positioning and primary CTA |
+| 1 | `p-1` | 01 / WHAT WE DO | The service, four offerings |
+| 2 | `p-2` | 02 / HOW IT WORKS | Four-step engagement and risk reversal |
+| 3 | `p-3` | 03 / WHO WE ARE | Credibility, three pillars |
+| 4 | `p-4` | 04 / OUR CLIENTS | Sector chips and six client names |
+| 5 | `p-5` | 05 / START WITH THE FREE PART | Contact and footer |
+
+Fixed chrome sits above the cards: logo pill, "Book discovery" pill, the live
+readout (UNCAPTURED / CAPTURED / CHAIN plus a status word), step buttons, and a
+numbered rail on the right edge that fades in once the hero has been left.
+
+## The chain
+
+A single fixed `<canvas>` drawing 13 record nodes on a hairline spine. Three
+nodes (3, 7, 10) start open. Particles travel down the spine and spill sideways
+at an open node. A green seal front sweeps the chain; behind it nodes are
+sealed and nothing more spills.
 
 | Concern | Rule |
 | --- | --- |
-| State | One `current` integer. One `goTo(i)`. One `render()`. No second code path decides what is showing. |
-| Wheel | Fires the instant the delta threshold is crossed, then locks, and **returns before touching `lockUntil`** while locked so events can't extend it. Lock floor sits above the 700ms transition; a gesture that cleared the threshold in one event is a discrete notch and gets the floor rather than being scaled by its ~0ms duration. |
-| Momentum | A separate settling gate, because the lock alone expires mid-tail on a trackpad and the leftover deltas trip the threshold again — one flick, two panels. It releases on a quiet stream, on rising deltas (a real second gesture), or on a hard deadline that is never renewed. Discrete notches skip it; they have no momentum. |
-| Touch | Checks the current panel's own scroller for remaining room in that direction *before* treating a swipe as panel navigation. |
-| Reduced motion | Same `render()`, same classes; CSS branches transform → opacity. |
-| Mobile chrome | Below `860px` the floating dots/arrows/label are replaced by an opaque bottom bar, themed per panel via CSS custom properties set from a JS theme table. |
-| Panel height | Content bands are sized off `svh`, never `dvh` — mobile Safari re-expands its toolbar after a scroll settles and `dvh`-sized content gets stranded behind the bar. |
-| First paint | Every panel has a **static** CSS default matching its initial JS state, so the highest-z-index panel can't paint on top before the script runs. |
-| Overlays | Case list → overlay 1 (summary, slides in) → overlay 2 (narrower, stacked, full detail). Closing 2 returns to 1. |
-| Overlay layout | Desktop two columns, **top-aligned** (centering a tall media element against short text reads as a crop). Mobile single column with the media forced between the two text blocks via `display:contents` + `order` — no DOM reordering, desktop untouched. |
-| Media | Screenshots get a CSS-drawn frame. Already-chromed sources use `data-frame="plain"` so they aren't double-bezelled. No image at all → the column collapses; no empty placeholder box. |
+| Node states | Untouched: slate stroke, no fill. Open: amber stroke plus a dashed amber connector to the next node. Sealed: green stroke, faint green fill. Previously-open once sealed: mint stroke, mint fill, and a solid mint square centred inside it. That last distinction matters to the client. |
+| Glow | A two pass stroke (5px at low alpha, then 1.1px opaque), never `ctx.shadowBlur`. Per-node shadowBlur every frame was a measured performance problem. |
+| Hero | Self running. An 8.4s loop: sweep 5.2s on a cubic ease, hold 2s, release 0.7s. Full opacity, vertically inset to clear the CTA above and the step buttons below. |
+| Handover | On scroll it cross-fades to a scroll-driven value with a retained baseline, `lerp(auto, RETAIN + (1 - RETAIN) * scrollProgress, dockProgress)`, `RETAIN` 0.30, so it never resets to zero. |
+| Docked | Canvas at 0.30 opacity (0.10 on mobile), chain grown to about 1.02 of viewport height, sitting near the right edge so card copy reads over it. |
+| Spill | Bounded to about 3.2 node heights and faded over exactly that distance, so particles never rain across the viewport. |
+| Reduced motion | One static frame per scroll position, no particles. |
+
+## Interaction
+
+| Concern | Rule |
+| --- | --- |
+| Scrolling | Wheel and trackpad scroll the page normally. |
+| One entry point | Logo, header CTA, both hero CTAs, step buttons and every rail marker call the same `goTo(index)`. |
+| `goTo` never reads `offsetTop` | The cards are sticky, so a stuck card reports its stuck offset rather than its layout position, which silently breaks every backward jump. The target comes from stack geometry instead. |
+| Tween | Own rAF tween, ease-in-out cubic, `min(900, 260 + distance * 0.35)` ms, guarded by a 110ms `setTimeout` that jumps straight to the target if the first frame has not fired. Native smooth scrolling proved unreliable in embedded views: the easing is a bonus, the landing is guaranteed. |
+| Snap | Mandatory scroll snap on mobile stands down for the duration of a programmatic tween, since the two fight each other. |
+| Keyboard | PageUp and PageDown move one screen. Home and End jump to the ends. |
+
+## Traps this build already hit
+
+1. **A canvas is a replaced element.** `position:fixed; inset:0` with `width:auto` resolves to its intrinsic (backing store) size, not the viewport, so the chain rendered at DPR times the viewport and landed off screen. It needs explicit `width:100%; height:100%`.
+2. **Connectors cannot be grid children of the tile row.** With `repeat(4, minmax(0,1fr))` the three connectors each consumed a column and wrapped the row into two. The row is flex.
+3. `min-height:0` on every grid inside a card, because the cards are `overflow:hidden` flex columns and a child grid taller than its space will not shrink.
+4. No `backdrop-filter` over the animating canvas. Every canvas repaint re-runs every blur. The chrome uses solid `rgba(7,11,14,0.93)`.
+5. No animated `filter: brightness` on full-viewport layers. Each card has an absolutely positioned dark overlay whose `opacity` is animated so it composites.
+6. Nothing is measured per frame. References are cached at init, card coverage comes from `scrollY` arithmetic rather than `getBoundingClientRect`, style writes are skipped when the value has not changed, and DPR is capped at 1.5.
+7. `minmax(0, 1fr)` everywhere, since `1fr` is `minmax(auto, 1fr)` and one long unbreakable string blows out its track.
+8. Client names are `white-space:nowrap`. `dereh-haski.co.il` breaking at its own hyphen misreads the client's name.
 
 ## Stack
 
 | Layer | Choice | Why |
 | --- | --- | --- |
-| Markup/style/script | Single `index.html`, inline CSS + JS | No build step, no dependency surface, one file to reason about |
-| Fonts | Google Fonts via `<link>` — Bricolage Grotesque, Space Grotesk, JetBrains Mono | Display / body / mono, loaded in one request |
-| Graphics | Inline SVG (the chain motif) | Scales, themes with `currentColor`, no binaries |
+| Markup, style, script | Single `index.html`, inline CSS and JS | No build step, no dependency surface |
+| Fonts | Archivo 400/500/600/700 and IBM Plex Mono 400/500 | Currently loaded from Google Fonts. The brief asks for self-hosting; see Open items. |
+| Chain | Inline `<canvas>` 2D | 13 nodes, particles, seal front |
+| Icons | Hand-traced vector `M` plus generated PNGs | `assets/favicon.svg` carries the Archivo 700 `M` as an exact polygon, so it needs no font |
 | Hosting | GitHub Pages, branch `main`, root `/` | Same pattern that serves liav-chanoch.com |
-| SEO | `rel=canonical`, JSON-LD `ProfessionalService`, `sitemap.xml`, `robots.txt` | Staging paths are disallowed in robots *and* carry `noindex` |
+| SEO | `rel=canonical`, JSON-LD `ProfessionalService`, `sitemap.xml`, `robots.txt` | Staging paths are disallowed in robots and carry `noindex` |
 
 ## Run locally
 
@@ -62,22 +103,39 @@ The parts that are load-bearing and easy to break:
 python3 -m http.server 8000 --directory .
 ```
 
-Then open <http://localhost:8000>. Test both sides of the `860px` breakpoint —
-the mobile bottom bar and the desktop floating chrome are entirely different
-components, so a change to one is not a change to the other.
+Then open <http://localhost:8000>. Check both sides of the 760px breakpoint:
+below it the rail and readout change shape and the tile row becomes a 2x2 grid.
 
 ## Staging
 
 `/v2/` is a sandbox for trying changes without touching production. It is
-tagged `noindex, nofollow` and disallowed in `robots.txt`. Any asset it needs is
-referenced at `../assets/...` — the same file production uses, never a copy — so
-promoting a sandbox later is an HTML swap, not an asset migration.
+tagged `noindex, nofollow` and disallowed in `robots.txt`, and it references
+shared assets at `../assets/`, so promoting it later is an HTML swap rather
+than an asset migration.
 
 ## Environment variables
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| _(none)_ | — | The site is fully static with no runtime configuration. |
+| _(none)_ | | The site is fully static with no runtime configuration. |
 
-`.env.example` is committed as the template for anything added later (a form
-endpoint, an analytics id). All `.env*` variants are gitignored.
+`.env.example` is committed as the template for anything added later. All
+`.env*` variants are gitignored.
+
+## Open items
+
+Waiting on the client, per section 10 of the brief:
+
+- Exact copy for screens 01 to 05, from `MoreChain Site v5.dc.html`
+- The three case studies for the parked SELECTED SYSTEMS screen
+- A real client quote with name, role and company, plus the two counters
+- Logo files for the six clients, to replace the text names
+- The real LinkedIn URL (currently a dead anchor)
+- Confirmation that `hello@morechain.co` is live
+
+Waiting on a decision here:
+
+- **Self-hosted fonts.** The brief asks for Archivo and IBM Plex Mono to be
+  self-hosted. That means downloading woff2 files into `assets/fonts/`, which
+  needs an explicit go-ahead. Until then they load from Google Fonts with
+  `display=swap`.
