@@ -93,11 +93,15 @@ a{ color:inherit; text-decoration:none; }
 .card{
   position:sticky; top:0;
   height:100vh; height:100svh;
+  /* Gutter as padding, not as a margin on the box: a margin collapses
+     through and makes the scroll pitch larger than the card height, which
+     puts every goTo target between two cards. */
+  padding:var(--gut);
 }
 .card__box{
   position:relative; overflow:hidden;
-  height:calc(100% - (var(--gut) * 2));
-  margin:var(--gut);
+  height:100%;
+  margin:0;
   border:1px solid var(--hair);
   border-radius:var(--r);
   display:flex; flex-direction:column;
@@ -553,8 +557,12 @@ h2 .dim{ color:var(--faint-2); }
   html.no-snap{ scroll-snap-type:none; }
   body{ overscroll-behavior-y:contain; }
   /* scroll-snap-stop is the load-bearing one: without it a fast flick skips
-     two or three cards and the seal front jumps in a single frame. */
-  .card{ scroll-snap-align:start; scroll-snap-stop:always; }
+     two or three cards and the seal front jumps in a single frame.
+     position:static matters just as much: a sticky card reports its stuck
+     offset as its snap area, so every stuck card claims the same snap
+     position and the container snaps back to the wrong card. The canvas is
+     fixed regardless, so nothing needs to stick here. */
+  .card{ position:relative; top:auto; scroll-snap-align:start; scroll-snap-stop:always; }
 
   /* Swipe is the navigation on a phone, so the rail and the step buttons go.
      Only the logo and the Book pill navigate. */
