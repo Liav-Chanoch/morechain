@@ -64,7 +64,7 @@ a{ color:inherit; text-decoration:none; }
 
 .mono{
   font-family:var(--m); font-weight:500; text-transform:uppercase;
-  letter-spacing:.14em; font-size:clamp(9px,1.05vh,11px);
+  letter-spacing:.14em; font-size:clamp(9px,1.35vh,14px);
 }
 
 /* ==========================================================
@@ -148,13 +148,14 @@ a{ color:inherit; text-decoration:none; }
 h1,h2{
   margin:0; font-weight:700;
   letter-spacing:-.042em; line-height:.94;
-  font-size:clamp(1.7rem,5.6vh,3.4rem);
+  font-size:clamp(1.7rem,5.6vh,4.2rem);
 }
 h1{
-  font-size:clamp(2.4rem,10vh,5.6rem); letter-spacing:-.045em; line-height:.9;
-  /* The reference wraps the hero headline at about half the card width.
-     An em-based cap keeps that wrap point as the type scales. */
-  max-width:9.2em;
+  font-size:clamp(2.2rem,11.5vh,7rem); letter-spacing:-.045em; line-height:.9;
+  /* Both references put the hero headline across 42% of the width (388px at
+     924, 835px at 2000), so the cap tracks the viewport rather than the font
+     size. An em cap drifts, because the type does not scale with width. */
+  max-width:42vw;
 }
 h1 i{ font-style:italic; color:var(--green); }
 h3{
@@ -164,11 +165,11 @@ h3{
 p{ margin:0; }
 .lead{
   color:var(--ink-2); max-width:52ch;
-  font-size:clamp(12px,1.75vh,17px); line-height:1.52;
+  font-size:clamp(12px,2.3vh,23px); line-height:1.52;
 }
 .body{
   color:var(--muted);
-  font-size:clamp(10.5px,1.45vh,14px); line-height:1.5;
+  font-size:clamp(10.5px,1.72vh,17px); line-height:1.5;
 }
 .head{ display:flex; flex-direction:column; gap:clamp(9px,2.2vh,26px); }
 .grow{ margin-top:auto; }
@@ -176,7 +177,7 @@ p{ margin:0; }
 /* A headline carrying a full sentence needs a smaller ceiling than a
    three-word one, or it eats the card at short viewport heights. */
 h2.h2--long{
-  font-size:clamp(1.45rem,5.4vh,2.9rem); line-height:1.05; letter-spacing:-.034em;
+  font-size:clamp(1.45rem,5.4vh,3.5rem); line-height:1.05; letter-spacing:-.034em;
   /* Keeps the reference wrap where the headline is not already inside a
      constrained column. */
   max-width:13em;
@@ -186,8 +187,9 @@ h2 .dim{ color:var(--faint-2); }
 /* Hero eyebrow: a bordered pill with an amber node */
 .eyebrow{
   display:inline-flex; align-items:center; gap:9px; align-self:flex-start;
-  border:1px solid var(--hair); border-radius:999px; padding:7px 14px;
-  font-family:var(--m); font-weight:500; font-size:clamp(9px,1.05vh,11px);
+  border:1px solid var(--hair); border-radius:999px;
+  padding:clamp(7px,1.1vh,12px) clamp(14px,2vh,22px);
+  font-family:var(--m); font-weight:500; font-size:clamp(9px,1.25vh,13px);
   letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
 }
 .eyebrow i{
@@ -198,7 +200,7 @@ h2 .dim{ color:var(--faint-2); }
 /* Hero scroll hint */
 .hint{
   display:inline-flex; align-items:center; gap:.6em;
-  font-family:var(--m); font-weight:400; font-size:10.5px;
+  font-family:var(--m); font-weight:400; font-size:clamp(10px,1.6vh,15px);
   letter-spacing:.16em; text-transform:uppercase; color:var(--faint-2);
   margin-top:clamp(14px,2.6vh,30px);
 }
@@ -245,7 +247,7 @@ h2 .dim{ color:var(--faint-2); }
 
 /* Pillars gain a kicker line above the body */
 .pillar__k{
-  color:var(--ink-2); font-size:clamp(11px,1.55vh,15px);
+  color:var(--ink-2); font-size:clamp(11px,1.85vh,18px);
   line-height:1.3; font-weight:500; letter-spacing:-.01em;
 }
 .pillar--edge .mono{ color:var(--amber); }
@@ -414,14 +416,14 @@ h2 .dim{ color:var(--faint-2); }
 .mark{
   display:inline-flex; align-items:baseline; gap:0;
   font-weight:700; letter-spacing:-.03em; line-height:1;
-  font-size:15px;
+  font-size:clamp(15px,2.2vh,21px);
 }
 .mark__a{ color:var(--ink); }
 .mark__b{ color:var(--green); }
 .mark__n{
-  width:4.5px; height:4.5px; border-radius:1.5px;
+  width:.3em; height:.3em; border-radius:.1em;
   background:var(--mint); align-self:flex-end;
-  margin:0 0 1px 3px;
+  margin:0 0 .07em .2em;
   flex:0 0 auto;
 }
 /* Below about 13px the node stops reading and is dropped. */
@@ -440,17 +442,17 @@ h2 .dim{ color:var(--faint-2); }
 }
 .pill{
   top:calc(var(--gut) + 14px);
-  padding:10px 18px; min-height:40px;
+  padding:clamp(10px,1.5vh,16px) clamp(18px,2.4vh,28px); min-height:40px;
   display:flex; align-items:center; gap:.5em;
-  font-weight:500; font-size:13.5px; letter-spacing:-.005em;
+  font-weight:500; font-size:clamp(13.5px,1.9vh,18px); letter-spacing:-.005em;
   transition:background 200ms var(--ease), color 200ms var(--ease), border-color 200ms var(--ease), transform 200ms var(--ease);
 }
 /* Hero CTAs sit in the flow rather than as fixed chrome. */
 .cta{
   display:inline-flex; align-items:center; gap:.55em;
   border:1px solid var(--hair); border-radius:999px;
-  padding:13px 22px; font-weight:500;
-  font-size:clamp(13px,1.6vh,15px); letter-spacing:-.005em;
+  padding:clamp(12px,1.8vh,20px) clamp(20px,2.9vh,34px); font-weight:500;
+  font-size:clamp(13px,2.2vh,20px); letter-spacing:-.005em;
   background:var(--chrome-bg); color:var(--ink);
   transition:background 200ms var(--ease), border-color 200ms var(--ease), transform 200ms var(--ease);
 }
@@ -471,13 +473,13 @@ h2 .dim{ color:var(--faint-2); }
 }
 .readout{
   position:static;
-  border-radius:12px; padding:9px 15px;
-  display:flex; gap:20px; align-items:baseline;
+  border-radius:14px; padding:clamp(9px,1.4vh,15px) clamp(15px,2vh,22px);
+  display:flex; gap:clamp(18px,2.8vh,32px); align-items:baseline;
 }
 .ro{ display:flex; align-items:baseline; gap:7px; }
-.ro-k{ color:var(--faint-2); font-family:var(--m); font-size:9px; letter-spacing:.16em; text-transform:uppercase; }
+.ro-k{ color:var(--faint-2); font-family:var(--m); font-size:clamp(9px,1.25vh,12px); letter-spacing:.16em; text-transform:uppercase; }
 .ro-v{
-  font-family:var(--m); font-weight:500; font-size:13px; color:var(--ink);
+  font-family:var(--m); font-weight:500; font-size:clamp(13px,2.1vh,20px); color:var(--ink);
   font-variant-numeric:tabular-nums;
   /* Fixed width so a digit change never shifts the row. */
   min-width:7ch;
@@ -487,7 +489,7 @@ h2 .dim{ color:var(--faint-2); }
 .ro-v[data-k="chain"]{ color:var(--ink); min-width:4ch; }
 /* The status word sits outside the pill, on the page. */
 .ro-status{
-  color:var(--green); font-family:var(--m); font-size:9px; font-weight:500;
+  color:var(--green); font-family:var(--m); font-size:clamp(9px,1.25vh,12px); font-weight:500;
   letter-spacing:.16em; text-transform:uppercase; min-width:17ch;
 }
 
@@ -940,13 +942,19 @@ function roundRect(x,y,w,h,rad){
   ctx.closePath();
 }
 
-/* Glow is a two pass stroke of the same path. Canvas shadowBlur on
-   every node on every frame was a measured performance problem. */
-function twoPass(color, glowA){
-  ctx.lineWidth = 5;
+/* Glow is a two pass stroke of the same path, never shadowBlur, which was a
+   measured cost when it ran per node per frame. The widths are proportional
+   rather than fixed: the brief's 5px halo and 1.1px stroke are correct at the
+   reference's small node, but on a node twice that size the same absolute
+   values read as thin wire instead of a phosphor bloom. */
+function twoPass(color, glowA, size){
+  ctx.lineWidth = Math.max(5, size * 0.5);
+  ctx.strokeStyle = rgba(color, glowA * 0.55);
+  ctx.stroke();
+  ctx.lineWidth = Math.max(4, size * 0.28);
   ctx.strokeStyle = rgba(color, glowA);
   ctx.stroke();
-  ctx.lineWidth = 1.1;
+  ctx.lineWidth = Math.max(1.1, size * 0.085);
   ctx.strokeStyle = rgba(color, 1);
   ctx.stroke();
 }
@@ -959,20 +967,36 @@ function draw(seal, dockP, dt){
   var len = lerp(heroLen, dockLen, dockP);
   /* On a 390px card a centred chain sits straight through the headline, so
      the phone hero holds it off to the right before it docks. */
-  var cx  = MOBILE ? lerp(W * 0.74, W * 0.90, dockP) : W * 0.862;
+  /* The chain lane is not a flat percentage. The reference puts it at 86% of
+     a 924px viewport and 76% of a 2000px one, which is the same line:
+     0.672W + 172. A flat fraction either collides with the header pill at
+     narrow widths or drifts too far right at wide ones. */
+  var cx  = MOBILE ? lerp(W * 0.74, W * 0.90, dockP) : Math.min(W * 0.90, W * 0.672 + 172);
   var top = (H - len) / 2;
   var gap = len / (NODES - 1);
-  var size = clamp(gap * 0.52, 9, 17);
+  var size = clamp(gap * 0.60, 9, 40);
   var half = size / 2;
   var sealY = top + seal * len;
 
-  /* Spine */
+  /* Spine: dim for its whole length, lit behind the seal front. */
   ctx.beginPath();
   ctx.moveTo(cx, top);
   ctx.lineTo(cx, top + len);
   ctx.lineWidth = 1;
   ctx.strokeStyle = rgba(SLATE, 0.18);
   ctx.stroke();
+
+  if(seal > 0.001){
+    ctx.beginPath();
+    ctx.moveTo(cx, top);
+    ctx.lineTo(cx, sealY);
+    ctx.lineWidth = Math.max(3, size * 0.22);
+    ctx.strokeStyle = rgba(GREEN, 0.10);
+    ctx.stroke();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = rgba(GREEN, 0.75);
+    ctx.stroke();
+  }
 
   /* Sealed band: a soft gradient centred on the spine, never a hard edge. */
   if(seal > 0.001){
@@ -1004,7 +1028,7 @@ function draw(seal, dockP, dt){
 
     if(!sealedNow && isOpen[i] && i < NODES - 1){
       ctx.save();
-      ctx.setLineDash([3,4]);
+      ctx.setLineDash([Math.max(3, size*0.16), Math.max(4, size*0.2)]);
       ctx.beginPath();
       ctx.moveTo(cx, y + half);
       ctx.lineTo(cx, y + gap - half);
@@ -1017,22 +1041,47 @@ function draw(seal, dockP, dt){
     roundRect(cx - half, y - half, size, size, 2.5);
 
     if(!sealedNow){
-      if(isOpen[i]){ twoPass(AMBER, 0.18); }
+      if(isOpen[i]){ twoPass(AMBER, 0.30, size); }
       else{
-        ctx.lineWidth = 1.1;
+        ctx.lineWidth = Math.max(1.1, size * 0.06);
         ctx.strokeStyle = rgba(SLATE, 0.26);
         ctx.stroke();
       }
     } else if(isOpen[i]){
       ctx.fillStyle = rgba(MINT, 0.16); ctx.fill();
-      twoPass(MINT, 0.20);
+      twoPass(MINT, 0.34, size);
       var inner = size * 0.34;
+      ctx.fillStyle = rgba(MINT, 0.22);
+      ctx.fillRect(cx - inner, y - inner, inner * 2, inner * 2);
       ctx.fillStyle = rgba(MINT, 0.95);
       ctx.fillRect(cx - inner/2, y - inner/2, inner, inner);
     } else {
       ctx.fillStyle = rgba(GREEN, 0.08); ctx.fill();
-      twoPass(GREEN, 0.15);
+      twoPass(GREEN, 0.28, size);
     }
+  }
+
+  /* The advancing front: a bright tick across the spine with a soft bloom
+     behind it, so the eye can see where the sealing has reached. */
+  if(seal > 0.002 && seal < 0.999){
+    var bloom = size * 2.6;
+    var rg2 = ctx.createRadialGradient(cx, sealY, 0, cx, sealY, bloom);
+    rg2.addColorStop(0, rgba(GREEN, 0.30));
+    rg2.addColorStop(0.55, rgba(GREEN, 0.08));
+    rg2.addColorStop(1, rgba(GREEN, 0));
+    ctx.fillStyle = rg2;
+    ctx.fillRect(cx - bloom, sealY - bloom, bloom * 2, bloom * 2);
+
+    var tick = size * 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - tick, sealY);
+    ctx.lineTo(cx + tick, sealY);
+    ctx.lineWidth = Math.max(3, size * 0.22);
+    ctx.strokeStyle = rgba(GREEN, 0.16);
+    ctx.stroke();
+    ctx.lineWidth = Math.max(1.2, size * 0.06);
+    ctx.strokeStyle = rgba(GREEN, 0.9);
+    ctx.stroke();
   }
 
   /* Seal rings */
@@ -1042,8 +1091,8 @@ function draw(seal, dockP, dt){
     var p = rg.t / 620;
     if(p >= 1){ rings.splice(k,1); continue; }
     ctx.beginPath();
-    ctx.arc(rg.x, rg.y, size * 0.7 + p * size * 2.2, 0, Math.PI * 2);
-    ctx.lineWidth = 1;
+    ctx.arc(rg.x, rg.y, size * 0.7 + p * size * 2.4, 0, Math.PI * 2);
+    ctx.lineWidth = Math.max(1, size * 0.045);
     ctx.strokeStyle = rgba(rg.mint ? MINT : GREEN, (1 - p) * 0.45);
     ctx.stroke();
   }
@@ -1062,8 +1111,12 @@ function draw(seal, dockP, dt){
       var dist = Math.abs(pt.x - pt.ox);
       var maxD = size * 3.2;
       if(dist >= maxD){ particles.splice(pi,1); continue; }
-      ctx.fillStyle = rgba(AMBER, (1 - dist / maxD) * 0.8);
-      ctx.fillRect(pt.x - 0.9, pt.y - 0.9, 1.8, 1.8);
+      var a = (1 - dist / maxD) * 0.85;
+      var pr = Math.max(1.4, size * 0.085);
+      ctx.beginPath(); ctx.arc(pt.x, pt.y, pr * 2.6, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(AMBER, a * 0.16); ctx.fill();
+      ctx.beginPath(); ctx.arc(pt.x, pt.y, pr, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(AMBER, a); ctx.fill();
       continue;
     }
     pt.y += travel * dt * pt.sp;
@@ -1080,8 +1133,9 @@ function draw(seal, dockP, dt){
         continue;
       }
     }
-    ctx.fillStyle = rgba(SLATE, 0.5);
-    ctx.fillRect(pt.x - 0.8, pt.y - 0.8, 1.6, 1.6);
+    var sr = Math.max(1.2, size * 0.07);
+    ctx.beginPath(); ctx.arc(pt.x, pt.y, sr, 0, Math.PI * 2);
+    ctx.fillStyle = rgba(SLATE, 0.5); ctx.fill();
   }
 
   spawnAcc += dt;
