@@ -948,13 +948,13 @@ function roundRect(x,y,w,h,rad){
    reference's small node, but on a node twice that size the same absolute
    values read as thin wire instead of a phosphor bloom. */
 function twoPass(color, glowA, size){
-  ctx.lineWidth = Math.max(5, size * 0.5);
-  ctx.strokeStyle = rgba(color, glowA * 0.55);
-  ctx.stroke();
-  ctx.lineWidth = Math.max(4, size * 0.28);
+  /* One wide faint pass for the halo, one thin opaque pass for the edge.
+     The widths stay small on purpose: stacking wide strokes draws a thick
+     square ring, which is the neon sign the brief rules out. */
+  ctx.lineWidth = Math.max(4, size * 0.17);
   ctx.strokeStyle = rgba(color, glowA);
   ctx.stroke();
-  ctx.lineWidth = Math.max(1.1, size * 0.085);
+  ctx.lineWidth = Math.max(1.1, size * 0.05);
   ctx.strokeStyle = rgba(color, 1);
   ctx.stroke();
 }
@@ -990,28 +990,32 @@ function draw(seal, dockP, dt){
     ctx.beginPath();
     ctx.moveTo(cx, top);
     ctx.lineTo(cx, sealY);
-    ctx.lineWidth = Math.max(3, size * 0.22);
-    ctx.strokeStyle = rgba(GREEN, 0.10);
+    ctx.lineWidth = Math.max(2, size * 0.09);
+    ctx.strokeStyle = rgba(GREEN, 0.12);
     ctx.stroke();
     ctx.lineWidth = 1;
-    ctx.strokeStyle = rgba(GREEN, 0.75);
+    ctx.strokeStyle = rgba(GREEN, 0.7);
     ctx.stroke();
   }
 
   /* Sealed band: a soft gradient centred on the spine, never a hard edge. */
   if(seal > 0.001){
-    var bandW = Math.max(40, size * 4);
-    var g = ctx.createLinearGradient(cx - bandW, 0, cx + bandW, 0);
-    g.addColorStop(0,   rgba(GREEN, 0));
-    g.addColorStop(0.5, rgba(GREEN, 0.075));
-    g.addColorStop(1,   rgba(GREEN, 0));
-    ctx.fillStyle = g;
-    ctx.fillRect(cx - bandW, top, bandW * 2, sealY - top);
-    var vg = ctx.createLinearGradient(0, sealY - gap, 0, sealY);
-    vg.addColorStop(0, rgba(GREEN, 0.05));
-    vg.addColorStop(1, rgba(GREEN, 0));
-    ctx.fillStyle = vg;
-    ctx.fillRect(cx - bandW, sealY - gap, bandW * 2, gap);
+    var bandW = Math.max(40, size * 3.2);
+    var bandH = sealY - top;
+    var SLICES = 12;
+    for(var b = 0; b < SLICES; b++){
+      var mid = (b + 0.5) / SLICES;
+      /* Fade in over the first fifth and out over the last eighth, so the
+         band has no hard top or bottom edge. */
+      var env = Math.min(1, mid / 0.2) * Math.min(1, (1 - mid) / 0.125);
+      if(env <= 0.001) continue;
+      var g = ctx.createLinearGradient(cx - bandW, 0, cx + bandW, 0);
+      g.addColorStop(0,   rgba(GREEN, 0));
+      g.addColorStop(0.5, rgba(GREEN, 0.055 * env));
+      g.addColorStop(1,   rgba(GREEN, 0));
+      ctx.fillStyle = g;
+      ctx.fillRect(cx - bandW, top + bandH * (b / SLICES), bandW * 2, bandH / SLICES + 1);
+    }
   }
 
   /* Nodes */
@@ -1041,30 +1045,28 @@ function draw(seal, dockP, dt){
     roundRect(cx - half, y - half, size, size, 2.5);
 
     if(!sealedNow){
-      if(isOpen[i]){ twoPass(AMBER, 0.30, size); }
+      if(isOpen[i]){ twoPass(AMBER, 0.20, size); }
       else{
-        ctx.lineWidth = Math.max(1.1, size * 0.06);
+        ctx.lineWidth = Math.max(1.1, size * 0.05);
         ctx.strokeStyle = rgba(SLATE, 0.26);
         ctx.stroke();
       }
     } else if(isOpen[i]){
       ctx.fillStyle = rgba(MINT, 0.16); ctx.fill();
-      twoPass(MINT, 0.34, size);
+      twoPass(MINT, 0.22, size);
       var inner = size * 0.34;
-      ctx.fillStyle = rgba(MINT, 0.22);
-      ctx.fillRect(cx - inner, y - inner, inner * 2, inner * 2);
       ctx.fillStyle = rgba(MINT, 0.95);
       ctx.fillRect(cx - inner/2, y - inner/2, inner, inner);
     } else {
       ctx.fillStyle = rgba(GREEN, 0.08); ctx.fill();
-      twoPass(GREEN, 0.28, size);
+      twoPass(GREEN, 0.18, size);
     }
   }
 
   /* The advancing front: a bright tick across the spine with a soft bloom
      behind it, so the eye can see where the sealing has reached. */
   if(seal > 0.002 && seal < 0.999){
-    var bloom = size * 2.6;
+    var bloom = size * 1.9;
     var rg2 = ctx.createRadialGradient(cx, sealY, 0, cx, sealY, bloom);
     rg2.addColorStop(0, rgba(GREEN, 0.30));
     rg2.addColorStop(0.55, rgba(GREEN, 0.08));
@@ -1076,10 +1078,10 @@ function draw(seal, dockP, dt){
     ctx.beginPath();
     ctx.moveTo(cx - tick, sealY);
     ctx.lineTo(cx + tick, sealY);
-    ctx.lineWidth = Math.max(3, size * 0.22);
+    ctx.lineWidth = Math.max(2, size * 0.10);
     ctx.strokeStyle = rgba(GREEN, 0.16);
     ctx.stroke();
-    ctx.lineWidth = Math.max(1.2, size * 0.06);
+    ctx.lineWidth = Math.max(1.2, size * 0.05);
     ctx.strokeStyle = rgba(GREEN, 0.9);
     ctx.stroke();
   }
