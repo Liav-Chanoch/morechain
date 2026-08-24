@@ -3,17 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Synecura, systems that pay for themselves</title>
+<title>Synecura, blue variant</title>
 <meta name="description" content="Synecura builds custom operational systems for owner-run businesses and takes its fee out of the verified gain. Every system is built for one operation alone.">
 <meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://liav-chanoch.github.io/morechain/">
 <meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#070B0E">
+<meta name="theme-color" content="#060A10">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Synecura">
 <meta property="og:title" content="Synecura, systems that pay for themselves">
 <meta property="og:description" content="Every operation has headroom. We find where it sits, build the system that captures it, and take our fee out of the gain.">
 <meta property="og:url" content="https://liav-chanoch.github.io/morechain/">
-<meta property="og:image" content="https://liav-chanoch.github.io/morechain/assets/og.png">
+<meta property="og:image" content="https://liav-chanoch.github.io/morechain/v2/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
@@ -27,19 +28,33 @@
    TOKENS. No hue outside this list.
    ========================================================== */
 :root{
-  --bg:#070B0E;
+  /* ---- VARIANT PALETTE -------------------------------------------------
+     This block is the whole difference between variants. A third variant is
+     a change to these nine lines and nothing else. The canvas reads the rgb
+     triples once at init, never per frame. */
+  --brand:#3ca8d2;
+  --brand-rgb:60,168,210;
+  --brand-ink:#05121A;
+  --accent:#7ed4e8;
+  --accent-rgb:126,212,232;
+  --amber:#e8a050;
+  --amber-rgb:232,160,80;
+  --slate-rgb:168,190,208;
+  --shell:#060A10;
+  /* --------------------------------------------------------------------- */
+
+  --bg:var(--shell);
   --panel:#0C1116;
   --ink:#E9EEF3;
   --ink-2:#C6D1DB;
   --muted:#8593A0;
   --faint:#6F7D89;
   --faint-2:#5C6873;
-  --green:#3cd291;
-  --mint:#7ee8c4;
-  --amber:#e8a050;
-  --slate:rgba(168,190,208,0.26);
+  --green:var(--brand);
+  --mint:var(--accent);
+  --slate:rgba(var(--slate-rgb),0.26);
   --hair:rgba(255,255,255,0.09);
-  --chrome-bg:rgba(7,11,14,0.93);
+  --chrome-bg:rgba(6,10,16,0.93);
 
   --f:"Archivo",system-ui,-apple-system,sans-serif;
   --m:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -66,6 +81,20 @@ a{ color:inherit; text-decoration:none; }
   font-family:var(--m); font-weight:500; text-transform:uppercase;
   letter-spacing:.14em; font-size:clamp(9px,1.35vh,14px);
 }
+
+/* Variant switch, bottom centre, present in both versions. */
+.variant{
+  position:fixed; left:50%; bottom:calc(var(--gut) + 66px); transform:translateX(-50%);
+  z-index:60; display:inline-flex; align-items:center; gap:.55em;
+  font-family:var(--m); font-weight:500; font-size:9px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  background:var(--chrome-bg); border:1px solid var(--hair); border-radius:999px;
+  padding:8px 14px; text-decoration:none; white-space:nowrap;
+  transition:color 200ms var(--ease), border-color 200ms var(--ease);
+}
+.variant:hover{ color:var(--ink); border-color:var(--green); }
+.variant b{ color:var(--green); font-weight:500; }
+@media (max-width:760px){ .variant{ display:none; } }
 
 /* ==========================================================
    CHAIN CANVAS
@@ -134,10 +163,10 @@ a{ color:inherit; text-decoration:none; }
 .card[data-i="2"] .card__box{ background:linear-gradient(165deg,#111820,#0A0F14 70%); }
 .card[data-i="3"] .card__box{ background:linear-gradient(165deg,#0E141A,#0A0F14 70%); }
 .card[data-i="4"] .card__box{ background:linear-gradient(165deg,#111820,#0A0F14 70%); }
-.card[data-i="5"] .card__box{ background:linear-gradient(165deg,#0F1A18,#0A0F14 68%); }
+.card[data-i="5"] .card__box{ background:linear-gradient(165deg,#0E1A20,#0A0F14 68%); }
 
 @media (hover:hover){
-  .card__box:hover{ border-color:rgba(60,210,145,0.42); }
+  .card__box:hover{ border-color:rgba(var(--brand-rgb),0.42); }
 }
 
 /* ==========================================================
@@ -221,7 +250,7 @@ h2 .dim{ color:var(--faint-2); }
 .step__top{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
 .free{
   font-family:var(--m); font-weight:500; font-size:9px; letter-spacing:.14em;
-  text-transform:uppercase; background:var(--green); color:#07120C;
+  text-transform:uppercase; background:var(--green); color:var(--brand-ink);
   border-radius:999px; padding:3px 8px; line-height:1.4;
 }
 
@@ -464,15 +493,15 @@ h2 .dim{ color:var(--faint-2); }
   background:var(--chrome-bg); color:var(--ink);
   transition:background 200ms var(--ease), border-color 200ms var(--ease), transform 200ms var(--ease);
 }
-.cta:hover{ transform:translateY(-1px); border-color:rgba(60,210,145,.42); }
-.cta--go{ background:var(--green); color:#07120C; border-color:var(--green); font-weight:600; }
+.cta:hover{ transform:translateY(-1px); border-color:rgba(var(--brand-rgb),.42); }
+.cta--go{ background:var(--green); color:var(--brand-ink); border-color:var(--green); font-weight:600; }
 .cta--go:hover{ background:#4ade9f; border-color:#4ade9f; }
 /* Screen 05 stacks two of these full width in their column. */
 .cta--wide{ width:100%; justify-content:center; padding:15px 22px; font-size:clamp(13.5px,1.7vh,15.5px); }
 .pill--logo{ left:calc(var(--gut) + 14px); }
 .pill--cta{ right:calc(var(--gut) + 14px); color:var(--ink-2); }
-.pill--cta:hover{ background:var(--green); color:#07120C; border-color:var(--green); }
-.pill--logo:hover{ border-color:rgba(60,210,145,0.42); }
+.pill--cta:hover{ background:var(--green); color:var(--brand-ink); border-color:var(--green); }
+.pill--logo:hover{ border-color:rgba(var(--brand-rgb),0.42); }
 
 .readout-wrap{
   position:fixed; z-index:20;
@@ -514,7 +543,7 @@ h2 .dim{ color:var(--faint-2); }
   display:grid; place-items:center; color:var(--muted);
   transition:background 180ms var(--ease), color 180ms var(--ease), border-color 180ms var(--ease);
 }
-.stepbtn:hover:not(:disabled){ border-color:rgba(60,210,145,.42); }
+.stepbtn:hover:not(:disabled){ border-color:rgba(var(--brand-rgb),.42); }
 .stepbtn:hover:not(:disabled){ background:rgba(255,255,255,.06); color:var(--ink); }
 .stepbtn:disabled{ opacity:.25; cursor:default; }
 .stepbtn svg{ width:13px; height:13px; }
@@ -883,6 +912,8 @@ h2 .dim{ color:var(--faint-2); }
 
 <nav class="rail" id="rail" aria-label="Screens"></nav>
 
+<a class="variant" href="../" title="Switch to the green variant"><b>B</b> &#183; Blue</a>
+
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -939,7 +970,24 @@ var LOOP = 8400, SWEEP = 5200, HOLD = 2000, REL = 700;
 var RETAIN = 0.30;
 var UNCAP_MAX = 48000;
 
-var GREEN = [60,210,145], MINT = [126,232,196], AMBER = [232,160,80], SLATE = [168,190,208];
+/* Palette comes from the CSS custom properties, read once at init and cached
+   in these four variables. Never read inside the frame loop. */
+function paletteTriple(name, fallback){
+  var raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  var parts = raw.split(',');
+  if(parts.length !== 3) return fallback;
+  var out = [];
+  for(var i = 0; i < 3; i++){
+    var n = parseInt(parts[i], 10);
+    if(isNaN(n)) return fallback;
+    out.push(n);
+  }
+  return out;
+}
+var GREEN = paletteTriple('--brand-rgb',  [60,168,210]),
+    MINT  = paletteTriple('--accent-rgb', [126,212,232]),
+    AMBER = paletteTriple('--amber-rgb',  [232,160,80]),
+    SLATE = paletteTriple('--slate-rgb',  [168,190,208]);
 
 function rgba(c,a){ return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
 function clamp(v,a,b){ return v < a ? a : (v > b ? b : v); }

@@ -117,6 +117,37 @@ python3 -m http.server 8000 --directory .
 Then open <http://localhost:8000>. Check both sides of the 760px breakpoint:
 below it the rail and readout change shape and the tile row becomes a 2x2 grid.
 
+## The two variants
+
+| Path | Variant | Served |
+| --- | --- | --- |
+| `/` | Green, brand `#3cd291` | Live |
+| `/v2/` | Blue, brand `#3ca8d2` | Parallel, for A/B comparison |
+
+A small pill at the bottom centre of each version links to the other, so they
+can be compared without editing the URL.
+
+**`v2/` is fully self-contained and hand-maintained.** It has its own
+`v2/assets/`, and nothing in it reaches up into the root with `../`. That is
+deliberate: the whole point is to change one and not the other, so duplicated
+CSS is the correct trade.
+
+> **Do not regenerate `v2/index.html` from the root.** Earlier in this repo's
+> life `v2/` was a staging mirror kept in step with a `sed` copy of the root on
+> every edit. That would now silently overwrite the blue variant. A change
+> meant for both versions has to be applied to both files.
+
+Only the palette differs. In `v2/index.html` it lives in one block of nine
+custom properties at the top of `:root`, so a third variant is a change to
+those nine lines. The canvas reads the rgb triples through
+`getComputedStyle` once at init and caches them; it never reads them inside
+the frame loop.
+
+Amber is deliberately identical in both. It is the contrast that keeps the
+chain legible: without it every link reads as one colour.
+
+`.nojekyll` sits at the repo root so Pages publishes the tree as-is.
+
 ## Staging
 
 `/v2/` is a sandbox for trying changes without touching production. It is
