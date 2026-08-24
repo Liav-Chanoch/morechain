@@ -1,6 +1,6 @@
-# MoreChain
+# Synecura
 
-Marketing site for **MoreChain**, which builds custom operational systems
+Marketing site for **Synecura**, which builds custom operational systems
 (automation, internal tools, process redesign) for owner-run businesses and
 prices itself as a share of the verified gain.
 
