@@ -594,197 +594,405 @@ function applyScroll(){
 /* ============================================================
    NETWORK ENGINE
    ============================================================ */
-function makeNetwork(canvas, opts){
+/* ============================================================
+   SHARED DRAWING LANGUAGE
+   ============================================================ */
+var ACC = '#9B4A32', HOT = '#CE8A52', AMB = '#8A6A3E';
+var SLATE = 'rgba(239,231,218,0.20)';
+function hexA(hex, a){
+  var n = parseInt(hex.slice(1), 16);
+  return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + Math.max(0,a).toFixed(3) + ')';
+}
+function outC(t){ return 1 - Math.pow(1 - t, 3); }
+function angDist(a, b){ var d = Math.abs(a-b) % 6.28318; return d > 3.14159 ? 6.28318 - d : d; }
+function rr(ctx, x, y, s){
+  var h = s/2, rad = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(x-h+rad,y-h); ctx.lineTo(x+h-rad,y-h); ctx.quadraticCurveTo(x+h,y-h,x+h,y-h+rad);
+  ctx.lineTo(x+h,y+h-rad); ctx.quadraticCurveTo(x+h,y+h,x+h-rad,y+h);
+  ctx.lineTo(x-h+rad,y+h); ctx.quadraticCurveTo(x-h,y+h,x-h,y+h-rad);
+  ctx.lineTo(x-h,y-h+rad); ctx.quadraticCurveTo(x-h,y-h,x-h+rad,y-h); ctx.closePath();
+}
+function fitCanvas(canvas, ctx){
+  var dpr = Math.min(devicePixelRatio || 1, 1.5);
+  var w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return { w:w, h:h };
+}
+
+/* ============================================================
+   HERO NETWORK
+   Its own constants: they are not the service ones.
+   ============================================================ */
+function makeHero(canvas, opts){
   opts = opts || {};
+  var density = opts.density == null ? 2 : opts.density;
+  var speed = opts.speed == null ? 1 : opts.speed;
   var ctx = canvas.getContext('2d');
-  var W=0,H=0,DPR=1,cxp=0,cyp=0,RX=0,RY=0;
-  var nodes=[], edges=[], adj=[], sources=[], pulses=[], t0=0, born=0;
-  var rot=0, alive=true, fadeOut=0;
+  var W=0,H=0,cx=0,cy=0,R=0,mobile=false;
+  var nodes=[], edges=[], pulses=[], clock=0, seeded=false;
+  var CYCLE = 13;
 
-  function measure(){
-    DPR = Math.min(1.5, devicePixelRatio || 1);
-    var r = canvas.getBoundingClientRect();
-    W = Math.max(1, r.width); H = Math.max(1, r.height);
-    canvas.width = Math.round(W*DPR); canvas.height = Math.round(H*DPR);
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    if(opts && opts.hero){
-      /* The hero graph is offset, not centred, and its radius is a single
-         circle rather than the stage ellipse. */
-      var mob = W < 760;
-      cxp = mob ? W*0.5 : W*0.60;
-      cyp = mob ? H*0.40 : H*0.47;
-      var R = mob ? Math.min(W*0.46, H*0.30) : Math.min(W*0.40, H*0.46);
-      RX = R; RY = R;
-    } else {
-      cxp = W*0.5; cyp = H*0.5; RX = 0.44*W; RY = 0.42*H;
-    }
+  function size(){
+    var d = fitCanvas(canvas, ctx); W = d.w; H = d.h;
+    mobile = W < 760;
+    cx = mobile ? W*0.5 : W*0.60;
+    cy = mobile ? H*0.40 : H*0.47;
+    R  = mobile ? Math.min(W*0.46, H*0.30) : Math.min(W*0.40, H*0.46);
   }
 
-  function build(nSys){
-    nodes=[]; edges=[]; adj=[]; sources=[]; pulses=[];
-    var rings = 3 + (Math.random() < 0.45 ? 1 : 0);
-    nodes.push({ r:0, a:0, ring:0, phase:Math.random()*6.28, delay:0 });
-    adj.push([]);
-    var ringStart=[0];
+  function build(){
+    nodes=[]; edges=[]; pulses=[]; seeded=false;
+    var rings = (density === 1 ? 2 : density === 3 ? 4 : 3) + (Math.random() < 0.4 ? 1 : 0);
+    nodes.push({ r:0, a:0, hub:true });
+    var starts=[0];
     for(var k=1;k<=rings;k++){
-      var count = 6 + 2*k + Math.floor(Math.random()*4);
-      var base = k/rings + (Math.random()*0.07 - 0.035);
-      ringStart.push(nodes.length);
+      var count = 5 + k*2 + Math.floor(Math.random()*4);
+      var off = Math.random()*6.28318;
+      starts.push(nodes.length);
       for(var i=0;i<count;i++){
-        var a = (i/count)*Math.PI*2 + (Math.random()*0.2 - 0.1);
-        nodes.push({ r:base, a:a, ring:k, phase:Math.random()*6.28,
-                     delay:0.1 + k*0.9 + Math.random()*0.3 });
-        adj.push([]);
+        nodes.push({ r: k/rings + (Math.random()-0.5)*0.075,
+                     a: off + (i/count)*6.28318 + (Math.random()-0.5)*0.20,
+                     ring:k });
       }
-    }
-    ringStart.push(nodes.length);
-    function link(x,y){
-      edges.push({ a:x, b:y, lit:0, delay:0 });
-      adj[x].push(edges.length-1); adj[y].push(edges.length-1);
-    }
-    for(var k2=1;k2<=rings;k2++){
-      var s=ringStart[k2], e=ringStart[k2+1], n=e-s;
+      var st = starts[k], n = count;
       for(var j=0;j<n;j++){
-        if(Math.random() >= 0.18) link(s+j, s+((j+1)%n));       /* 18% skipped */
-        var skip = k2===1 ? 0.45 : 0.28;
+        if(Math.random() < 0.16) continue;
+        edges.push({ a:st+j, b:st+((j+1)%n) });
+      }
+      var skip = (k === 1 ? 0.52 : 0.26);
+      for(var m=0;m<n;m++){
         if(Math.random() < skip) continue;
-        var ps=ringStart[k2-1], pe=ringStart[k2], best=ps, bd=Infinity;
+        var ps = starts[k-1], pe = st, best = ps, bd = 9;
         for(var q=ps;q<pe;q++){
-          var d=Math.abs(((nodes[q].a-nodes[s+j].a+Math.PI*3)%(Math.PI*2))-Math.PI);
-          if(d<bd){ bd=d; best=q; }
+          var d2 = angDist(nodes[q].a, nodes[st+m].a);
+          if(d2 < bd){ bd = d2; best = q; }
         }
-        link(s+j, best);
+        edges.push({ a:best, b:st+m });
       }
     }
-    edges.forEach(function(ed,i){ ed.delay = 1.1 + i*0.011 + Math.random()*0.2; });
-    /* one inner ring node per system, spread around the circle */
-    var s1=ringStart[1], e1=ringStart[2], avail=e1-s1;
-    for(var m=0;m<nSys;m++){
-      sources.push(s1 + Math.floor(m*avail/nSys));
-    }
-    t0 = performance.now()/1000; born = t0; alive = true; fadeOut = 0;
+    nodes.forEach(function(nd){
+      nd.adj = []; nd.lit = 0; nd.drift = Math.random()*6.28318;
+      var far = 1.5 + Math.random()*0.8, ang = Math.random()*6.28318;
+      nd.ox = Math.cos(ang)*far; nd.oy = Math.sin(ang)*far;
+      nd.delay = 0.12 + nd.r*1.0 + Math.random()*0.4;
+    });
+    edges.forEach(function(e,i){
+      e.lit = 0; e.delay = 1.7 + i*0.013 + Math.random()*0.25;
+      nodes[e.a].adj.push(i); nodes[e.b].adj.push(i);
+    });
+    clock = 0;
   }
 
-  function pos(n, t){
-    var br = n.r * (1 + 0.02*Math.sin(t*0.055 + n.phase));
-    var ang = n.a + rot;
-    return { x: cxp + Math.cos(ang)*br*RX,
-             y: cyp + Math.sin(ang)*br*RY + Math.sin(t*0.7 + n.phase)*1.4 };
+  function entered(nd, t){ return outC(Math.min(1, Math.max(0, (t - nd.delay)/1.5))); }
+  function posOf(nd, t, spin){
+    var e = entered(nd, t);
+    var a = nd.a + spin;
+    var rad = nd.r * R;
+    var x = Math.cos(a)*rad, y = Math.sin(a)*rad;
+    /* fly in from outside */
+    x += nd.ox * R * (1-e); y += nd.oy * R * (1-e);
+    y += Math.sin(clock*0.9 + nd.drift) * (mobile ? 1.1 : 1.8) * e;
+    return { x:x, y:y, e:e };
   }
 
-  var lastWave = -99;
-  function step(t, dt){
-    rot += 0.014*dt;
-    if(t - lastWave > 6.2){
-      lastWave = t;
-      sources.forEach(function(sn, i){
-        pulses.push({ node:sn, at:t + i*0.26, edge:-1, prog:0 });
-      });
+  function step(dt){
+    clock += dt * speed;
+    if(clock > CYCLE){ build(); return; }
+    var t = clock;
+    if(!seeded && t > 4.6){
+      seeded = true;
+      nodes[0].adj.forEach(function(ei){ pulses.push({ e:ei, from:0, t:0 }); });
     }
-    for(var i=pulses.length-1;i>=0;i--){
-      var p=pulses[i];
-      if(t < p.at) continue;
-      if(p.edge < 0){
-        var out = adj[p.node] || [];
-        for(var j=0;j<out.length && pulses.length < 60;j++){
-          pulses.push({ node:p.node, edge:out[j], prog:0, at:t });
+    if(t > 4.6 && t < CYCLE - 2.2){
+      for(var i=pulses.length-1;i>=0;i--){
+        var q = pulses[i]; q.t += dt * 1.5;
+        edges[q.e].lit = 1;
+        if(q.t >= 1){
+          var ed = edges[q.e], other = ed.a === q.from ? ed.b : ed.a;
+          nodes[other].lit = 1;
+          nodes[other].adj.forEach(function(ei){
+            if(ei === q.e || pulses.length >= 90) return;
+            if(Math.random() < 0.62) pulses.push({ e:ei, from:other, t:0 });
+          });
+          pulses.splice(i,1);
         }
-        pulses.splice(i,1); continue;
-      }
-      p.prog += 1.35*dt;
-      var ed = edges[p.edge];
-      ed.lit = 1;
-      if(p.prog >= 1){
-        var other = ed.a === p.node ? ed.b : ed.a;
-        nodes[other].lit = 1;
-        var nxt = adj[other] || [];
-        for(var k=0;k<nxt.length && pulses.length < 60;k++){
-          if(nxt[k] === p.edge) continue;
-          if(Math.random() < 0.42) pulses.push({ node:other, edge:nxt[k], prog:0, at:t });
-        }
-        pulses.splice(i,1);
       }
     }
-    edges.forEach(function(e){ if(e.lit) e.lit = Math.max(0, e.lit - 0.85*dt); });
-    nodes.forEach(function(n){ if(n.lit) n.lit = Math.max(0, n.lit - 0.55*dt); });
+    edges.forEach(function(e){ if(e.lit>0) e.lit = Math.max(0, e.lit - dt*0.55); });
+    nodes.forEach(function(n){ if(n.lit>0) n.lit = Math.max(0, n.lit - dt*0.30); });
   }
 
-  function draw(t){
+  function draw(){
+    var t = reduce.matches ? 6.5 : clock;
+    var spin = reduce.matches ? 0 : clock * 0.021;
+    var diss = Math.min(1, Math.max(0, (t - (CYCLE - 1.9))/1.7));
+    var fa = reduce.matches ? 1 : 1 - diss;
+    ctx.setTransform(Math.min(devicePixelRatio||1,1.5),0,0,Math.min(devicePixelRatio||1,1.5),0,0);
     ctx.clearRect(0,0,W,H);
-    var age = t - born;
-    var layer = reduce.matches ? 1 : Math.min(1, age/0.7);
-    if(fadeOut > 0) layer *= Math.max(0, 1 - fadeOut);
-    var P = nodes.map(function(n){ return pos(n, t); });
+    ctx.save(); ctx.translate(cx, cy);
+
+    var P = nodes.map(function(nd){ return posOf(nd, t, spin); });
 
     edges.forEach(function(e){
-      var ep = reduce.matches ? 1 : Math.min(1, Math.max(0,(age - e.delay)/0.6));
+      var ep = Math.min(1, Math.max(0, (t - e.delay)/0.85));
       if(ep <= 0) return;
-      ep = 1 - Math.pow(1-ep,3);
+      if(P[e.a].e < 0.35 || P[e.b].e < 0.35) return;
+      ep = outC(ep);
       var A=P[e.a], B=P[e.b];
+      ctx.globalAlpha = fa;
       ctx.beginPath(); ctx.moveTo(A.x,A.y);
       ctx.lineTo(A.x+(B.x-A.x)*ep, A.y+(B.y-A.y)*ep);
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = e.lit > 0.02
-        ? 'rgba(206,138,82,' + (0.25 + e.lit*0.6)*layer + ')'
-        : 'rgba(239,231,218,' + 0.13*layer + ')';
+      if(e.lit > 0.02){ ctx.strokeStyle = hexA(HOT, 0.45 + 0.45*e.lit); ctx.lineWidth = 1.4; }
+      else if(ep < 1){ ctx.strokeStyle = hexA(ACC, 0.6); ctx.lineWidth = 1; }
+      else { ctx.strokeStyle = SLATE; ctx.lineWidth = 1; }
       ctx.stroke();
     });
 
-    nodes.forEach(function(n,i){
-      var np = reduce.matches ? 1 : Math.min(1, Math.max(0,(age - n.delay)/0.7));
-      if(np <= 0) return;
-      var ease = 1 - Math.pow(1-np,3);
-      var p = P[i];
-      var x = cxp + (p.x-cxp)*(0.4 + 0.6*ease);
-      var y = cyp + (p.y-cyp)*(0.4 + 0.6*ease);
-      n._x = x; n._y = y;
-      var si = sources.indexOf(i);
-      var size = si >= 0 ? (n._grow || 14) : (n.ring ? 5.5 : 9);
-      var col = si >= 0 ? SYS_COLOURS[si % 3] : null;
-      roundRect(ctx, x, y, size, 1.5);
-      if(col){
-        ctx.fillStyle = hexA(col, 0.22*layer); ctx.fill();
-        ctx.lineWidth = 1.3; ctx.strokeStyle = hexA(col, layer); ctx.stroke();
-        var inner = size*0.34;
-        ctx.fillStyle = hexA(col, layer); ctx.fillRect(x-inner/2, y-inner/2, inner, inner);
-        if(n._ring > 0){
-          ctx.beginPath(); ctx.arc(x, y, size*0.95 + 8, 0, 6.2832);
-          ctx.lineWidth = 1; ctx.strokeStyle = hexA(col, 0.5*layer*n._ring); ctx.stroke();
+    if(!reduce.matches) pulses.forEach(function(q){
+      var ed = edges[q.e], A = P[ed.a === q.from ? ed.a : ed.b], B = P[ed.a === q.from ? ed.b : ed.a];
+      var x = A.x + (B.x-A.x)*Math.min(1,q.t), y = A.y + (B.y-A.y)*Math.min(1,q.t);
+      ctx.globalAlpha = fa * 0.9;
+      ctx.beginPath(); ctx.arc(x,y,2,0,6.28318); ctx.fillStyle = HOT; ctx.fill();
+    });
+
+    nodes.forEach(function(nd,i){
+      var p = P[i], e = p.e;
+      if(e <= 0) return;
+      var sz = (nd.hub ? 13 : 7) * (mobile ? 0.82 : 1);
+      ctx.globalAlpha = fa * (0.25 + 0.75*e);
+      rr(ctx, p.x, p.y, sz);
+      if(nd.lit > 0.02){ ctx.fillStyle = hexA(HOT, 0.26*nd.lit); ctx.fill(); }
+      else if(nd.hub){ ctx.fillStyle = hexA(ACC, 0.16); ctx.fill(); }
+      if(e < 1){ ctx.lineWidth = 1.1; ctx.strokeStyle = hexA(AMB, 0.7*(1-e)); ctx.stroke(); }
+      if(nd.lit > 0.02){ ctx.strokeStyle = HOT; ctx.lineWidth = 1.4; }
+      else if(nd.hub){ ctx.strokeStyle = hexA(ACC, 0.7); ctx.lineWidth = 1.1; }
+      else { ctx.strokeStyle = SLATE; ctx.lineWidth = 1.1; }
+      ctx.stroke();
+      if(nd.hub && nd.lit > 0.02){
+        var inn = sz*0.44;
+        ctx.fillStyle = hexA(HOT, nd.lit);
+        ctx.fillRect(p.x-inn/2, p.y-inn/2, inn, inn);
+      }
+    });
+    ctx.globalAlpha = 1; ctx.restore();
+  }
+
+  return { size:size, build:build, step:step, draw:draw };
+}
+
+/* ============================================================
+   SERVICE NETWORK
+   Geometry from the stage box. No rebuild while a panel is open.
+   ============================================================ */
+function makeService(canvas, opts){
+  opts = opts || {};
+  var ctx = canvas.getContext('2d');
+  var W=0,H=0,cx=0,cy=0,RX=0,RY=0,mobile=false;
+  var nodes=[], edges=[], pulses=[], srcIdx=[], labelIdx=[];
+  var clock=0, spin=0, breathe=0, wave=-1, fade=0, dissolving=false, hoverCard=-1;
+
+  function size(){
+    var d = fitCanvas(canvas, ctx); W = d.w; H = d.h;
+    mobile = W < 760;
+    cx = W*0.5; cy = H*0.5; RX = W*0.44; RY = H*0.42;
+  }
+
+  function build(cardCount, labelCount){
+    nodes=[]; edges=[]; pulses=[]; srcIdx=[]; labelIdx=[];
+    clock=0; spin=0; breathe=0; wave=-1; fade=0; dissolving=false; hoverCard=-1;
+    var rings = 3 + (Math.random() < 0.45 ? 1 : 0);
+    nodes.push({ r:0, a:0, hub:true, ring:0 });
+    var starts=[0];
+    for(var k=1;k<=rings;k++){
+      var count = 6 + k*2 + Math.floor(Math.random()*4);
+      var off = Math.random()*6.28318;
+      starts.push(nodes.length);
+      for(var i=0;i<count;i++){
+        nodes.push({ r: k/rings + (Math.random()-0.5)*0.07,
+                     a: off + (i/count)*6.28318 + (Math.random()-0.5)*0.2, ring:k });
+      }
+      var st=starts[k], n=count;
+      for(var j=0;j<n;j++){
+        if(Math.random() < 0.18) continue;
+        edges.push({ a:st+j, b:st+((j+1)%n) });
+      }
+      var skip = (k === 1 ? 0.45 : 0.28);
+      for(var m=0;m<n;m++){
+        if(Math.random() < skip) continue;
+        var ps=starts[k-1], pe=st, best=ps, bd=9;
+        for(var q=ps;q<pe;q++){
+          var dd = angDist(nodes[q].a, nodes[st+m].a);
+          if(dd < bd){ bd = dd; best = q; }
+        }
+        edges.push({ a:best, b:st+m });
+      }
+    }
+    nodes.forEach(function(nd){
+      nd.adj=[]; nd.lit=0; nd.gw=0; nd.drift=Math.random()*6.28318;
+      nd.delay = 0.1 + nd.r*0.9 + Math.random()*0.3;
+      var far = 1.4 + Math.random()*0.8, ang = Math.random()*6.28318;
+      nd.ox = Math.cos(ang)*far; nd.oy = Math.sin(ang)*far;
+    });
+    edges.forEach(function(e,i){
+      e.lit=0; e.delay = 1.1 + i*0.011 + Math.random()*0.2;
+      nodes[e.a].adj.push(i); nodes[e.b].adj.push(i);
+    });
+
+    /* sources: one ring-2 node per card, spread around the circle */
+    var srcRing = rings < 3 ? 1 : 2;
+    var used = {};
+    for(var c=0;c<cardCount;c++){
+      var want = -1.9 + c * (5.0 / cardCount), pick=-1, bestd=99;
+      for(var i2=0;i2<nodes.length;i2++){
+        if(used[i2] || nodes[i2].ring !== srcRing) continue;
+        var dd2 = angDist(nodes[i2].a, want);
+        if(dd2 < bestd){ bestd = dd2; pick = i2; }
+      }
+      if(pick < 0) continue;
+      used[pick]=1; nodes[pick].src = true; nodes[pick].sysK = c; srcIdx.push(pick);
+    }
+    /* labels: outer, unused, nearest a target angle and the outer radius */
+    for(var l=0;l<labelCount;l++){
+      var wantA = -3.1 + l * (6.28318 / labelCount), lp=-1, lb=99;
+      for(var i3=0;i3<nodes.length;i3++){
+        if(used[i3] || nodes[i3].ring < 2 || nodes[i3].src) continue;
+        var sc = angDist(nodes[i3].a, wantA) + Math.abs(1 - nodes[i3].r);
+        if(sc < lb){ lb = sc; lp = i3; }
+      }
+      if(lp < 0) continue;
+      used[lp]=1; labelIdx.push(lp);
+    }
+  }
+
+  function entered(nd, t){ return outC(Math.min(1, Math.max(0, (t - nd.delay)/0.9))); }
+  function posOf(nd, t){
+    var e = entered(nd, t);
+    var a = nd.a + spin;
+    var r2 = nd.r * (1 + 0.02*Math.sin(breathe + nd.drift));
+    var x = cx + Math.cos(a)*r2*RX, y = cy + Math.sin(a)*r2*RY;
+    x += nd.ox * RX * (1-e); y += nd.oy * RY * (1-e);
+    y += Math.sin(clock*0.8 + nd.drift) * (mobile ? 0.9 : 1.4) * e;
+    return { x:x, y:y, e:e };
+  }
+
+  function step(dt){
+    clock += dt;
+    if(!reduce.matches){ spin += dt*0.014; breathe += dt*0.055; }
+    var grow = Math.min(1, Math.max(0, clock/0.7));
+    fade = dissolving ? Math.max(0, fade - dt*2.6) : grow;
+    if(reduce.matches) return;
+    var t = clock;
+    var w = Math.floor((t - 2.6) / 6.2);
+    if(t > 2.6 && w !== wave){
+      wave = w;
+      srcIdx.forEach(function(sn, k){
+        setTimeout(function(){
+          if(!nodes[sn]) return;
+          nodes[sn].lit = 1;
+          nodes[sn].adj.forEach(function(ei){ if(pulses.length < 60) pulses.push({ e:ei, from:sn, t:0 }); });
+        }, k*260);
+      });
+    }
+    for(var i=pulses.length-1;i>=0;i--){
+      var q = pulses[i]; q.t += dt*1.35;
+      edges[q.e].lit = 1;
+      if(q.t >= 1){
+        var ed = edges[q.e], other = ed.a === q.from ? ed.b : ed.a;
+        nodes[other].lit = 1;
+        nodes[other].adj.forEach(function(ei){
+          if(ei === q.e || pulses.length >= 60) return;
+          if(Math.random() < 0.42) pulses.push({ e:ei, from:other, t:0 });
+        });
+        pulses.splice(i,1);
+      }
+    }
+    edges.forEach(function(e){ if(e.lit>0) e.lit = Math.max(0, e.lit - dt*0.85); });
+    nodes.forEach(function(n){
+      if(n.lit>0) n.lit = Math.max(0, n.lit - dt*0.55);
+      var target = (n.src && srcIdx[hoverCard] === nodes.indexOf(n)) ? 1 : 0;
+      n.gw += (target - n.gw) * Math.min(1, dt*7);
+    });
+  }
+
+  var P = [];
+  function draw(){
+    var t = reduce.matches ? 5 : clock;
+    ctx.setTransform(Math.min(devicePixelRatio||1,1.5),0,0,Math.min(devicePixelRatio||1,1.5),0,0);
+    ctx.clearRect(0,0,W,H);
+    P = nodes.map(function(nd){ return posOf(nd, t); });
+
+    edges.forEach(function(e){
+      var ep = Math.min(1, Math.max(0, (t - e.delay)/0.6));
+      if(ep <= 0) return;
+      if(P[e.a].e < 0.35 || P[e.b].e < 0.35) return;
+      ep = outC(ep);
+      var A=P[e.a], B=P[e.b];
+      ctx.beginPath(); ctx.moveTo(A.x,A.y);
+      ctx.lineTo(A.x+(B.x-A.x)*ep, A.y+(B.y-A.y)*ep);
+      if(e.lit > 0.02){ ctx.strokeStyle = hexA(HOT, 0.26 + 0.46*e.lit); ctx.lineWidth = 1.3; }
+      else { ctx.strokeStyle = SLATE; ctx.lineWidth = 1; }
+      ctx.stroke();
+    });
+
+    if(!reduce.matches) pulses.forEach(function(q){
+      var ed = edges[q.e];
+      var A = P[q.from], B = P[ed.a === q.from ? ed.b : ed.a];
+      if(!A || !B) return;
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.arc(A.x+(B.x-A.x)*Math.min(1,q.t), A.y+(B.y-A.y)*Math.min(1,q.t), 2, 0, 6.28318);
+      ctx.fillStyle = HOT; ctx.fill(); ctx.globalAlpha = 1;
+    });
+
+    nodes.forEach(function(nd,i){
+      var p = P[i]; if(p.e <= 0) return;
+      var col = nd.src ? SYS_COLOURS[nd.sysK % 3] : null;
+      var sz = (nd.src ? 14 + 12*nd.gw : nd.hub ? 11 : 7) * (mobile ? 0.85 : 1);
+      ctx.globalAlpha = 0.25 + 0.75*p.e;
+      rr(ctx, p.x, p.y, sz);
+      if(nd.src){ ctx.fillStyle = hexA(col, 0.22); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.4; }
+      else if(nd.lit > 0.02){ ctx.fillStyle = hexA(HOT, 0.24*nd.lit); ctx.fill(); ctx.strokeStyle = HOT; ctx.lineWidth = 1.3; }
+      else if(nd.hub){ ctx.fillStyle = hexA(ACC, 0.12); ctx.fill(); ctx.strokeStyle = hexA(ACC, 0.7); ctx.lineWidth = 1.1; }
+      else { ctx.strokeStyle = SLATE; ctx.lineWidth = 1.1; }
+      ctx.stroke();
+      if(nd.src){
+        var inn = sz*0.40;
+        ctx.fillStyle = col; ctx.fillRect(p.x-inn/2, p.y-inn/2, inn, inn);
+        if(nd.lit > 0.02){
+          ctx.beginPath(); ctx.arc(p.x,p.y, sz*(0.8 + (1-nd.lit)*1.6), 0, 6.28318);
+          ctx.strokeStyle = hexA(col, 0.45*nd.lit); ctx.lineWidth = 1; ctx.stroke();
+        }
+        if(nd.gw > 0.01){
+          ctx.beginPath(); ctx.arc(p.x,p.y, sz*0.95 + 8, 0, 6.28318);
+          ctx.strokeStyle = hexA(col, 0.6*nd.gw); ctx.lineWidth = 1.1; ctx.stroke();
         }
         if(opts.badges){
           ctx.font = "600 10px 'IBM Plex Mono', monospace";
-          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-          ctx.fillStyle = hexA(col, 0.95*layer);
-          ctx.fillText('S' + ('0' + (si+1)), x, y - size - 9);
+          ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+          ctx.fillStyle = hexA(col, 0.95);
+          ctx.fillText('S0' + (nd.sysK+1), p.x + sz*0.72, p.y);
         }
-      } else {
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = n.lit > 0.02
-          ? 'rgba(206,138,82,' + (0.35 + n.lit*0.6)*layer*ease + ')'
-          : 'rgba(239,231,218,' + 0.2*layer*ease + ')';
-        ctx.stroke();
       }
+      ctx.globalAlpha = 1;
     });
-    return layer;
   }
 
-  function roundRect(c,x,y,s,rad){
-    var h=s/2; c.beginPath();
-    c.moveTo(x-h+rad,y-h); c.lineTo(x+h-rad,y-h); c.quadraticCurveTo(x+h,y-h,x+h,y-h+rad);
-    c.lineTo(x+h,y+h-rad); c.quadraticCurveTo(x+h,y+h,x+h-rad,y+h);
-    c.lineTo(x-h+rad,y+h); c.quadraticCurveTo(x-h,y+h,x-h,y+h-rad);
-    c.lineTo(x-h,y-h+rad); c.quadraticCurveTo(x-h,y-h,x-h+rad,y-h); c.closePath();
-  }
-  function hexA(hex,a){
-    var n=parseInt(hex.slice(1),16);
-    return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';
+  function tie(x1,y1,x2,y2,k){
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+    ctx.lineWidth = 1.2; ctx.strokeStyle = hexA(SYS_COLOURS[k%3], 0.6); ctx.stroke();
   }
 
   return {
-    measure:measure, build:build, step:step, draw:draw,
-    nodes:function(){ return nodes; }, sources:function(){ return sources; },
-    fade:function(v){ fadeOut = v; },
-    born:function(){ return born; }
+    size:size, build:build, step:step, draw:draw, tie:tie,
+    pos:function(i){ return P[i]; }, allPos:function(){ return P; },
+    nodes:function(){ return nodes; }, sources:function(){ return srcIdx; },
+    labels:function(){ return labelIdx; },
+    setHover:function(k){ hoverCard = k; },
+    fadeValue:function(){ return fade; },
+    dissolve:function(v){ dissolving = v; },
+    centre:function(){ return { cx:cx, cy:cy, W:W, H:H }; }
   };
 }
 
@@ -798,7 +1006,7 @@ var ovEyebrow = document.getElementById('ov-eyebrow');
 var ovTitle = document.getElementById('ov-title');
 var stage = document.getElementById('stage');
 var syslist = document.getElementById('syslist');
-var net = makeNetwork(document.getElementById('net'), { badges:isPhone() });
+var net = makeService(document.getElementById('net'), { badges:isPhone() });
 var current = -1, ovOpen = false, lastFocus = null, scrollLock = 0;
 
 SERVICES.forEach(function(s,i){
@@ -821,8 +1029,8 @@ function showPanel(i){
   ovEyebrow.textContent = ('0' + (i+1)) + ' / ' + svc.name;
   ovTitle.textContent = svc.name;
   clearStage();
-  net.measure();
-  net.build(svc.sys.length);
+  net.size();
+  net.build(svc.sys.length, isPhone() ? 6 : 12);
   buildDom(svc);
   /* Nodes need their entry delays to elapse before they have coordinates. */
   nextLayout = performance.now()/1000 + (reduce.matches ? 0.05 : 2.6);
@@ -836,8 +1044,9 @@ function buildDom(svc){
     el.className = 'oplabel';
     el.textContent = txt;
     /* first five are the core stages, the rest are peripheral */
-    el.style.opacity = n < 5 ? '0.42' : '0.26';
     el.dataset.core = n < 5 ? '1' : '0';
+    el.dataset.base = n < 5 ? '0.42' : '0.26';
+    el.style.opacity = el.dataset.base;
     stage.appendChild(el);
   });
   svc.sys.forEach(function(name, n){
@@ -878,10 +1087,7 @@ function buildDom(svc){
 }
 
 function hoverSys(n, on){
-  var nodes = net.nodes(), srcs = net.sources();
-  var idx = srcs[n]; if(idx == null) return;
-  nodes[idx]._grow = on ? 26 : 14;
-  nodes[idx]._ring = on ? 1 : 0;
+  net.setHover(on ? n : -1);
   var card = stage.querySelector('.syscard[data-sys="' + n + '"]');
   if(card && card._pop) placePopup(card, card._pop, on);
 }
@@ -912,96 +1118,102 @@ function hit(a,b){ return !(a.x+a.w < b.x || b.x+b.w < a.x || a.y+a.h < b.y || b
 
 function layout(){
   if(current < 0) return;
-  var nodes = net.nodes(), srcs = net.sources();
+  var P = net.allPos(), srcs = net.sources(), labs = net.labels();
   var sr = stage.getBoundingClientRect();
+  var stacked = isPhone();
   boxes = [];
 
-  /* system cards first: floated outward along the node radial */
   var cards = stage.querySelectorAll('.syscard');
-  Array.prototype.forEach.call(cards, function(card, n){
-    var nd = nodes[srcs[n]]; if(!nd || nd._x == null) return;
-    var vx = nd._x - sr.width/2, vy = nd._y - sr.height/2;
-    var len = Math.hypot(vx,vy) || 1;
+  if(!stacked) Array.prototype.forEach.call(cards, function(card, n){
+    var np = P[srcs[n]]; if(!np) return;
     var w = card.offsetWidth, h = card.offsetHeight;
-    var x = nd._x + (vx/len)*70 - w/2;
-    var y = nd._y + (vy/len)*70 - h/2;
+    var vx = np.x - sr.width/2, vy = np.y - sr.height/2;
+    var len = Math.hypot(vx, vy) || 1;
+    var x = np.x + (vx/len)*(w*0.42 + 34) - w/2;
+    var y = np.y + (vy/len)*(h*0.5 + 40) - h/2;
     x = Math.max(2, Math.min(sr.width - w - 2, x));
     y = Math.max(2, Math.min(sr.height - h - 2, y));
     var box = { x:x, y:y, w:w, h:h };
-    for(var pass=0; pass<24; pass++){
+    for(var pass=0; pass<26; pass++){
       var clash = false;
       for(var b=0;b<boxes.length;b++){ if(hit(box, boxes[b])){ clash = true; break; } }
       if(!clash) break;
-      box.y += 16;
-      if(box.y + h > sr.height - 2){ box.y = 2; box.x += 26; }
+      box.y += 12;
+      if(box.y + h > sr.height - 2){ box.y = 2; box.x += 12; }
+      box.x = Math.max(2, Math.min(sr.width - w - 2, box.x));
     }
+    card._off = { dx: box.x - np.x, dy: box.y - np.y };
     card.style.left = box.x + 'px'; card.style.top = box.y + 'px';
     boxes.push(box);
-    card._tie = { x:nd._x, y:nd._y, col:SYS_COLOURS[n%3], bx:box.x, by:box.y, bw:w, bh:h };
   });
   var cardBoxes = boxes.slice();
 
-  /* labels on outer ring nodes */
-  var labels = stage.querySelectorAll('.oplabel');
-  var outer = [];
-  for(var i=0;i<nodes.length;i++){
-    if(nodes[i]._x == null) continue;
-    if(srcs.indexOf(i) >= 0) continue;
-    if(nodes[i].ring === 0) continue;
-    outer.push(i);
-  }
-  outer.sort(function(a,b){ return nodes[b].ring - nodes[a].ring; });
+  /* On the phone a 68 by 52 box is reserved around each source so a label
+     never lands on the S0n badge. */
+  if(stacked) srcs.forEach(function(si){
+    var np = P[si]; if(!np) return;
+    cardBoxes.push({ x:np.x-10, y:np.y-26, w:68, h:52 });
+    boxes.push({ x:np.x-10, y:np.y-26, w:68, h:52 });
+  });
 
+  var labels = stage.querySelectorAll('.oplabel');
   Array.prototype.forEach.call(labels, function(lab, n){
-    var nd = nodes[outer[n % Math.max(1,outer.length)]];
-    if(!nd){ lab.style.display='none'; return; }
+    var np = P[labs[n]];
+    if(!np){ lab.style.display='none'; return; }
     lab.style.display = '';
     var w = lab.offsetWidth, h = lab.offsetHeight;
-    var right = nd._x < sr.width*0.55;
+    var right = np.x < sr.width*0.55;
     var placed = null;
-    /* pass one: avoid everything already placed */
-    for(var s=0;s<2 && !placed;s++){
-      var side = s === 0 ? right : !right;
-      for(var dy=0; dy<=48 && !placed; dy+=12){
-        for(var sgn=1; sgn>=-1 && !placed; sgn-=2){
-          var x = side ? nd._x + 13 : nd._x - 13 - w;
-          var y = nd._y + sgn*dy - h/2;
-          if(x < 0 || x + w > sr.width || y < 0 || y + h > sr.height) continue;
-          var box = { x:x, y:y, w:w, h:h };
-          var bad = false;
-          for(var b=0;b<boxes.length;b++){ if(hit(box, boxes[b])){ bad = true; break; } }
-          if(!bad) placed = box;
+    for(var pass=0; pass<2 && !placed; pass++){
+      for(var s2=0; s2<2 && !placed; s2++){
+        var side = s2 === 0 ? right : !right;
+        for(var dy=0; dy<=60 && !placed; dy+=12){
+          for(var sg=1; sg>=-1 && !placed; sg-=2){
+            var x = side ? np.x + 13 : np.x - 13 - w;
+            var y = np.y + sg*dy - h/2;
+            if(x < 0 || x + w > sr.width || y < 0 || y + h > sr.height) continue;
+            var box = { x:x, y:y, w:w, h:h };
+            var bad = false, list = pass === 0 ? boxes : cardBoxes;
+            for(var b=0;b<list.length;b++){ if(hit(box, list[b])){ bad = true; break; } }
+            if(!bad) placed = box;
+          }
         }
       }
     }
-    /* pass two: allow label to label proximity, never a card */
     if(!placed){
-      for(var s2=0;s2<2 && !placed;s2++){
-        var side2 = s2 === 0 ? right : !right;
-        for(var dy2=0; dy2<=60 && !placed; dy2+=12){
-          var x2 = side2 ? nd._x + 13 : nd._x - 13 - w;
-          var y2 = nd._y + dy2 - h/2;
-          if(x2 < 0 || x2 + w > sr.width || y2 < 0 || y2 + h > sr.height) continue;
-          var box2 = { x:x2, y:y2, w:w, h:h };
-          var badCard = false;
-          for(var c=0;c<cardBoxes.length;c++){ if(hit(box2, cardBoxes[c])){ badCard = true; break; } }
-          if(!badCard) placed = box2;
-        }
+      var bx = Math.max(2, Math.min(sr.width - w - 2, np.x + 13));
+      var by = Math.max(2, Math.min(sr.height - h - 2, np.y - h/2));
+      placed = { x:bx, y:by, w:w, h:h };
+      for(var c=0;c<cardBoxes.length;c++){
+        if(hit(placed, cardBoxes[c])) placed.y = cardBoxes[c].y + cardBoxes[c].h + 6;
       }
-    }
-    /* pass three: slide clear of the card it hit */
-    if(!placed){
-      var x3 = Math.max(2, Math.min(sr.width - w - 2, nd._x + 13));
-      var y3 = Math.max(2, Math.min(sr.height - h - 2, nd._y - h/2));
-      var box3 = { x:x3, y:y3, w:w, h:h };
-      for(var c2=0;c2<cardBoxes.length;c2++){
-        if(hit(box3, cardBoxes[c2])){ box3.y = cardBoxes[c2].y + cardBoxes[c2].h + 6; }
-      }
-      if(box3.y + h > sr.height - 2) box3.y = Math.max(2, cardBoxes.length ? cardBoxes[0].y - h - 6 : 2);
-      placed = box3;
+      if(placed.y + h > sr.height - 2) placed.y = Math.max(2, placed.y - h - 12);
     }
     lab.style.left = placed.x + 'px'; lab.style.top = placed.y + 'px';
+    lab._off = { dx: placed.x - np.x, dy: placed.y - np.y };
+    /* first five are the core stages, the rest fade by distance from centre */
+    var mid = sr.height/2;
+    lab.style.opacity = lab.dataset.core === '1'
+      ? '0.42'
+      : (0.2 + 0.12*(1 - Math.abs(placed.y - mid)/mid)).toFixed(3);
     boxes.push(placed);
+  });
+}
+
+/* Cheap per frame pass: the DOM rides the graph by its stored offset. */
+function follow(){
+  if(current < 0) return;
+  var P = net.allPos(), srcs = net.sources(), labs = net.labels();
+  var stacked = isPhone();
+  if(!stacked) Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(card, n){
+    var np = P[srcs[n]]; if(!np || !card._off) return;
+    card.style.left = (np.x + card._off.dx) + 'px';
+    card.style.top  = (np.y + card._off.dy) + 'px';
+  });
+  Array.prototype.forEach.call(stage.querySelectorAll('.oplabel'), function(lab, n){
+    var np = P[labs[n]]; if(!np || !lab._off) return;
+    lab.style.left = (np.x + lab._off.dx) + 'px';
+    lab.style.top  = (np.y + lab._off.dy) + 'px';
   });
 }
 
@@ -1041,54 +1253,66 @@ window.addEventListener('keydown', function(e){
 });
 function page(d){
   var n = (current + d + SERVICES.length) % SERVICES.length;
-  net.fade(0.001);
-  setTimeout(function(){ net.fade(0); showPanel(n); }, 420);
+  net.dissolve(true);
+  setTimeout(function(){ net.dissolve(false); lastFade = -1; showPanel(n); }, 420);
 }
 
 /* ============================================================
    FRAME LOOP
    ============================================================ */
-var last = performance.now()/1000, nextLayout = 0;
-function frame(now){
-  var t = now/1000, dt = Math.min(0.05, t - last); last = t;
-  applyScroll();
-  if(ovOpen){
-    if(!reduce.matches) net.step(t, dt);
-    net.draw(t);
-    drawTies();
-    /* First pass once the entry animation has settled, then every 7s.
-       Keyed off a scheduled time rather than an elapsed check, which would
-       have left cards unpositioned for the first seven seconds. */
-    if(t > nextLayout){ layout(); nextLayout = t + 7; }
-  }
-  requestAnimationFrame(frame);
+var last = performance.now()/1000, nextLayout = 0, lastFade = -1;
+
+function applyFade(){
+  var f = net.fadeValue();
+  if(Math.abs(f - lastFade) <= 0.008) return;
+  lastFade = f;
+  document.getElementById('net').style.opacity = f;
+  Array.prototype.forEach.call(stage.querySelectorAll('.oplabel'), function(l){
+    l.style.opacity = (parseFloat(l.dataset.base || l.style.opacity || 0.3) * f).toFixed(3);
+  });
+  Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(c){ c.style.opacity = f; });
 }
+
 function drawTies(){
-  var c = document.getElementById('net').getContext('2d');
-  Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(card){
-    var tie = card._tie; if(!tie) return;
-    var tx = tie.bx < tie.x ? tie.bx + tie.bw : tie.bx;
-    var ty = tie.by + tie.bh/2;
-    c.beginPath(); c.moveTo(tie.x, tie.y); c.lineTo(tx, ty);
-    c.lineWidth = 1.2; c.strokeStyle = tie.col; c.globalAlpha = 0.5; c.stroke(); c.globalAlpha = 1;
+  if(isPhone()) return;                       /* stacked list: no tie lines */
+  var P = net.allPos(), srcs = net.sources();
+  var sr = stage.getBoundingClientRect();
+  Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(card, n){
+    var np = P[srcs[n]]; if(!np) return;
+    var x = parseFloat(card.style.left) || 0, y = parseFloat(card.style.top) || 0;
+    var w = card.offsetWidth, h = card.offsetHeight;
+    /* nearest point on the card edge to the node */
+    var ax = Math.max(x, Math.min(x + w, np.x));
+    var ay = Math.max(y, Math.min(y + h, np.y));
+    net.tie(np.x, np.y, ax, ay, n);
   });
 }
 
+function frame(now){
+  var t = now/1000, dt = Math.min(0.05, t - last); last = t;
+  applyScroll();
+  if(!reduce.matches){ heroNet.step(dt); }
+  heroNet.draw();
+  if(ovOpen){
+    if(!reduce.matches) net.step(dt);
+    net.draw();
+    drawTies();
+    if(t > nextLayout){ layout(); nextLayout = t + 7; }
+    follow();
+    applyFade();
+  }
+  requestAnimationFrame(frame);
+}
+
 /* ============================================================
-   HERO NETWORK, START
+   START. One rAF loop drives both pieces.
    ============================================================ */
-var heroNet = makeNetwork(heroCanvas, { hero:true });
-function sizeHero(){ heroNet.measure(); heroNet.build(0); }
+var heroNet = makeHero(heroCanvas, { density:2, speed:1 });
+function sizeHero(){ heroNet.size(); heroNet.build(); }
 
 measureDock();
 applyScroll();
 sizeHero();
-requestAnimationFrame(function loop(now){
-  var t = now/1000;
-  if(!reduce.matches) heroNet.step(t, 0.016);
-  heroNet.draw(t);
-  requestAnimationFrame(loop);
-});
 requestAnimationFrame(frame);
 
 var rz;
@@ -1096,14 +1320,12 @@ addEventListener('resize', function(){
   clearTimeout(rz);
   rz = setTimeout(function(){
     lastP = -1; measureDock(); applyScroll(); sizeHero();
-    if(ovOpen){ net.measure(); layout(); }
+    if(ovOpen){ net.size(); layout(); }
   }, 140);
 });
 addEventListener('scroll', function(){ if(!ovOpen) applyScroll(); }, { passive:true });
-/* Test hook: lets the collision invariants be checked deterministically
-   rather than waiting on the frame loop. */
 window.__syn = { layout:layout, open:openOverlay, close:closeOverlay, page:showPanel,
-                 net:net, stage:stage, hover:hoverSys };
+                 net:net, hero:heroNet, stage:stage, hover:hoverSys, follow:follow };
 setTimeout(function(){ document.getElementById('sticky').classList.add('on'); }, 900);
 })();
 </script>
