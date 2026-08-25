@@ -132,6 +132,14 @@ p{ margin:0; text-wrap:pretty; }
     background:var(--shell); z-index:15; pointer-events:none;
     transition:opacity .28s var(--ease);
   }
+  /* Full width band rather than a plate sized in em off a font size the
+     wordmark no longer uses. Content scrolls underneath it. The !important
+     overrides an inline scale left behind by a resize across the breakpoint. */
+  .plate{
+    left:0; right:0; top:0; width:auto; height:104px;
+    font-size:44px; margin:0; padding:0; border-radius:0;
+    transform:none !important;
+  }
 }
 .hero-h1 h1{ max-width:min(720px,56vw); }
 
@@ -303,13 +311,15 @@ p{ margin:0; text-wrap:pretty; }
    PHONE. Fixed type scale, single column, safe areas.
    ========================================================== */
 @media (max-width:760px){
-  .screen{ padding:74px 20px 40px; gap:11px; }
+  .screen{ padding:104px 20px 66px; gap:11px; }
   /* Screen 02 has to seat four rows and the risk statement clear of the
-     fixed bottom bar, so it runs tighter than the rest. */
-  #p-2 .step{ padding:9px 0; }
+     fixed bottom bar, so it runs tighter than the rest. The 44px floor on
+     .step__btn already carries the tap target, so row padding is what gets
+     traded away rather than row height. */
+  #p-2 .step{ padding:2px 0; }
   #p-2 .risk{ padding-top:12px; margin-top:2px; }
   #p-2 .lead{ line-height:1.5; }
-  #contact{ padding:88px 20px 110px; }
+  #contact{ padding:104px 20px 110px; }
   .two{ grid-template-columns:minmax(0,1fr); gap:24px; }
   h1{ font-size:34px; }
   .hero-h1 h1{ max-width:none; }
@@ -326,6 +336,17 @@ p{ margin:0; text-wrap:pretty; }
   .syscard__t{ font-size:15px; }
   .popup{ font-size:14.5px; }
   .wordmark{ font-size:44px; top:56px; }
+
+  /* Short phones: dock the wordmark higher so the band, and the padding that
+     clears it, give the rows back the height they need. */
+  @media (max-height:820px){
+    .plate{ height:88px; }
+    .wordmark{ font-size:36px; top:46px; }
+    .screen{ padding-top:88px; padding-bottom:58px; gap:9px; }
+    .srow{ padding:clamp(8px,1.15vh,18px) 2px; }
+    .lead{ line-height:1.45; }
+    #p-1 .two{ gap:8px; }
+  }
 
   /* Wordmark, network and headline share one screen, next screen peeks. */
   #hero{ height:82vh; min-height:82vh; }
@@ -604,13 +625,12 @@ function applyScroll(){
   var e = easeIO(p);
   var k = 1 + (bigK - 1) * e;
   wordmark.style.transform = 'scale(' + k.toFixed(4) + ')';
-  plate.style.transform = 'scale(' + k.toFixed(4) + ')';
-  plate.style.background = 'rgba(20,16,14,' + (0.95 * p).toFixed(3) + ')';
+  if(innerWidth > 760) plate.style.transform = 'scale(' + k.toFixed(4) + ')';
+  plate.style.background = 'rgba(20,16,14,' + ((innerWidth > 760 ? 0.95 : 1) * p).toFixed(3) + ')';
   var h = Math.max(0, 1 - p * 2);
   heroH1.style.opacity = h.toFixed(3);
   heroH1.style.transform = 'translateY(' + (-34 * e).toFixed(1) + 'px)';
   heroCanvas.style.opacity = (1 - 0.7 * p).toFixed(3);
-  if(peekmask) peekmask.style.opacity = pageYOffset > 2 ? '0' : '1';
 }
 
 /* ============================================================
