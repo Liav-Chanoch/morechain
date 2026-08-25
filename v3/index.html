@@ -95,7 +95,10 @@ p{ margin:0; text-wrap:pretty; }
 
 /* ---------- hero ---------- */
 #hero{ height:100vh; justify-content:flex-end; padding-bottom:clamp(34px,5.5vh,64px); }
-#net-hero{ position:fixed; inset:0; z-index:1; pointer-events:none; }
+/* A canvas is a replaced element: inset:0 with width:auto resolves to its
+   intrinsic size, not the viewport, which drew the whole network small and
+   pinned to the top left corner. */
+#net-hero{ position:fixed; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; }
 .wordmark{
   position:fixed; z-index:3;
   left:var(--pad-x); top:clamp(32px,4.6vw,60px);
@@ -171,6 +174,7 @@ p{ margin:0; text-wrap:pretty; }
 
 /* ---------- 04 clients ---------- */
 .pills{ display:flex; flex-wrap:wrap; gap:8px; }
+.two--clients .pills{ justify-content:flex-end; align-content:flex-start; }
 .sector{ font-family:var(--m); font-weight:500; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); border:1px solid var(--hair); border-radius:999px; padding:7px 13px; }
 .clients{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(8px,1vw,12px); }
 .clients .card{ font-weight:500; color:var(--ink); font-size:clamp(13px,1.05vw,16.5px); }
@@ -243,7 +247,8 @@ p{ margin:0; text-wrap:pretty; }
   transition:border-color .32s var(--ease), background .32s var(--ease);
 }
 .syscard:hover{ background:var(--card-bg-hi); }
-.syscard__i{ font-family:var(--m); font-weight:500; font-size:10px; letter-spacing:.14em; color:currentColor; }
+.syscard__row{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+.syscard__i{ font-family:var(--m); font-weight:500; font-size:10px; letter-spacing:.14em; color:currentColor; flex:0 0 auto; }
 .syscard__t{ font-weight:600; color:var(--ink); font-size:clamp(13.5px,1.1vw,16.5px); letter-spacing:-.02em; line-height:1.2; }
 .popup{
   position:absolute; display:none; z-index:6;
@@ -344,7 +349,7 @@ p{ margin:0; text-wrap:pretty; }
   <div class="eyebrow-row"><span class="mono">01 / What we do</span></div>
   <div class="two">
     <h2>We build automated systems that are custom made <span class="acc">specifically for your business.</span></h2>
-    <p class="lead needs-copy" data-needs-copy="01 lead paragraph">Lead paragraph, verbatim from Synecura Walnut.dc.html. Not present in the brief and the prototype is not in this repo, so it is marked rather than invented.</p>
+    <p class="lead">We specialize in identifying business inefficiencies that cost you valuable time and money, building tailored systems that deliver precise solutions for every operational challenge. Our expertise lies in transforming repetitive, manual tasks into smart, automated workflows that work for you.</p>
   </div>
   <span class="mono">Some of what we do</span>
   <div class="rows" id="rows"></div>
@@ -356,7 +361,7 @@ p{ margin:0; text-wrap:pretty; }
   <div class="two">
     <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4vh,26px)">
       <h2>Turn repetitive manual work into <span class="acc">fast, automated business growth.</span></h2>
-      <p class="lead needs-copy" data-needs-copy="02 paragraph">Paragraph, verbatim from the prototype.</p>
+      <p class="lead">We specialize in optimizing business operations by replacing repetitive manual tasks with custom systems and smart automations. We save you substantial time and money, with fees tied directly to real, measurable results.</p>
     </div>
     <div class="steps" id="steps"></div>
   </div>
@@ -372,14 +377,14 @@ p{ margin:0; text-wrap:pretty; }
   <div class="two">
     <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4vh,26px);align-items:flex-start">
       <h2>We know where you lose time and money because we've already <span class="acc">solved it in our own operations</span></h2>
-      <p class="body">We come from years of starting and running successful businesses, which means we have seen where the real headroom sits: the work that quietly absorbs hours, the process running at a fraction of what it could, the step everyone routes around.</p>
-      <p class="body">Alongside that we have spent years building systems, first for our own companies and then for others, designed around exactly those opportunities. The result each time was the same: large cost savings and meaningful revenue growth.</p>
+      <p class="body">Having spent years launching and managing businesses ourselves, we understand operations from the inside. We know where companies waste valuable time: the repetitive manual tasks that eat up hours, the slow workflows, and the everyday operational bottlenecks.</p>
+      <p class="body">We design and build custom tech systems tailored specifically to eliminate those inefficiencies. The outcome is always straightforward: significant cost reduction, higher productivity, and real business growth.</p>
       <a class="cta cta--inline" href="#contact"><span class="cta__sq" aria-hidden="true"></span>Book your free characterization session</a>
     </div>
     <div class="cards">
-      <article class="card"><span class="mono">Operators</span><h3 class="card__t">Years of starting and running successful businesses</h3><p class="card__c">We know this world from the inside, so we know what to look for, where to look for it, and how to turn what we find into a better number.</p></article>
-      <article class="card"><span class="mono">Builders</span><h3 class="card__t">A long, proven record in product and custom system development</h3><p class="card__c">Every system is built from scratch around the specific needs of the business in front of us. We do not resell a template.</p></article>
-      <article class="card"><span class="mono">The edge</span><h3 class="card__t">Current-generation automation, not the stack of a decade ago</h3><p class="card__c">This is what makes it economic to capture gains that were previously too small to be worth anyone's time, and it is why our fee can come out of the upside.</p></article>
+      <article class="card"><span class="mono">Operators</span><h3 class="card__t">Years of hands-on business management</h3><p class="card__c">We know how real businesses operate day to day. This background lets us identify operational friction quickly and turn lost time into measurable financial savings.</p></article>
+      <article class="card"><span class="mono">Builders</span><h3 class="card__t">Proven track record in custom software development</h3><p class="card__c">Every system is built completely from scratch around your company’s unique workflow. We do not sell generic templates or one-size-fits-all fixes.</p></article>
+      <article class="card"><span class="mono">The edge</span><h3 class="card__t">Modern, smart automation tools</h3><p class="card__c">We use current, advanced automation technology instead of outdated legacy software. That lets us solve operational challenges fast, cost-effectively, and with zero unnecessary complexity.</p></article>
     </div>
   </div>
 </section>
@@ -387,9 +392,11 @@ p{ margin:0; text-wrap:pretty; }
 <!-- 04 -->
 <section class="screen" id="p-4">
   <div class="eyebrow-row"><span class="mono">04 / Our clients</span></div>
-  <h2>Some of the operations we have <span class="acc">optimised so far.</span></h2>
-  <div class="pills">
-    <span class="sector">Tourism</span><span class="sector">Marine &amp; cruises</span><span class="sector">Sport &amp; leisure</span><span class="sector">Creative studios</span><span class="sector">Relocation</span>
+  <div class="two two--clients">
+    <h2>Some of the operations we have <span class="acc">optimised so far.</span></h2>
+    <div class="pills">
+      <span class="sector">Tourism</span><span class="sector">Marine &amp; cruises</span><span class="sector">Sport &amp; leisure</span><span class="sector">Creative studios</span><span class="sector">Relocation</span>
+    </div>
   </div>
   <div class="clients">
     <article class="card">dereh-haski.co.il</article>
@@ -407,7 +414,7 @@ p{ margin:0; text-wrap:pretty; }
   <div class="two">
     <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4vh,26px)">
       <h2>Start with a free strategy session. <span class="acc">See where your business can save.</span></h2>
-      <p class="lead needs-copy" data-needs-copy="05 paragraph">Paragraph, verbatim from the prototype.</p>
+      <p class="lead">We sit down with you to review your operations, map out your workflows, and identify where custom automation can eliminate wasted time and cut costs. You get a clear operational roadmap with zero commitment required.</p>
     </div>
     <div class="ctas">
       <a class="cta" href="mailto:hello@synecura.co"><span class="cta__sq" aria-hidden="true"></span>hello@synecura.co</a>
@@ -450,19 +457,32 @@ var isPhone = function(){ return innerWidth <= 760; };
 var SERVICES = [
   { chip:'01 / Revenue', name:'Revenue and sales systems',
     ops:['Inbound lead','Qualification','Sales call','Proposal','Close','Lead scoring','CRM sync','Follow-up','Forecast','Commission','Renewal','Handover'],
-    sys:['AI Sales Copilot','Conversation Intelligence Agent','Autonomous Pipeline Agent'] },
+    sys:[
+      { t:'AI Sales Copilot', d:null },
+      { t:'Conversation Intelligence Agent', d:'Reviews sales calls end to end, surfaces coaching notes, flags missed objections, and recommends the next move to close.' },
+      { t:'Autonomous Pipeline Agent', d:null }
+    ] },
   { chip:'02 / Orders', name:'Order and supplier platforms',
     ops:['Order intake','Confirmation','Supplier dispatch','Fulfilment','Payment','Stock check','Purchase order','Delivery notes','Returns','Invoicing','Lead times','Archive'],
-    sys:['Proprietary Order Management CRM','Supplier Portal'] },
+    sys:[ { t:'Proprietary Order Management CRM', d:null }, { t:'Supplier Portal', d:null } ] },
   { chip:'03 / Pricing', name:'Pricing and quoting engines',
     ops:['Client request','Inventory pull','Package build','Quote issued','Booking','Rate cards','Availability','Margin rules','Ancillaries','Approvals','Cancellation','Supplier feed'],
-    sys:['Dynamic Packaging & Pricing Engine','Agent CPQ Platform'] },
+    sys:[ { t:'Dynamic Packaging & Pricing Engine', d:null }, { t:'Agent CPQ Platform', d:null } ] },
   { chip:'04 / Finance', name:'Finance automation',
     ops:['Expense capture','Classification','Reconciliation','VAT filing','Reporting','Receipts','Entities','Recurring costs','Bank feed','Receivables','Audit trail','Year end'],
-    sys:['Multi-Entity Expense Agent','Automated VAT & Revenue Reporting Agent'] }
+    sys:[ { t:'Multi-Entity Expense Agent', d:null }, { t:'Automated VAT & Revenue Reporting Agent', d:null } ] }
 ];
 var SYS_COLOURS = ['#B4562F','#D0A05C','#C2703A'];
-var STEPS = ['Discovery','Action Plan','Custom Build','Growth & Optimization'];
+var STEPS = [
+  { t:'Discovery',
+    d:'A free strategy session with business owners and senior management. We analyze your core operations, map out where time and money are going to repetitive work, and give you a full analysis you keep, whatever you decide next.' },
+  { t:'Action Plan',
+    d:'A clear, data-backed plan detailing exactly which manual processes we will automate, the expected time and cost savings, and the exact metrics we will track together.' },
+  { t:'Custom Build',
+    d:'A tailor-made system engineered around your exact operational needs: fully integrated with your existing software, highly secure, and easy for your team to run independently.' },
+  { t:'Growth & Optimization',
+    d:'A flexible ongoing partnership where our fee reflects the real money and hours saved. As your business scales, we continue to streamline and automate new areas of your operations.' }
+];
 
 /* ============================================================
    01 rows and 02 steps
@@ -480,7 +500,7 @@ SERVICES.forEach(function(s, i){
 });
 
 var stepsHost = document.getElementById('steps');
-STEPS.forEach(function(t, i){
+STEPS.forEach(function(st, i){
   var wrap = document.createElement('div');
   wrap.className = 'step';
   var idx = ('0' + (i+1));
@@ -490,8 +510,9 @@ STEPS.forEach(function(t, i){
       '<span class="step__h"><span class="step__t"></span>' + (i === 0 ? '<span class="pill">No charge</span>' : '') + '</span>' +
       '<span class="step__sign" aria-hidden="true">+</span>' +
     '</button>' +
-    '<div class="step__body"><p class="body needs-copy" data-needs-copy="step ' + idx + ' description">Step description, verbatim from the prototype.</p></div>';
-  wrap.querySelector('.step__t').textContent = t;
+    '<div class="step__body"><p class="body"></p></div>';
+  wrap.querySelector('.step__t').textContent = st.t;
+  wrap.querySelector('.step__body p').textContent = st.d;
   var btn = wrap.querySelector('.step__btn');
   btn.addEventListener('click', function(){
     if(!isPhone()) return;                       /* accordion is a phone behaviour */
@@ -771,12 +792,13 @@ function buildDom(svc){
     var card = document.createElement('article');
     card.className = 'syscard';
     card.style.color = col;
-    card.innerHTML = '<span class="syscard__i"></span><h4 class="syscard__t"></h4>';
+    card.innerHTML = '<span class="syscard__row"><h4 class="syscard__t"></h4><span class="syscard__i"></span></span>';
     card.querySelector('.syscard__i').textContent = 'S' + ('0' + (n+1));
-    card.querySelector('.syscard__t').textContent = name;
+    card.querySelector('.syscard__t').textContent = name.t;
     var pop = document.createElement('div');
     pop.className = 'popup'; pop.style.color = col;
-    pop.innerHTML = '<span class="needs-copy" data-needs-copy="system description">Description, verbatim from the prototype.</span>';
+    if(name.d){ pop.textContent = name.d; }
+    else { pop.innerHTML = '<span class="needs-copy" data-needs-copy="system description">Description, verbatim from the prototype.</span>'; }
     card.dataset.sys = String(n);
     if(phone){
       card.appendChild(pop);
