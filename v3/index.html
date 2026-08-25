@@ -3,942 +3,1024 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Synecura, walnut variant</title>
-<meta name="description" content="Synecura finds the operational inefficiency in a business and builds the custom system that removes it. Every system is built for one operation alone.">
+<title>Synecura, custom built systems for operations</title>
+<meta name="description" content="Synecura builds automated systems made specifically for your business. Start with a free strategy session and see where your business can save.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="canonical" href="https://liav-chanoch.github.io/morechain/">
 <meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#171210">
+<meta name="theme-color" content="#14100E">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Synecura">
 <meta property="og:title" content="Synecura, custom built systems that save you time and money">
-<meta property="og:description" content="We find the operational inefficiency and build the system that removes it. Every system is built for one operation alone.">
 <meta property="og:image" content="https://liav-chanoch.github.io/morechain/v3/assets/og.png">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ==========================================================
-   TOKENS. Walnut. No hue outside this list.
-   ========================================================== */
 :root{
-  --bg-a:#201A16;
-  --bg-b:#100C0A;
-  --panel:#1A1512;
-  --accent:#9B4A32;
-  --accent-hi:#B25940;
-  --accent-soft:#CE8A52;
+  --shell:#14100E;
   --ink:#EFE7DA;
-  --body:#BEB2A4;
+  --body:#CBBFB0;
   --muted:#9A8D80;
   --dim:#786C61;
-  --dim-2:#6B6057;
+  --dimmer:#6B6057;
+  --accent:#9B4A32;
+  --accent-hi:#B25940;
+  --amber:#CE8A52;
+  --amber-cta:#D0A05C;
+  --amber-cta-hi:#DDB273;
+  --sys1:#B4562F;
+  --sys2:#D0A05C;
+  --sys3:#C2703A;
   --hair:rgba(239,231,218,0.10);
   --hair-2:rgba(239,231,218,0.14);
   --hair-3:rgba(239,231,218,0.18);
+  --slate:rgba(239,231,218,0.20);
   --card-bg:rgba(239,231,218,0.022);
   --card-bg-hi:rgba(239,231,218,0.05);
-
   --f:"Archivo",system-ui,-apple-system,sans-serif;
   --m:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-
-  --r:2px;
-  --pad:clamp(20px,5vw,84px);
+  --pad-x:clamp(34px,5.6vw,92px);
   --ease:cubic-bezier(.4,0,.2,1);
 }
-
 *,*::before,*::after{ box-sizing:border-box; }
-html{ background:var(--bg-b); }
+html{
+  background:var(--shell);
+  scroll-snap-type:y proximity;
+}
+@media (min-height:640px){ html{ scroll-snap-type:y mandatory; } }
+@media (prefers-reduced-motion: reduce){ html{ scroll-snap-type:none; } }
 body{
   margin:0;
-  background:radial-gradient(74% 74% at 62% 40%, var(--bg-a) 0%, var(--bg-b) 100%) no-repeat fixed;
+  background:radial-gradient(1100px 760px at 62% 40%, #201A16, #100C0A 74%) var(--shell) no-repeat fixed;
   color:var(--body);
   font-family:var(--f); font-weight:400;
   -webkit-font-smoothing:antialiased;
 }
-/* A closed drawer sits past the right edge. Clip rather than scroll. */
-.page{ overflow-x:clip; position:relative; }
-
+/* Off canvas layers would widen the document without this. */
+.wrap{ overflow-x:clip; position:relative; }
+::selection{ background:var(--accent); color:var(--shell); }
 img{ max-width:100%; display:block; }
 button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
-a{ color:inherit; text-decoration:none; }
-:focus-visible{ outline:2px solid var(--accent-soft); outline-offset:3px; border-radius:var(--r); }
+a{ color:inherit; text-decoration:none; transition:color .28s var(--ease); }
+a:hover{ color:var(--accent); }
+:focus-visible{ outline:2px solid var(--amber); outline-offset:3px; border-radius:2px; }
 
-/* ==========================================================
-   TYPE
-   ========================================================== */
 .mono{
   font-family:var(--m); font-weight:500; text-transform:uppercase;
-  font-size:clamp(9.5px,0.75vw,11px); letter-spacing:.14em; color:var(--dim);
+  font-size:11px; letter-spacing:.14em; color:var(--dim);
 }
-.mono--soft{ color:var(--accent-soft); }
-h1,h2{
-  margin:0; font-weight:600; color:var(--ink);
-  font-size:clamp(26px,3.3vw,54px); line-height:1.05; letter-spacing:-.038em;
-  text-wrap:balance;
-}
-h1 em{ font-style:normal; color:var(--accent-soft); }
-h3{
-  margin:0; font-weight:600; color:var(--ink);
-  font-size:clamp(15px,1.15vw,18px); line-height:1.2; letter-spacing:-.018em;
-}
-p{ margin:0; }
-.copy{
-  color:var(--body);
-  font-size:clamp(13px,1.05vw,16.5px); line-height:1.62;
-  text-wrap:pretty; max-width:58ch;
-}
-.copy--muted{ color:var(--muted); }
+.mono--micro{ font-size:11px; color:var(--dimmer); letter-spacing:.16em; }
 
-/* ==========================================================
-   SECTIONS
-   ========================================================== */
-.sec{
-  min-height:100svh;
-  padding:clamp(84px,11vh,128px) var(--pad) clamp(64px,9vh,104px);
-  display:flex; flex-direction:column; justify-content:center;
-  position:relative;
-}
-.sec__head{ display:flex; flex-direction:column; gap:clamp(12px,1.6vh,20px); }
-.rule{ height:1px; background:var(--hair); border:0; margin:0; }
-.two{
-  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-  gap:clamp(26px,4vw,72px); align-items:start;
-}
-.eyebrow-row{
-  display:flex; align-items:center; gap:14px;
-  margin-bottom:clamp(20px,3vh,34px);
-}
-.eyebrow-row .rule{ flex:1; }
+h1,h2{ margin:0; font-weight:600; color:var(--ink); text-wrap:balance; }
+h1{ font-size:clamp(33px,4.9vw,82px); line-height:1.02; letter-spacing:-.042em; }
+h2{ font-size:clamp(26px,min(3.8vw,7vh),62px); line-height:1.05; letter-spacing:-.038em; }
+#contact h2{ font-size:clamp(28px,min(4.4vw,8vh),72px); line-height:1.02; letter-spacing:-.042em; }
+em.acc{ font-style:italic; font-weight:400; color:var(--accent); }
+span.acc{ color:var(--accent); }
+p{ margin:0; text-wrap:pretty; }
+.lead{ color:var(--body); font-size:clamp(15px,min(1.45vw,2.9vh),25px); line-height:1.58; }
+.body{ color:var(--muted); font-size:clamp(14px,min(1.2vw,2.5vh),19px); line-height:1.62; }
 
-/* ==========================================================
-   CARD. One treatment, reused by the drawer systems, the three
-   Who-we-are cards and the client tiles.
-   ========================================================== */
+.screen{
+  min-height:100vh;
+  scroll-snap-align:start; scroll-snap-stop:always;
+  padding:clamp(74px,11vh,120px) var(--pad-x) clamp(34px,5.5vh,64px);
+  display:flex; flex-direction:column; gap:clamp(22px,4vh,44px);
+  justify-content:center; position:relative;
+}
+.eyebrow-row{ display:flex; align-items:center; gap:16px; padding-bottom:14px; border-bottom:1px solid var(--hair); }
+.two{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(38px,5.6vw,96px); align-items:start; }
+
+/* ---------- hero ---------- */
+#hero{ height:100vh; justify-content:flex-end; padding-bottom:clamp(34px,5.5vh,64px); }
+#net-hero{ position:fixed; inset:0; z-index:1; pointer-events:none; }
+.wordmark{
+  position:fixed; z-index:3;
+  left:var(--pad-x); top:clamp(32px,4.6vw,60px);
+  transform-origin:0 0; white-space:nowrap;
+  font-weight:600; letter-spacing:-.045em; line-height:1;
+  font-size:clamp(46px,11.2vw,196px); color:var(--ink);
+}
+.wordmark i{ font-style:normal; color:var(--accent); }
+.wordmark u{ text-decoration:none; display:inline-block; width:.27em; height:.27em; background:var(--accent); margin-left:.12em; }
+.plate{ position:fixed; left:0; top:0; right:0; height:clamp(72px,11vh,132px); background:rgba(20,16,14,0); z-index:2; pointer-events:none; }
+/* ch resolves against the element's own font size, so the cap belongs on the
+   heading. On the wrapper it would use the 16px body size and wrap to one
+   word per line. */
+.hero-h1{ position:relative; z-index:2; }
+.hero-h1 h1{ max-width:15ch; }
+
+/* ---------- 01 rows ---------- */
+.rows{ display:flex; flex-direction:column; }
+.srow{
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(14px,2vw,30px);
+  width:100%; text-align:left; padding:clamp(14px,2.2vh,26px) 2px;
+  border-top:1px solid var(--hair); min-height:44px;
+  transition:padding-left .32s var(--ease);
+}
+.srow:last-child{ border-bottom:1px solid var(--hair); }
+.srow__t{ font-weight:600; color:var(--ink); font-size:clamp(19px,min(2.6vw,4.8vh),41px); letter-spacing:-.032em; transition:color .32s var(--ease); }
+.srow__go{ width:30px; height:30px; border-radius:999px; border:1px solid var(--hair-2); display:grid; place-items:center; color:var(--muted); transition:border-color .32s var(--ease), color .32s var(--ease); }
+.srow__go svg{ width:11px; height:11px; }
+@media (hover:hover){
+  .srow:hover{ padding-left:9px; }
+  .srow:hover .srow__t,.srow:hover .mono{ color:var(--amber); }
+  .srow:hover .srow__go{ border-color:var(--amber); color:var(--amber); }
+}
+
+/* ---------- 02 steps ---------- */
+.steps{ display:flex; flex-direction:column; }
+.step{ border-top:1px solid var(--hair); padding:clamp(13px,2vh,22px) 0; display:grid; grid-template-columns:auto 1fr; gap:clamp(12px,1.5vw,22px); align-items:start; }
+.step:first-child{ border-top:0; }
+.step__h{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.step__t{ font-weight:600; color:var(--ink); font-size:clamp(15.5px,min(1.4vw,2.8vh),22px); letter-spacing:-.02em; }
+.pill{ font-family:var(--m); font-weight:500; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); border:1px solid var(--accent); border-radius:999px; padding:3px 9px; }
+.risk{ display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; border-top:1px solid var(--accent); padding-top:clamp(14px,2.2vh,24px); }
+.risk__sq{ width:6px; height:6px; background:var(--accent); margin-top:.5em; }
+.risk p{ color:var(--ink); font-weight:600; font-size:clamp(16px,min(1.7vw,3.3vh),25px); line-height:1.4; letter-spacing:-.02em; }
+
+/* ---------- shared card ---------- */
 .card{
-  border:1px solid var(--hair);
-  border-left:2px solid rgba(155,74,50,0.34);
-  border-radius:var(--r);
+  border:1px solid var(--hair); border-left:2px solid rgba(155,74,50,0.34); border-radius:2px;
   background:var(--card-bg);
-  padding:clamp(16px,2.1vh,22px) clamp(17px,1.7vw,24px);
-  display:flex; flex-direction:column; gap:clamp(7px,1vh,11px);
+  padding:clamp(15px,2vh,22px) clamp(18px,1.8vw,26px);
+  display:flex; flex-direction:column; gap:clamp(6px,1vh,10px);
   transition:border-color .32s var(--ease), background .32s var(--ease), box-shadow .32s var(--ease);
 }
 @media (hover:hover){
-  .card:hover{
-    border-color:rgba(239,231,218,0.2);
-    border-left-color:var(--accent);
-    background:var(--card-bg-hi);
-    box-shadow:0 10px 30px -22px rgba(0,0,0,0.9);
-  }
+  .card:hover{ border-color:rgba(239,231,218,0.2); border-left-color:var(--accent); background:var(--card-bg-hi); box-shadow:0 10px 30px -22px rgba(0,0,0,0.9); }
 }
+.card__t{ font-weight:600; color:var(--ink); font-size:clamp(15px,min(1.3vw,2.6vh),20.5px); letter-spacing:-.02em; }
+.card__c{ color:var(--muted); font-size:clamp(13px,min(1.08vw,2.2vh),17px); line-height:1.5; }
+.cards{ display:flex; flex-direction:column; gap:clamp(9px,1.4vh,15px); }
 
-/* ==========================================================
-   0 HERO
-   ========================================================== */
-#hero{ justify-content:flex-end; position:relative; overflow:hidden; }
-#chain{
-  position:absolute; inset:0; width:100%; height:100%;
-  z-index:0; pointer-events:none;
-}
-.hero__plate{
-  position:absolute; left:0; top:0; width:min(560px,72vw); height:clamp(96px,13vh,150px);
-  background:linear-gradient(180deg, rgba(16,12,10,0.92), rgba(16,12,10,0));
-  opacity:0; pointer-events:none; z-index:2;
-}
-.wordmark{
-  position:absolute; z-index:3;
-  left:var(--pad); top:clamp(84px,15vh,180px);
-  transform-origin:0 0;
-  font-weight:600; letter-spacing:-.04em; line-height:1;
-  font-size:clamp(52px,9.4vw,132px); color:var(--ink);
-  display:inline-flex; align-items:baseline; gap:0;
-  white-space:nowrap;
-}
-.wordmark s{ text-decoration:none; }
-.wordmark i{ font-style:normal; color:var(--accent); }
-.wordmark u{
-  text-decoration:none; width:.15em; height:.15em; background:var(--accent);
-  display:inline-block; margin-left:.14em; flex:0 0 auto;
-}
-.hero__h1{
-  position:relative; z-index:3;
-  margin-top:auto;
-}
-/* ch resolves against the element's own font size, so this belongs on the
-   heading, not on the wrapper, where it would use the 16px body size. */
-.hero__h1 h1{ max-width:15ch; }
-.hero__hint{ margin-top:clamp(16px,2.4vh,28px); color:var(--dim-2); }
-
-/* ==========================================================
-   01 SERVICE ROWS
-   ========================================================== */
-.rows{ display:flex; flex-direction:column; margin-top:clamp(6px,1vh,12px); }
-.row{
-  display:grid; grid-template-columns:1fr auto; align-items:center; gap:20px;
-  width:100%; text-align:left;
-  padding:clamp(16px,2.4vh,26px) 2px;
-  border-top:1px solid var(--hair);
-  min-height:44px;
-  transition:color .32s var(--ease), padding-left .32s var(--ease);
-}
-.row:last-child{ border-bottom:1px solid var(--hair); }
-.row__t{ font-weight:600; color:var(--ink); font-size:clamp(17px,1.9vw,28px); letter-spacing:-.028em; transition:color .32s var(--ease); }
-.row__go{
-  width:34px; height:34px; border-radius:999px; border:1px solid var(--hair-2);
-  display:grid; place-items:center; color:var(--muted); flex:0 0 auto;
-  transition:border-color .32s var(--ease), color .32s var(--ease), transform .32s var(--ease);
-}
-.row__go svg{ width:12px; height:12px; }
-@media (hover:hover){
-  .row:hover{ padding-left:10px; }
-  .row:hover .row__t{ color:var(--accent-soft); }
-  .row:hover .row__go{ border-color:var(--accent); color:var(--accent-soft); transform:translateX(3px); }
-}
-
-/* ==========================================================
-   02 STEPS
-   ========================================================== */
-.steps{ display:flex; flex-direction:column; }
-.step{
-  display:grid; grid-template-columns:auto 1fr; gap:clamp(14px,1.6vw,24px);
-  padding:clamp(15px,2.2vh,24px) 0; border-top:1px solid var(--hair);
-  align-items:start;
-}
-.step:first-child{ border-top:0; }
-.step__n{ font-family:var(--m); font-size:clamp(9.5px,0.75vw,11px); letter-spacing:.14em; color:var(--accent); padding-top:.35em; }
-.step__b{ display:flex; flex-direction:column; gap:6px; }
-.step__t{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-.pill{
-  font-family:var(--m); font-weight:500; font-size:9.5px; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--ink);
-  border:1px solid var(--accent); border-radius:999px; padding:3px 9px; line-height:1.5;
-}
-.statement{
-  margin-top:clamp(24px,3.6vh,48px);
-  border-top:1px solid var(--accent);
-  padding-top:clamp(16px,2.2vh,24px);
-  display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start;
-}
-.statement__sq{ width:9px; height:9px; background:var(--accent); margin-top:.45em; flex:0 0 auto; }
-.statement p{ color:var(--ink); font-size:clamp(15px,1.5vw,22px); line-height:1.4; letter-spacing:-.02em; max-width:52ch; }
-
-/* ==========================================================
-   03 CARDS COLUMN
-   ========================================================== */
-.stack-cards{ display:flex; flex-direction:column; gap:clamp(10px,1.4vh,16px); }
+/* ---------- cta ---------- */
 .cta{
   display:inline-flex; align-items:center; gap:.7em; align-self:flex-start;
-  background:var(--accent); color:var(--ink);
-  border-radius:var(--r); padding:14px 22px; min-height:44px;
-  font-weight:500; font-size:clamp(13px,1vw,15px); letter-spacing:-.005em;
-  transition:background .32s var(--ease);
+  background:var(--accent); color:var(--ink); border-radius:2px;
+  padding:14px 22px; min-height:44px; font-weight:500; font-size:15px;
+  transition:background .3s var(--ease);
 }
-.cta:hover{ background:var(--accent-hi); }
-.cta--ghost{ background:transparent; border:1px solid var(--hair-2); }
-.cta--ghost:hover{ background:var(--card-bg-hi); border-color:var(--hair-3); }
-.cta__sq{ width:8px; height:8px; background:var(--bg-b); flex:0 0 auto; }
-.cta--ghost .cta__sq{ background:var(--accent); }
+.cta:hover{ background:var(--accent-hi); color:var(--ink); }
+.cta--out{ background:transparent; border:1px solid var(--hair-3); }
+.cta--out:hover{ background:var(--card-bg-hi); color:var(--ink); }
+.cta__sq{ width:8px; height:8px; background:var(--shell); }
+.cta--out .cta__sq{ background:var(--accent); }
 
-/* ==========================================================
-   04 CLIENTS
-   ========================================================== */
-.pills{ display:flex; flex-wrap:wrap; gap:8px; margin-top:clamp(16px,2.4vh,28px); }
-.sector{
-  font-family:var(--m); font-weight:500; font-size:clamp(9.5px,0.75vw,11px);
-  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
-  border:1px solid var(--hair); border-radius:999px; padding:7px 13px;
-}
-.clients{
-  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:clamp(8px,1vw,12px); margin-top:clamp(20px,3vh,38px);
-}
-.client{ align-items:flex-start; }
-.client b{ font-weight:500; color:var(--ink); font-size:clamp(13px,1.05vw,16px); letter-spacing:-.01em; white-space:nowrap; }
+/* ---------- 04 clients ---------- */
+.pills{ display:flex; flex-wrap:wrap; gap:8px; }
+.sector{ font-family:var(--m); font-weight:500; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); border:1px solid var(--hair); border-radius:999px; padding:7px 13px; }
+.clients{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(8px,1vw,12px); }
+.clients .card{ font-weight:500; color:var(--ink); font-size:clamp(13px,1.05vw,16.5px); }
 
-/* ==========================================================
-   05 CONTACT + FOOTER
-   ========================================================== */
-#contact{ padding-bottom:clamp(140px,18vh,200px); }
-.ctas{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; margin-top:clamp(20px,3vh,34px); }
-.foot{
-  margin-top:clamp(40px,7vh,90px); padding-top:clamp(16px,2.2vh,26px);
-  border-top:1px solid var(--hair);
-  display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; align-items:baseline;
-}
-.foot .mono{ color:var(--dim-2); }
+/* ---------- 05 ---------- */
+#contact{ }
+.ctas{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
+.foot{ margin-top:auto; padding-top:clamp(14px,2.2vh,26px); border-top:1px solid var(--hair); display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; }
 .foot i{ font-style:normal; color:var(--accent); }
 
-/* ==========================================================
-   DOCKED WORDMARK SLOT
-   ========================================================== */
-.dock{
-  position:fixed; left:var(--pad); top:clamp(18px,2.4vh,28px); z-index:40;
-  font-weight:600; letter-spacing:-.03em; line-height:1; font-size:20px;
-  color:var(--ink); display:inline-flex; align-items:baseline;
-  opacity:0; pointer-events:none;
-}
-.dock i{ font-style:normal; color:var(--accent); }
-.dock u{ text-decoration:none; width:.16em; height:.16em; background:var(--accent); display:inline-block; margin-left:.15em; }
-
-/* ==========================================================
-   DRAWER
-   ========================================================== */
-.scrim{
-  position:fixed; inset:0; z-index:60; background:rgba(10,8,7,0.62);
-  opacity:0; visibility:hidden;
-  transition:opacity .38s var(--ease), visibility 0s linear .38s;
-}
-.scrim.on{ opacity:1; visibility:visible; transition-delay:0s,0s; }
-.drawer{
-  position:fixed; top:0; right:0; z-index:70;
-  width:min(540px,92vw); height:100%;
-  background:var(--panel); border-left:1px solid var(--hair-2);
-  transform:translateX(103%);
-  transition:transform .46s cubic-bezier(.22,.85,.24,1);
-  display:flex; flex-direction:column;
-}
-.drawer.on{ transform:translateX(0); }
-.drawer__top{
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding:clamp(20px,3vh,30px) clamp(20px,3vw,34px) 0;
-}
-.drawer__x{
-  /* 44px floor, same as every other tap target. */
-  width:44px; height:44px; min-width:44px; border-radius:999px;
-  border:1px solid var(--hair-2); display:grid; place-items:center; color:var(--muted);
-  transition:border-color .32s var(--ease), color .32s var(--ease);
-}
-.drawer__x:hover{ border-color:var(--accent); color:var(--accent-soft); }
-.drawer__body{ overflow-y:auto; padding:clamp(16px,2.4vh,24px) clamp(20px,3vw,34px) clamp(28px,4vh,44px); }
-.drawer h2{ font-size:clamp(22px,2.4vw,32px); margin-top:clamp(10px,1.4vh,16px); }
-.drawer__div{
-  position:relative; height:1px; background:var(--hair); margin:clamp(16px,2.2vh,24px) 0 clamp(16px,2.2vh,22px);
-  transform:scaleX(0); transform-origin:0 50%;
-}
-.drawer.on .drawer__div{ transform:scaleX(1); transition:transform .5s var(--ease) .06s; }
-.drawer__div::before{ content:""; position:absolute; left:0; top:0; width:68px; height:1px; background:var(--accent); }
-.sys{ display:flex; flex-direction:column; gap:clamp(9px,1.2vh,13px); }
-.sys .card{ opacity:0; transform:translateY(16px); }
-.drawer.on .sys .card{ opacity:1; transform:none; transition:opacity .62s var(--ease), transform .62s var(--ease); }
-.sys .card:nth-child(1){ transition-delay:.14s; }
-.sys .card:nth-child(2){ transition-delay:.23s; }
-.sys .card:nth-child(3){ transition-delay:.32s; }
-.sys .card:nth-child(4){ transition-delay:.41s; }
-.panel-view{ display:none; }
-.panel-view.on{ display:block; }
-
-/* ==========================================================
-   STICKY CTA
-   ========================================================== */
+/* ---------- sticky ---------- */
 .sticky{
-  position:fixed; right:clamp(14px,2vw,26px); bottom:clamp(14px,2vh,26px); z-index:50;
+  position:fixed; right:clamp(14px,2vw,26px); bottom:clamp(14px,2vh,26px); z-index:16;
   display:inline-flex; align-items:center; gap:.7em;
-  background:var(--accent); color:var(--ink);
-  border-radius:var(--r); padding:13px 20px; min-height:44px;
-  font-weight:500; font-size:clamp(12.5px,0.95vw,14px);
+  background:var(--accent); color:var(--ink); border-radius:2px;
+  padding:13px 20px; min-height:44px; font-weight:500; font-size:14px;
   opacity:0; transform:translateY(6px);
-  transition:opacity .5s var(--ease), transform .5s var(--ease), background .32s var(--ease);
+  transition:opacity .5s var(--ease), transform .5s var(--ease), background .3s var(--ease);
 }
 .sticky.on{ opacity:1; transform:none; }
-.sticky:hover{ background:var(--accent-hi); }
-.sticky__sq{ width:8px; height:8px; background:var(--bg-b); flex:0 0 auto; }
-.sticky__short{ display:none; }
+.sticky:hover{ background:var(--accent-hi); color:var(--ink); }
+.sticky__sq{ width:8px; height:8px; background:var(--shell); }
+
+/* ---------- service overlay ---------- */
+.ov{
+  position:fixed; inset:0; z-index:40;
+  background:radial-gradient(900px 620px at 30% 18%, #201A16, #14100E 72%);
+  opacity:0; pointer-events:none; transition:opacity .4s var(--ease);
+  display:flex; flex-direction:column;
+  padding:clamp(26px,4vh,44px) var(--pad-x) clamp(20px,3vh,36px);
+  overflow:hidden;
+}
+.ov.on{ opacity:1; pointer-events:auto; }
+.ov__bar{ display:flex; align-items:center; gap:clamp(12px,1.6vw,22px); flex-wrap:nowrap; }
+.exit{
+  display:inline-flex; align-items:center; gap:11px;
+  background:var(--amber-cta); color:var(--shell);
+  border-radius:2px; padding:11px 18px; min-height:50px;
+  font-weight:600; font-size:16px; flex:0 0 auto;
+  transition:background .28s var(--ease), transform .28s var(--ease);
+}
+.exit:hover{ background:var(--amber-cta-hi); color:var(--shell); transform:translateX(-3px); }
+.exit__c{ width:26px; height:26px; border-radius:999px; background:var(--shell); color:var(--amber-cta); display:grid; place-items:center; font-size:13px; flex:0 0 auto; }
+.ov__div{ width:1px; align-self:stretch; background:var(--hair-2); flex:0 0 auto; }
+.chips{ display:flex; gap:8px; align-items:center; overflow-x:auto; scrollbar-width:none; }
+.chips::-webkit-scrollbar{ display:none; }
+.chip{
+  font-family:var(--m); font-weight:500; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); border:1px solid var(--hair); border-radius:2px;
+  padding:0 14px; min-height:44px; display:inline-flex; align-items:center; white-space:nowrap;
+  transition:color .28s var(--ease), border-color .28s var(--ease), background .28s var(--ease);
+}
+.chip.on{ color:var(--ink); background:rgba(155,74,50,0.14); border-color:var(--accent); }
+.ov__eyebrow{ margin-top:clamp(16px,2.6vh,30px); }
+.ov h3{ margin:6px 0 0; font-weight:600; color:var(--ink); font-size:clamp(26px,3vw,44px); letter-spacing:-.035em; line-height:1.06; }
+/* The overlay is a flex column, so the stage needs flex:none or it is
+   shrunk below its stated height and the canvas loses its geometry. */
+.stage{ position:relative; width:100%; height:clamp(260px,52vh,620px); flex:0 0 auto; margin-top:clamp(10px,2vh,22px); }
+.stage canvas{ position:absolute; inset:0; width:100%; height:100%; }
+.oplabel{
+  position:absolute; font-family:var(--m); font-weight:400; font-size:10px;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--ink);
+  white-space:nowrap; pointer-events:none;
+}
+.syscard{
+  position:absolute; width:clamp(180px,17vw,250px);
+  border:1px solid var(--hair); border-left:2px solid currentColor; border-radius:2px;
+  background:var(--card-bg); padding:12px 14px;
+  display:flex; flex-direction:column; gap:5px; cursor:pointer;
+  transition:border-color .32s var(--ease), background .32s var(--ease);
+}
+.syscard:hover{ background:var(--card-bg-hi); }
+.syscard__i{ font-family:var(--m); font-weight:500; font-size:10px; letter-spacing:.14em; color:currentColor; }
+.syscard__t{ font-weight:600; color:var(--ink); font-size:clamp(13.5px,1.1vw,16.5px); letter-spacing:-.02em; line-height:1.2; }
+.popup{
+  position:absolute; display:none; z-index:6;
+  width:clamp(292px,27vw,430px);
+  padding:clamp(18px,2.2vh,25px) clamp(19px,1.8vw,27px);
+  border:1px solid currentColor; border-radius:2px;
+  background:#181310;
+  color:var(--body); font-size:clamp(14.5px,1.15vw,17.5px); line-height:1.6;
+}
+.popup.on{ display:block; }
+.needs-copy{ color:var(--dim); font-style:italic; }
 
 /* ==========================================================
-   RESPONSIVE
+   PHONE. Fixed type scale, single column, safe areas.
    ========================================================== */
-@media (max-width:860px){
-  .two{ grid-template-columns:minmax(0,1fr); gap:clamp(18px,3vh,28px); }
+@media (max-width:760px){
+  .screen{ padding:88px 20px 40px; gap:26px; }
+  #contact{ padding:88px 20px 110px; }
+  .two{ grid-template-columns:minmax(0,1fr); gap:24px; }
+  h1{ font-size:34px; }
+  h2{ font-size:27px; }
+  #contact h2{ font-size:29px; }
+  .lead{ font-size:16.5px; }
+  #p-2 .lead{ font-size:17px; }
+  .body{ font-size:15px; }
+  .card__c{ font-size:14px; }
+  .card__t{ font-size:16px; }
+  .step__t{ font-size:17px; }
+  .srow__t{ font-size:21px; }
+  .ov h3{ font-size:24px; }
+  .syscard__t{ font-size:15px; }
+  .popup{ font-size:14.5px; }
+  .wordmark{ font-size:44px; top:56px; }
+
+  /* Wordmark, network and headline share one screen, next screen peeks. */
+  #hero{ height:82vh; min-height:82vh; }
+
   .clients{ grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .wordmark{ top:clamp(76px,13vh,120px); }
-  .hero__h1{ max-width:16ch; }
+  .pills{ justify-content:flex-start; }
+
+  /* Full width bottom bar replaces the corner button. */
+  .sticky{ left:14px; right:14px; bottom:14px; justify-content:center; z-index:16; }
+  /* The inline CTA on 03 duplicated the bar, so it is desktop only. */
+  .cta--inline{ display:none; }
+
+  /* 02 steps become accordions so the screen fits the fold. */
+  .step{ grid-template-columns:minmax(0,1fr); gap:0; }
+  .step__btn{
+    display:grid; grid-template-columns:auto 1fr auto; align-items:start; gap:12px;
+    width:100%; text-align:left; min-height:46px; padding:0;
+  }
+  .step__btn .mono{ padding-top:20px; }
+  .step__sign{ font-size:20px; color:var(--muted); line-height:1; padding-top:16px; }
+  .step__body{ display:none; padding-top:8px; }
+  .step.open .step__body{ display:block; }
+
+  /* Service sheet. */
+  .ov{ padding:56px 18px 96px; overflow-y:auto; }
+  .ov__bar{ gap:12px; }
+  .exit{ min-height:46px; font-size:15px; padding:10px 15px; }
+  .ov__div{ display:none; }
+  /* The chip row scrolls inside its own band so nothing slides under exit. */
+  .chips{ flex:1 1 auto; min-width:0; padding:2px 0; }
+  .stage{ height:290px; flex:0 0 auto; }
+  .syscard{ position:static !important; width:100% !important; }
+  .syslist{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
+  .popup{
+    position:static !important; display:none; width:auto !important;
+    margin-top:10px; padding:14px 15px; border:0; border-top:1px solid currentColor;
+    background:transparent;
+  }
+  .popup.on{ display:block; }
 }
-@media (max-width:560px){
+@media (max-width:400px){
   .clients{ grid-template-columns:minmax(0,1fr); }
-  .row{ grid-template-columns:1fr auto; }
-}
-@media (max-width:480px){
-  .sticky__long{ display:none; }
-  .sticky__short{ display:inline; }
-  .sticky{ padding:12px 15px; }
 }
 @media (prefers-reduced-motion: reduce){
   *{ transition-duration:1ms !important; animation-duration:1ms !important; }
-  .drawer.on .sys .card{ transition-delay:0s !important; }
 }
 </style>
 </head>
 <body>
-<div class="page">
+<div class="wrap">
 
-<a class="dock" id="dock" href="#hero" aria-label="Synecura, back to the top"><s>Syne</s><i>cura</i><u></u></a>
+<canvas id="net-hero" aria-hidden="true"></canvas>
+<div class="plate" id="plate" aria-hidden="true"></div>
+<a class="wordmark" id="wordmark" href="#hero" aria-label="Synecura, back to the top">Syne<i>cura</i><u></u></a>
 
-<!-- 0 HERO -->
-<section class="sec" id="hero">
-  <canvas id="chain" aria-hidden="true"></canvas>
-  <div class="hero__plate" id="plate" aria-hidden="true"></div>
-  <span class="wordmark" id="wordmark"><s>Syne</s><i>cura</i><u></u></span>
-  <div class="hero__h1">
-    <h1>Custom built systems that save you <em>time and money</em></h1>
-    <p class="mono hero__hint">Scroll</p>
+<!-- HERO -->
+<section class="screen" id="hero">
+  <div class="hero-h1">
+    <h1>Custom built systems that save you <em class="acc">time and money</em></h1>
   </div>
 </section>
 
-<!-- 01 WHAT WE DO -->
-<section class="sec" id="p-1">
-  <div class="eyebrow-row"><span class="mono">01 / What we do</span><hr class="rule"></div>
+<!-- 01 -->
+<section class="screen" id="p-1">
+  <div class="eyebrow-row"><span class="mono">01 / What we do</span></div>
   <div class="two">
-    <h2>We sit with the people who run the business, then build the system that takes over the work eating their week.</h2>
-    <p class="copy">It starts with a conversation. Where does the day really go? Which manual, repetitive tasks could run on their own? What is each one worth? We have founded and run successful companies ourselves, so this is business advice as much as software. And nothing is off a shelf: every system is built for that one operation.</p>
+    <h2>We build automated systems that are custom made <span class="acc">specifically for your business.</span></h2>
+    <p class="lead needs-copy" data-needs-copy="01 lead paragraph">Lead paragraph, verbatim from Synecura Walnut.dc.html. Not present in the brief and the prototype is not in this repo, so it is marked rather than invented.</p>
   </div>
-  <div class="eyebrow-row" style="margin-top:clamp(28px,4.4vh,60px)"><span class="mono">Some of what we do</span><hr class="rule"></div>
-  <div class="rows">
-    <button class="row" data-panel="0" aria-haspopup="dialog">
-      <span class="row__t">Revenue and sales systems</span>
-      <span class="row__go" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-    </button>
-    <button class="row" data-panel="1" aria-haspopup="dialog">
-      <span class="row__t">Order and supplier platforms</span>
-      <span class="row__go" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-    </button>
-    <button class="row" data-panel="2" aria-haspopup="dialog">
-      <span class="row__t">Pricing and quoting engines</span>
-      <span class="row__go" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-    </button>
-    <button class="row" data-panel="3" aria-haspopup="dialog">
-      <span class="row__t">Finance automation</span>
-      <span class="row__go" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-    </button>
-  </div>
+  <span class="mono">Some of what we do</span>
+  <div class="rows" id="rows"></div>
 </section>
 
-<!-- 02 HOW IT WORKS -->
-<section class="sec" id="p-2">
-  <div class="eyebrow-row"><span class="mono">02 / How it works</span><hr class="rule"></div>
+<!-- 02 -->
+<section class="screen" id="p-2">
+  <div class="eyebrow-row"><span class="mono">02 / How it works</span></div>
   <div class="two">
-    <div class="sec__head">
-      <h2>You pay a share of what we save you. Not before.</h2>
-      <p class="copy copy--muted">Four steps, and the first one costs you nothing. You leave it with a map of where the headroom sits and a number attached to it, whether or not you build the system with us.</p>
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4vh,26px)">
+      <h2>Turn repetitive manual work into <span class="acc">fast, automated business growth.</span></h2>
+      <p class="lead needs-copy" data-needs-copy="02 paragraph">Paragraph, verbatim from the prototype.</p>
     </div>
-    <div class="steps">
-      <div class="step">
-        <span class="step__n">01</span>
-        <div class="step__b">
-          <span class="step__t"><h3>Discovery</h3><span class="pill">No charge</span></span>
-          <p class="copy copy--muted">Two sessions. We walk the operation with you and map where the headroom sits.</p>
-        </div>
-      </div>
-      <div class="step">
-        <span class="step__n">02</span>
-        <div class="step__b">
-          <span class="step__t"><h3>Action Plan</h3></span>
-          <p class="copy copy--muted">We put a number on the opportunity and scope the system around your operation.</p>
-        </div>
-      </div>
-      <div class="step">
-        <span class="step__n">03</span>
-        <div class="step__b">
-          <span class="step__t"><h3>Custom Build</h3></span>
-          <p class="copy copy--muted">Your system goes in, built from scratch. Nothing off a shelf, nothing shared with another client.</p>
-        </div>
-      </div>
-      <div class="step">
-        <span class="step__n">04</span>
-        <div class="step__b">
-          <span class="step__t"><h3>Growth &amp; Optimization</h3></span>
-          <p class="copy copy--muted">We stay on to keep the gain compounding as the operation changes around it.</p>
-        </div>
-      </div>
-    </div>
+    <div class="steps" id="steps"></div>
   </div>
-  <div class="statement">
-    <span class="statement__sq" aria-hidden="true"></span>
-    <p>If the saving does not show up in your numbers, you do not pay us. Written into the engagement, not into the marketing.</p>
+  <div class="risk">
+    <span class="risk__sq" aria-hidden="true"></span>
+    <p class="needs-copy" data-needs-copy="risk statement">Risk statement, verbatim from the prototype.</p>
   </div>
 </section>
 
-<!-- 03 WHO WE ARE -->
-<section class="sec" id="p-3">
-  <div class="eyebrow-row"><span class="mono">03 / Who we are</span><hr class="rule"></div>
+<!-- 03 -->
+<section class="screen" id="p-3">
+  <div class="eyebrow-row"><span class="mono">03 / Who we are</span></div>
   <div class="two">
-    <div class="sec__head">
-      <h2>We built the businesses. Then we built the systems that made them better.</h2>
-      <p class="copy">We come from years of starting and running successful businesses, which means we have seen where the real headroom sits: the work that quietly absorbs hours, the process running at a fraction of what it could, the step everyone routes around.</p>
-      <p class="copy">Alongside that we have spent years building systems, first for our own companies and then for others, designed around exactly those opportunities. The result each time was the same: large cost savings and meaningful revenue growth.</p>
-      <a class="cta" href="#contact" style="margin-top:clamp(10px,1.6vh,20px)"><span class="cta__sq" aria-hidden="true"></span>Book your free characterization session</a>
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4vh,26px);align-items:flex-start">
+      <h2>We know where you lose time and money because we've already <span class="acc">solved it in our own operations</span></h2>
+      <p class="body">We come from years of starting and running successful businesses, which means we have seen where the real headroom sits: the work that quietly absorbs hours, the process running at a fraction of what it could, the step everyone routes around.</p>
+      <p class="body">Alongside that we have spent years building systems, first for our own companies and then for others, designed around exactly those opportunities. The result each time was the same: large cost savings and meaningful revenue growth.</p>
+      <a class="cta cta--inline" href="#contact"><span class="cta__sq" aria-hidden="true"></span>Book your free characterization session</a>
     </div>
-    <div class="stack-cards">
-      <article class="card">
-        <span class="mono mono--soft">Operators</span>
-        <h3>Years of starting and running successful businesses</h3>
-        <p class="copy copy--muted">We know this world from the inside, so we know what to look for, where to look for it, and how to turn what we find into a better number.</p>
-      </article>
-      <article class="card">
-        <span class="mono mono--soft">Builders</span>
-        <h3>A long, proven record in product and custom system development</h3>
-        <p class="copy copy--muted">Every system is built from scratch around the specific needs of the business in front of us. We do not resell a template.</p>
-      </article>
-      <article class="card">
-        <span class="mono mono--soft">The edge</span>
-        <h3>Current-generation automation, not the stack of a decade ago</h3>
-        <p class="copy copy--muted">This is what makes it economic to capture gains that were previously too small to be worth anyone's time, and it is why our fee can come out of the upside.</p>
-      </article>
+    <div class="cards">
+      <article class="card"><span class="mono">Operators</span><h3 class="card__t">Years of starting and running successful businesses</h3><p class="card__c">We know this world from the inside, so we know what to look for, where to look for it, and how to turn what we find into a better number.</p></article>
+      <article class="card"><span class="mono">Builders</span><h3 class="card__t">A long, proven record in product and custom system development</h3><p class="card__c">Every system is built from scratch around the specific needs of the business in front of us. We do not resell a template.</p></article>
+      <article class="card"><span class="mono">The edge</span><h3 class="card__t">Current-generation automation, not the stack of a decade ago</h3><p class="card__c">This is what makes it economic to capture gains that were previously too small to be worth anyone's time, and it is why our fee can come out of the upside.</p></article>
     </div>
   </div>
 </section>
 
-<!-- 04 OUR CLIENTS -->
-<section class="sec" id="p-4">
-  <div class="eyebrow-row"><span class="mono">04 / Our clients</span><hr class="rule"></div>
-  <h2 style="max-width:18ch">Some of the operations we helped so far.</h2>
+<!-- 04 -->
+<section class="screen" id="p-4">
+  <div class="eyebrow-row"><span class="mono">04 / Our clients</span></div>
+  <h2>Some of the operations we have <span class="acc">optimised so far.</span></h2>
   <div class="pills">
-    <span class="sector">Tourism</span>
-    <span class="sector">Marine &amp; cruises</span>
-    <span class="sector">Sport &amp; leisure</span>
-    <span class="sector">Creative studios</span>
-    <span class="sector">Relocation</span>
+    <span class="sector">Tourism</span><span class="sector">Marine &amp; cruises</span><span class="sector">Sport &amp; leisure</span><span class="sector">Creative studios</span><span class="sector">Relocation</span>
   </div>
   <div class="clients">
-    <article class="card client"><b>dereh-haski.co.il</b></article>
-    <article class="card client"><b>tour-guide.co.il</b></article>
-    <article class="card client"><b>snowpro.co.il</b></article>
-    <article class="card client"><b>corfuprivatecruises.com</b></article>
-    <article class="card client"><b>Ponygrll Studios</b></article>
-    <article class="card client"><b>MikMak Relocations</b></article>
+    <article class="card">dereh-haski.co.il</article>
+    <article class="card">tour-guide.co.il</article>
+    <article class="card">snowpro.co.il</article>
+    <article class="card">corfuprivatecruises.com</article>
+    <article class="card">Ponygrll Studios</article>
+    <article class="card">MikMak Relocations</article>
   </div>
 </section>
 
-<!-- 05 GET STARTED -->
-<section class="sec" id="contact">
-  <div class="eyebrow-row"><span class="mono">05 / Get started</span><hr class="rule"></div>
+<!-- 05 -->
+<section class="screen" id="contact">
+  <div class="eyebrow-row"><span class="mono">05 / Get started</span></div>
   <div class="two">
-    <div class="sec__head">
-      <h2>The discovery costs you two hours and nothing else.</h2>
-      <p class="copy">If we cannot point at a gain worth capturing, we will say so and you will have lost an afternoon. If we can, you will have a number, and a system scoped for your operation alone, before you have an invoice.</p>
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4vh,26px)">
+      <h2>Start with a free strategy session. <span class="acc">See where your business can save.</span></h2>
+      <p class="lead needs-copy" data-needs-copy="05 paragraph">Paragraph, verbatim from the prototype.</p>
     </div>
     <div class="ctas">
       <a class="cta" href="mailto:hello@synecura.co"><span class="cta__sq" aria-hidden="true"></span>hello@synecura.co</a>
-      <a class="cta cta--ghost" href="#" data-pending="booking"><span class="cta__sq" aria-hidden="true"></span>Book the free session</a>
+      <a class="cta cta--out" href="#" data-pending="booking"><span class="cta__sq" aria-hidden="true"></span>Book a session</a>
     </div>
   </div>
   <div class="foot">
-    <span class="mono">Syne<i>cura</i> &#183; Custom built systems</span>
-    <span class="mono">&#169; 2026</span>
+    <span class="mono mono--micro">Syne<i>cura</i> &#183; Custom systems for operations</span>
+    <span class="mono mono--micro">&#169; 2026</span>
   </div>
 </section>
 
-</div><!-- /.page -->
+</div>
 
-<div class="scrim" id="scrim"></div>
+<a class="sticky" id="sticky" href="#contact"><span class="sticky__sq" aria-hidden="true"></span>Book the free session</a>
 
-<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-hidden="true">
-  <div class="drawer__top">
-    <span class="mono" id="drawer-eyebrow"></span>
-    <button class="drawer__x" id="drawer-close" aria-label="Close">
-      <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-    </button>
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="ov__bar">
+    <button class="exit" id="ov-exit"><span class="exit__c" aria-hidden="true">&#8592;</span>Services</button>
+    <span class="ov__div" aria-hidden="true"></span>
+    <div class="chips" id="ov-chips"></div>
   </div>
-  <div class="drawer__body">
-    <h2 id="drawer-title"></h2>
-    <div class="drawer__div" aria-hidden="true"></div>
-    <div class="sys" id="drawer-sys"></div>
-  </div>
-</aside>
-
-<a class="sticky" id="sticky" href="#contact">
-  <span class="sticky__sq" aria-hidden="true"></span>
-  <span class="sticky__long">Book the free session</span>
-  <span class="sticky__short">Book</span>
-</a>
+  <span class="mono ov__eyebrow" id="ov-eyebrow"></span>
+  <h3 id="ov-title"></h3>
+  <div class="stage" id="stage"><canvas id="net" aria-hidden="true"></canvas></div>
+  <div class="syslist" id="syslist"></div>
+</div>
 
 <script>
 (function(){
 'use strict';
-
-var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+var reduce = matchMedia('(prefers-reduced-motion: reduce)');
+var isPhone = function(){ return innerWidth <= 760; };
 
 /* ============================================================
-   DRAWER DATA
-   The four service categories. Nine systems in total.
+   CONTENT. Operation labels and system names are from the brief.
+   The nine system descriptions live in the prototype, which is not
+   in this repo, so they are marked rather than invented.
    ============================================================ */
-var PANELS = [
-  { title:'Revenue and sales systems', systems:[
-    { t:'Lead capture and routing',  d:'Enquiries land in one place, get qualified against your own rules, and reach the right person without anyone rekeying them.' },
-    { t:'Pipeline and follow up',    d:'The follow ups that depend on someone remembering are handed to a system that does not forget.' },
-    { t:'Reporting that reconciles', d:'One revenue number you trust, built from the sources you already own rather than assembled by hand each month.' }
-  ]},
-  { title:'Order and supplier platforms', systems:[
-    { t:'Order intake and status',   d:'Orders arrive in a single flow with a status every party can see, so the chasing stops being a job.' },
-    { t:'Supplier coordination',     d:'Purchase orders, confirmations and lead times tracked in one place instead of across inboxes.' }
-  ]},
-  { title:'Pricing and quoting engines', systems:[
-    { t:'Quote generation',          d:'Quotes built from your real cost inputs in a minute, consistent across whoever sends them.' },
-    { t:'Margin controls',           d:'Floors and approvals encoded once, so a discount that breaks the margin cannot leave the building unnoticed.' }
-  ]},
-  { title:'Finance automation', systems:[
-    { t:'Invoicing and collection',  d:'Invoices raised from the work that actually happened, with the chasing sequence handled for you.' },
-    { t:'Reconciliation',            d:'Bank, ledger and processor lined up automatically, with only the genuine exceptions surfaced.' }
-  ]}
+var SERVICES = [
+  { chip:'01 / Revenue', name:'Revenue and sales systems',
+    ops:['Inbound lead','Qualification','Sales call','Proposal','Close','Lead scoring','CRM sync','Follow-up','Forecast','Commission','Renewal','Handover'],
+    sys:['AI Sales Copilot','Conversation Intelligence Agent','Autonomous Pipeline Agent'] },
+  { chip:'02 / Orders', name:'Order and supplier platforms',
+    ops:['Order intake','Confirmation','Supplier dispatch','Fulfilment','Payment','Stock check','Purchase order','Delivery notes','Returns','Invoicing','Lead times','Archive'],
+    sys:['Proprietary Order Management CRM','Supplier Portal'] },
+  { chip:'03 / Pricing', name:'Pricing and quoting engines',
+    ops:['Client request','Inventory pull','Package build','Quote issued','Booking','Rate cards','Availability','Margin rules','Ancillaries','Approvals','Cancellation','Supplier feed'],
+    sys:['Dynamic Packaging & Pricing Engine','Agent CPQ Platform'] },
+  { chip:'04 / Finance', name:'Finance automation',
+    ops:['Expense capture','Classification','Reconciliation','VAT filing','Reporting','Receipts','Entities','Recurring costs','Bank feed','Receivables','Audit trail','Year end'],
+    sys:['Multi-Entity Expense Agent','Automated VAT & Revenue Reporting Agent'] }
 ];
+var SYS_COLOURS = ['#B4562F','#D0A05C','#C2703A'];
+var STEPS = ['Discovery','Action Plan','Custom Build','Growth & Optimization'];
 
-var drawer  = document.getElementById('drawer');
-var scrim   = document.getElementById('scrim');
-var dTitle  = document.getElementById('drawer-title');
-var dEyebrow= document.getElementById('drawer-eyebrow');
-var dSys    = document.getElementById('drawer-sys');
-var dClose  = document.getElementById('drawer-close');
-var lastFocus = null;
-
-function pad2(n){ return (n < 10 ? '0' : '') + n; }
-
-function openDrawer(i){
-  var p = PANELS[i];
-  if(!p) return;
-  dEyebrow.textContent = pad2(i + 1) + ' / ' + p.systems.length + ' Systems';
-  dTitle.textContent = p.title;
-
-  dSys.innerHTML = '';
-  p.systems.forEach(function(sys, n){
-    var el = document.createElement('article');
-    el.className = 'card';
-    var idx = document.createElement('span');
-    idx.className = 'mono mono--soft';
-    idx.textContent = 'S' + pad2(n + 1);
-    var h = document.createElement('h3');
-    h.textContent = sys.t;
-    var d = document.createElement('p');
-    d.className = 'copy copy--muted';
-    d.textContent = sys.d;
-    el.appendChild(idx); el.appendChild(h); el.appendChild(d);
-    dSys.appendChild(el);
-  });
-
-  lastFocus = document.activeElement;
-  /* The stagger has to replay on every open, so the class is removed and
-     re-added on the next frame rather than simply toggled. */
-  drawer.classList.remove('on');
-  void drawer.offsetWidth;
-  drawer.classList.add('on');
-  scrim.classList.add('on');
-  drawer.setAttribute('aria-hidden', 'false');
-  dClose.focus();
-}
-
-function closeDrawer(){
-  drawer.classList.remove('on');
-  scrim.classList.remove('on');
-  drawer.setAttribute('aria-hidden', 'true');
-  if(lastFocus && lastFocus.focus) lastFocus.focus();
-}
-
-Array.prototype.forEach.call(document.querySelectorAll('[data-panel]'), function(btn){
-  btn.addEventListener('click', function(){ openDrawer(parseInt(btn.getAttribute('data-panel'), 10)); });
+/* ============================================================
+   01 rows and 02 steps
+   ============================================================ */
+var rowsHost = document.getElementById('rows');
+SERVICES.forEach(function(s, i){
+  var b = document.createElement('button');
+  b.className = 'srow'; b.type = 'button';
+  b.innerHTML = '<span class="mono">' + ('0' + (i+1)) + '</span>' +
+                '<span class="srow__t"></span>' +
+                '<span class="srow__go" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+  b.querySelector('.srow__t').textContent = s.name;
+  b.addEventListener('click', function(){ openOverlay(i); });
+  rowsHost.appendChild(b);
 });
-scrim.addEventListener('click', closeDrawer);
-dClose.addEventListener('click', closeDrawer);
-window.addEventListener('keydown', function(e){
-  if(e.key === 'Escape' && drawer.classList.contains('on')) closeDrawer();
+
+var stepsHost = document.getElementById('steps');
+STEPS.forEach(function(t, i){
+  var wrap = document.createElement('div');
+  wrap.className = 'step';
+  var idx = ('0' + (i+1));
+  wrap.innerHTML =
+    '<button class="step__btn" type="button" aria-expanded="false">' +
+      '<span class="mono">' + idx + '</span>' +
+      '<span class="step__h"><span class="step__t"></span>' + (i === 0 ? '<span class="pill">No charge</span>' : '') + '</span>' +
+      '<span class="step__sign" aria-hidden="true">+</span>' +
+    '</button>' +
+    '<div class="step__body"><p class="body needs-copy" data-needs-copy="step ' + idx + ' description">Step description, verbatim from the prototype.</p></div>';
+  wrap.querySelector('.step__t').textContent = t;
+  var btn = wrap.querySelector('.step__btn');
+  btn.addEventListener('click', function(){
+    if(!isPhone()) return;                       /* accordion is a phone behaviour */
+    var open = wrap.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    wrap.querySelector('.step__sign').textContent = open ? '−' : '+';
+  });
+  stepsHost.appendChild(wrap);
 });
 
 /* ============================================================
    HERO DOCK
-   Scroll progress over 0.8 of the viewport height drives the
-   wordmark scale and travel, the h1 fade, the canvas fade and the
-   plate behind the docked mark. Written straight to style in a rAF
-   loop; nothing is measured inside it.
    ============================================================ */
 var wordmark = document.getElementById('wordmark');
-var heroH1   = document.querySelector('.hero__h1');
-var plate    = document.getElementById('plate');
-var dock     = document.getElementById('dock');
-var canvasEl = document.getElementById('chain');
-
-var startX = 0, startY = 0, startSize = 0, dockSize = 20, range = 1;
+var plate = document.getElementById('plate');
+var heroH1 = document.querySelector('.hero-h1');
+var heroCanvas = document.getElementById('net-hero');
+var bigK = 1, range = 1;
 
 function measureDock(){
-  var pad = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pad')) || 24;
-  var wr = wordmark.getBoundingClientRect();
-  startX = wr.left + window.pageXOffset;
-  startY = wr.top + window.pageYOffset;
-  startSize = parseFloat(getComputedStyle(wordmark).fontSize) || 100;
-  dockSize = parseFloat(getComputedStyle(dock).fontSize) || 20;
-  range = Math.max(1, window.innerHeight * 0.8);
-  return pad;
-}
-
-var dockPadTop = 0, dockPadLeft = 0;
-function measureAll(){
   wordmark.style.transform = '';
-  dockPadLeft = measureDock();
-  var dr = dock.getBoundingClientRect();
-  dockPadLeft = dr.left + window.pageXOffset;
-  dockPadTop  = dr.top + window.pageYOffset;
+  var fs = parseFloat(getComputedStyle(wordmark).fontSize) || 100;
+  bigK = 22 / fs;
+  range = Math.max(1, innerHeight * 0.8);
 }
+function easeIO(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
 
 var lastP = -1;
 function applyScroll(){
-  var p = Math.min(1, Math.max(0, window.pageYOffset / range));
+  var p = Math.min(1, Math.max(0, pageYOffset / range));
   if(p === lastP) return;
   lastP = p;
-
-  var scale = 1 + (dockSize / startSize - 1) * p;
-  var tx = (dockPadLeft - startX) * p;
-  var ty = (dockPadTop - startY + window.pageYOffset) * p;
-
-  wordmark.style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + scale.toFixed(4) + ')';
-  wordmark.style.opacity = p > 0.985 ? '0' : '1';
-  dock.style.opacity = p > 0.985 ? '1' : '0';
-  heroH1.style.opacity = String(Math.max(0, 1 - p * 1.35));
-  plate.style.opacity = String(p);
-  canvasEl.style.opacity = String(1 - 0.7 * p);
+  var e = easeIO(p);
+  var k = 1 + (bigK - 1) * e;
+  wordmark.style.transform = 'scale(' + k.toFixed(4) + ')';
+  plate.style.background = 'rgba(20,16,14,' + (0.95 * p).toFixed(3) + ')';
+  var h = Math.max(0, 1 - p * 2);
+  heroH1.style.opacity = h.toFixed(3);
+  heroH1.style.transform = 'translateY(' + (-34 * e).toFixed(1) + 'px)';
+  heroCanvas.style.opacity = (1 - 0.7 * p).toFixed(3);
 }
 
-var ticking = false;
-window.addEventListener('scroll', function(){
-  if(ticking) return;
-  ticking = true;
-  requestAnimationFrame(function(){ ticking = false; applyScroll(); });
-}, { passive:true });
-
-var rzT = 0;
-window.addEventListener('resize', function(){
-  clearTimeout(rzT);
-  rzT = setTimeout(function(){ lastP = -1; measureAll(); applyScroll(); }, 120);
-});
-
 /* ============================================================
-   CANVAS
-   A radial node and edge structure rebuilt from scratch on every
-   cycle: ring count, node counts, angles, missing ring segments and
-   missing spokes are all randomised, so no two cycles draw the same
-   system. That difference is the point of the piece.
+   NETWORK ENGINE
    ============================================================ */
-function initChain(canvas, opts){
-  opts = opts || {};
-  var density = Math.min(3, Math.max(1, opts.density == null ? 2 : opts.density));
-  var speed   = Math.min(1.8, Math.max(0.6, opts.speed == null ? 1 : opts.speed));
-
+function makeNetwork(canvas, opts){
   var ctx = canvas.getContext('2d');
-  var DPR = 1, W = 0, H = 0, cx = 0, cy = 0, R = 0, MOBILE = false;
-
-  var CYCLE    = 13000 / speed;
-  var PULSE_AT = 4600 / speed;
-  var DISSOLVE = 1900 / speed;
-
-  var ACCENT_SOFT = '206,138,82';
-  var INK = '239,231,218';
-
-  var nodes = [], edges = [], adj = [], pulses = [], cycleStart = 0;
+  var W=0,H=0,DPR=1,cxp=0,cyp=0,RX=0,RY=0;
+  var nodes=[], edges=[], adj=[], sources=[], pulses=[], t0=0, born=0;
+  var rot=0, alive=true, fadeOut=0;
 
   function measure(){
-    DPR = Math.min(1.5, window.devicePixelRatio || 1);
+    DPR = Math.min(1.5, devicePixelRatio || 1);
     var r = canvas.getBoundingClientRect();
     W = Math.max(1, r.width); H = Math.max(1, r.height);
-    canvas.width  = Math.round(W * DPR);
-    canvas.height = Math.round(H * DPR);
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    MOBILE = W < 760;
-    cx = MOBILE ? W * 0.5 : W * 0.68;
-    cy = MOBILE ? H * 0.42 : H * 0.46;
-    R  = Math.min(W, H) * (MOBILE ? 0.34 : 0.4);
+    canvas.width = Math.round(W*DPR); canvas.height = Math.round(H*DPR);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    cxp = W/2; cyp = H/2; RX = 0.44*W; RY = 0.42*H;
   }
 
-  function build(){
-    nodes = []; edges = []; adj = []; pulses = [];
-    var rings = 2 + Math.floor(Math.random() * 3);          /* 2 to 4 */
-    nodes.push({ x:cx, y:cy, ring:0, delay:0, size:9 });
+  function build(nSys){
+    nodes=[]; edges=[]; adj=[]; sources=[]; pulses=[];
+    var rings = 3 + (Math.random() < 0.45 ? 1 : 0);
+    nodes.push({ r:0, a:0, ring:0, phase:Math.random()*6.28, delay:0 });
     adj.push([]);
-
-    for(var r = 1; r <= rings; r++){
-      var base  = (4 + r * 2) * (0.7 + density * 0.22);
-      var count = Math.max(3, Math.round(base * (0.75 + Math.random() * 0.5)));
-      var off   = Math.random() * Math.PI * 2;
-      var rad   = R * (r / rings) * (0.82 + Math.random() * 0.22);
-      var first = nodes.length;
-      var placed = [];
-      for(var i = 0; i < count; i++){
-        if(Math.random() < 0.16) continue;                   /* missing ring segment */
-        var a = off + (i / count) * Math.PI * 2;
-        nodes.push({
-          x: cx + Math.cos(a) * rad,
-          y: cy + Math.sin(a) * rad,
-          ring: r, idx: i, ang: a, rad: rad,
-          delay: 220 * r + Math.random() * 260,
-          size: 7 - r * 0.7
-        });
+    var ringStart=[0];
+    for(var k=1;k<=rings;k++){
+      var count = 6 + 2*k + Math.floor(Math.random()*4);
+      var base = k/rings + (Math.random()*0.07 - 0.035);
+      ringStart.push(nodes.length);
+      for(var i=0;i<count;i++){
+        var a = (i/count)*Math.PI*2 + (Math.random()*0.2 - 0.1);
+        nodes.push({ r:base, a:a, ring:k, phase:Math.random()*6.28,
+                     delay:0.1 + k*0.9 + Math.random()*0.3 });
         adj.push([]);
-        placed.push(nodes.length - 1);
       }
-      /* spokes inward, some deliberately missing */
-      for(var k = 0; k < placed.length; k++){
-        if(Math.random() < 0.22) continue;                   /* missing spoke */
-        var ni = placed[k], best = 0, bd = Infinity;
-        for(var j = 0; j < first; j++){
-          if(nodes[j].ring !== r - 1) continue;
-          var dx = nodes[j].x - nodes[ni].x, dy = nodes[j].y - nodes[ni].y;
-          var d2 = dx * dx + dy * dy;
-          if(d2 < bd){ bd = d2; best = j; }
+    }
+    ringStart.push(nodes.length);
+    function link(x,y){
+      edges.push({ a:x, b:y, lit:0, delay:0 });
+      adj[x].push(edges.length-1); adj[y].push(edges.length-1);
+    }
+    for(var k2=1;k2<=rings;k2++){
+      var s=ringStart[k2], e=ringStart[k2+1], n=e-s;
+      for(var j=0;j<n;j++){
+        if(Math.random() >= 0.18) link(s+j, s+((j+1)%n));       /* 18% skipped */
+        var skip = k2===1 ? 0.45 : 0.28;
+        if(Math.random() < skip) continue;
+        var ps=ringStart[k2-1], pe=ringStart[k2], best=ps, bd=Infinity;
+        for(var q=ps;q<pe;q++){
+          var d=Math.abs(((nodes[q].a-nodes[s+j].a+Math.PI*3)%(Math.PI*2))-Math.PI);
+          if(d<bd){ bd=d; best=q; }
         }
-        edges.push({ a:best, b:ni, t:0 });
-        adj[best].push(edges.length - 1); adj[ni].push(edges.length - 1);
-      }
-      /* ring segments between neighbours that both survived */
-      for(var m = 0; m < placed.length; m++){
-        var A = placed[m], B = placed[(m + 1) % placed.length];
-        if(A === B) continue;
-        if(Math.random() < 0.3) continue;
-        edges.push({ a:A, b:B, t:0 });
-        adj[A].push(edges.length - 1); adj[B].push(edges.length - 1);
+        link(s+j, best);
       }
     }
-    for(var e = 0; e < edges.length; e++){
-      edges[e].delay = Math.max(nodes[edges[e].a].delay, nodes[edges[e].b].delay) + 260;
+    edges.forEach(function(ed,i){ ed.delay = 1.1 + i*0.011 + Math.random()*0.2; });
+    /* one inner ring node per system, spread around the circle */
+    var s1=ringStart[1], e1=ringStart[2], avail=e1-s1;
+    for(var m=0;m<nSys;m++){
+      sources.push(s1 + Math.floor(m*avail/nSys));
     }
+    t0 = performance.now()/1000; born = t0; alive = true; fadeOut = 0;
   }
 
-  function roundRect(x, y, s, rad){
-    var h = s / 2;
-    ctx.beginPath();
-    ctx.moveTo(x - h + rad, y - h);
-    ctx.lineTo(x + h - rad, y - h); ctx.quadraticCurveTo(x + h, y - h, x + h, y - h + rad);
-    ctx.lineTo(x + h, y + h - rad); ctx.quadraticCurveTo(x + h, y + h, x + h - rad, y + h);
-    ctx.lineTo(x - h + rad, y + h); ctx.quadraticCurveTo(x - h, y + h, x - h, y + h - rad);
-    ctx.lineTo(x - h, y - h + rad); ctx.quadraticCurveTo(x - h, y - h, x - h + rad, y - h);
-    ctx.closePath();
+  function pos(n, t){
+    var br = n.r * (1 + 0.02*Math.sin(t*0.055 + n.phase));
+    var ang = n.a + rot;
+    return { x: cxp + Math.cos(ang)*br*RX,
+             y: cyp + Math.sin(ang)*br*RY + Math.sin(t*0.7 + n.phase)*1.4 };
   }
 
-  function seedPulse(){
-    pulses = [];
-    var seen = {}, queue = [{ n:0, t:0 }];
-    seen[0] = true;
-    while(queue.length){
-      var cur = queue.shift();
-      var list = adj[cur.n] || [];
-      for(var i = 0; i < list.length; i++){
-        var ei = list[i], ed = edges[ei];
-        var other = ed.a === cur.n ? ed.b : ed.a;
-        if(seen[other]) continue;
-        seen[other] = true;
-        pulses.push({ edge:ei, node:other, at:cur.t + 150 });
-        queue.push({ n:other, t:cur.t + 150 });
+  var lastWave = -99;
+  function step(t, dt){
+    rot += 0.014*dt;
+    if(t - lastWave > 6.2){
+      lastWave = t;
+      sources.forEach(function(sn, i){
+        pulses.push({ node:sn, at:t + i*0.26, edge:-1, prog:0 });
+      });
+    }
+    for(var i=pulses.length-1;i>=0;i--){
+      var p=pulses[i];
+      if(t < p.at) continue;
+      if(p.edge < 0){
+        var out = adj[p.node] || [];
+        for(var j=0;j<out.length && pulses.length < 60;j++){
+          pulses.push({ node:p.node, edge:out[j], prog:0, at:t });
+        }
+        pulses.splice(i,1); continue;
+      }
+      p.prog += 1.35*dt;
+      var ed = edges[p.edge];
+      ed.lit = 1;
+      if(p.prog >= 1){
+        var other = ed.a === p.node ? ed.b : ed.a;
+        nodes[other].lit = 1;
+        var nxt = adj[other] || [];
+        for(var k=0;k<nxt.length && pulses.length < 60;k++){
+          if(nxt[k] === p.edge) continue;
+          if(Math.random() < 0.42) pulses.push({ node:other, edge:nxt[k], prog:0, at:t });
+        }
+        pulses.splice(i,1);
       }
     }
+    edges.forEach(function(e){ if(e.lit) e.lit = Math.max(0, e.lit - 0.85*dt); });
+    nodes.forEach(function(n){ if(n.lit) n.lit = Math.max(0, n.lit - 0.55*dt); });
   }
 
-  function draw(now){
-    var tc = (now - cycleStart) % CYCLE;
-    if(tc < 16 && pulses.length === 0) { /* new cycle just wrapped */ }
-    ctx.clearRect(0, 0, W, H);
+  function draw(t){
+    ctx.clearRect(0,0,W,H);
+    var age = t - born;
+    var layer = reduce.matches ? 1 : Math.min(1, age/0.7);
+    if(fadeOut > 0) layer *= Math.max(0, 1 - fadeOut);
+    var P = nodes.map(function(n){ return pos(n, t); });
 
-    var dissolveStart = CYCLE - DISSOLVE;
-    var fade = tc > dissolveStart ? 1 - (tc - dissolveStart) / DISSOLVE : 1;
-
-    /* edges */
-    for(var e = 0; e < edges.length; e++){
-      var ed = edges[e];
-      var ep = Math.min(1, Math.max(0, (tc - ed.delay) / 520));
-      if(ep <= 0) continue;
-      var A = nodes[ed.a], B = nodes[ed.b];
-      var lit = 0;
-      for(var q = 0; q < pulses.length; q++){
-        if(pulses[q].edge !== e) continue;
-        var age = tc - (PULSE_AT + pulses[q].at);
-        if(age > 0 && age < 900) lit = Math.max(lit, 1 - age / 900);
-      }
-      ctx.beginPath();
-      ctx.moveTo(A.x, A.y);
-      ctx.lineTo(A.x + (B.x - A.x) * ep, A.y + (B.y - A.y) * ep);
+    edges.forEach(function(e){
+      var ep = reduce.matches ? 1 : Math.min(1, Math.max(0,(age - e.delay)/0.6));
+      if(ep <= 0) return;
+      ep = 1 - Math.pow(1-ep,3);
+      var A=P[e.a], B=P[e.b];
+      ctx.beginPath(); ctx.moveTo(A.x,A.y);
+      ctx.lineTo(A.x+(B.x-A.x)*ep, A.y+(B.y-A.y)*ep);
       ctx.lineWidth = 1;
-      ctx.strokeStyle = lit > 0
-        ? 'rgba(' + ACCENT_SOFT + ',' + (0.16 + lit * 0.6) * fade + ')'
-        : 'rgba(' + INK + ',' + 0.13 * fade + ')';
+      ctx.strokeStyle = e.lit > 0.02
+        ? 'rgba(206,138,82,' + (0.25 + e.lit*0.6)*layer + ')'
+        : 'rgba(239,231,218,' + 0.13*layer + ')';
       ctx.stroke();
-    }
+    });
 
-    /* nodes */
-    for(var n = 0; n < nodes.length; n++){
-      var nd = nodes[n];
-      var np = Math.min(1, Math.max(0, (tc - nd.delay) / 620));
-      if(np <= 0) continue;
-      var ease = 1 - Math.pow(1 - np, 3);
-      var ox = nd.ring ? (nd.x - cx) * (1 - ease) * 1.5 : 0;
-      var oy = nd.ring ? (nd.y - cy) * (1 - ease) * 1.5 : 0;
-      var x = nd.x + ox, y = nd.y + oy;
-
-      var nlit = 0;
-      for(var q2 = 0; q2 < pulses.length; q2++){
-        if(pulses[q2].node !== n) continue;
-        var age2 = tc - (PULSE_AT + pulses[q2].at);
-        if(age2 > 0 && age2 < 900) nlit = Math.max(nlit, 1 - age2 / 900);
+    nodes.forEach(function(n,i){
+      var np = reduce.matches ? 1 : Math.min(1, Math.max(0,(age - n.delay)/0.7));
+      if(np <= 0) return;
+      var ease = 1 - Math.pow(1-np,3);
+      var p = P[i];
+      var x = cxp + (p.x-cxp)*(0.4 + 0.6*ease);
+      var y = cyp + (p.y-cyp)*(0.4 + 0.6*ease);
+      n._x = x; n._y = y;
+      var si = sources.indexOf(i);
+      var size = si >= 0 ? (n._grow || 14) : (n.ring ? 5.5 : 9);
+      var col = si >= 0 ? SYS_COLOURS[si % 3] : null;
+      roundRect(ctx, x, y, size, 1.5);
+      if(col){
+        ctx.fillStyle = hexA(col, 0.22*layer); ctx.fill();
+        ctx.lineWidth = 1.3; ctx.strokeStyle = hexA(col, layer); ctx.stroke();
+        var inner = size*0.34;
+        ctx.fillStyle = hexA(col, layer); ctx.fillRect(x-inner/2, y-inner/2, inner, inner);
+        if(n._ring > 0){
+          ctx.beginPath(); ctx.arc(x, y, size*0.95 + 8, 0, 6.2832);
+          ctx.lineWidth = 1; ctx.strokeStyle = hexA(col, 0.5*layer*n._ring); ctx.stroke();
+        }
+      } else {
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = n.lit > 0.02
+          ? 'rgba(206,138,82,' + (0.35 + n.lit*0.6)*layer*ease + ')'
+          : 'rgba(239,231,218,' + 0.2*layer*ease + ')';
+        ctx.stroke();
       }
-      if(n === 0){
-        var hubAge = tc - PULSE_AT;
-        if(hubAge > 0 && hubAge < 900) nlit = Math.max(nlit, 1 - hubAge / 900);
-      }
-
-      roundRect(x, y, nd.size, 1.5);
-      ctx.fillStyle = nlit > 0
-        ? 'rgba(' + ACCENT_SOFT + ',' + 0.16 * nlit * fade + ')'
-        : 'rgba(' + INK + ',' + 0.035 * fade + ')';
-      ctx.fill();
-      ctx.lineWidth = nd.ring ? 1 : 1.4;
-      ctx.strokeStyle = nlit > 0
-        ? 'rgba(' + ACCENT_SOFT + ',' + (0.3 + nlit * 0.6) * ease * fade + ')'
-        : 'rgba(' + INK + ',' + 0.26 * ease * fade + ')';
-      ctx.stroke();
-    }
+    });
+    return layer;
   }
 
-  var seeded = false;
-  function frame(now){
-    var tc = (now - cycleStart) % CYCLE;
-    if(tc < 40 && seeded && tc >= 0){ /* wrapped */ }
-    if(now - cycleStart >= CYCLE){
-      cycleStart = now;
-      build();
-      seeded = false;
-    }
-    if(!seeded && tc >= PULSE_AT){ seedPulse(); seeded = true; }
-    draw(now);
-    requestAnimationFrame(frame);
+  function roundRect(c,x,y,s,rad){
+    var h=s/2; c.beginPath();
+    c.moveTo(x-h+rad,y-h); c.lineTo(x+h-rad,y-h); c.quadraticCurveTo(x+h,y-h,x+h,y-h+rad);
+    c.lineTo(x+h,y+h-rad); c.quadraticCurveTo(x+h,y+h,x+h-rad,y+h);
+    c.lineTo(x-h+rad,y+h); c.quadraticCurveTo(x-h,y+h,x-h,y+h-rad);
+    c.lineTo(x-h,y-h+rad); c.quadraticCurveTo(x-h,y-h,x-h+rad,y-h); c.closePath();
+  }
+  function hexA(hex,a){
+    var n=parseInt(hex.slice(1),16);
+    return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';
   }
 
-  function staticFrame(){
-    build();
-    cycleStart = -PULSE_AT * 2;
-    draw(PULSE_AT * 2);
-  }
-
-  measure();
-  var rz = 0;
-  window.addEventListener('resize', function(){
-    clearTimeout(rz);
-    rz = setTimeout(function(){
-      measure();
-      if(reduce.matches) staticFrame(); else build();
-    }, 140);
-  });
-
-  if(reduce.matches){
-    staticFrame();
-  } else {
-    build();
-    cycleStart = performance.now();
-    requestAnimationFrame(frame);
-  }
+  return {
+    measure:measure, build:build, step:step, draw:draw,
+    nodes:function(){ return nodes; }, sources:function(){ return sources; },
+    fade:function(v){ fadeOut = v; },
+    born:function(){ return born; }
+  };
 }
 
 /* ============================================================
-   START
+   OVERLAY: chips, labels, system cards, popups
    ============================================================ */
-measureAll();
-applyScroll();
-initChain(canvasEl, { density:2, speed:1 });
+var ov = document.getElementById('ov');
+var ovExit = document.getElementById('ov-exit');
+var ovChips = document.getElementById('ov-chips');
+var ovEyebrow = document.getElementById('ov-eyebrow');
+var ovTitle = document.getElementById('ov-title');
+var stage = document.getElementById('stage');
+var syslist = document.getElementById('syslist');
+var net = makeNetwork(document.getElementById('net'));
+var current = -1, ovOpen = false, lastFocus = null, scrollLock = 0;
 
+SERVICES.forEach(function(s,i){
+  var c = document.createElement('button');
+  c.className = 'chip'; c.type = 'button'; c.textContent = s.chip;
+  c.addEventListener('click', function(){ showPanel(i); });
+  ovChips.appendChild(c);
+});
+
+function clearStage(){
+  Array.prototype.slice.call(stage.querySelectorAll('.oplabel,.syscard,.popup')).forEach(function(el){ el.remove(); });
+  syslist.innerHTML = '';
+}
+
+function showPanel(i){
+  if(i === current) return;
+  var svc = SERVICES[i];
+  current = i;
+  Array.prototype.forEach.call(ovChips.children, function(c,n){ c.classList.toggle('on', n === i); });
+  ovEyebrow.textContent = ('0' + (i+1)) + ' / ' + svc.name;
+  ovTitle.textContent = svc.name;
+  clearStage();
+  net.measure();
+  net.build(svc.sys.length);
+  buildDom(svc);
+  /* Nodes need their entry delays to elapse before they have coordinates. */
+  nextLayout = performance.now()/1000 + (reduce.matches ? 0.05 : 2.6);
+}
+
+function buildDom(svc){
+  var phone = isPhone();
+  var opCount = phone ? 6 : 12;
+  svc.ops.slice(0, opCount).forEach(function(txt, n){
+    var el = document.createElement('span');
+    el.className = 'oplabel';
+    el.textContent = txt;
+    /* first five are the core stages, the rest are peripheral */
+    el.style.opacity = n < 5 ? '0.42' : '0.26';
+    el.dataset.core = n < 5 ? '1' : '0';
+    stage.appendChild(el);
+  });
+  svc.sys.forEach(function(name, n){
+    var col = SYS_COLOURS[n % 3];
+    var card = document.createElement('article');
+    card.className = 'syscard';
+    card.style.color = col;
+    card.innerHTML = '<span class="syscard__i"></span><h4 class="syscard__t"></h4>';
+    card.querySelector('.syscard__i').textContent = 'S' + ('0' + (n+1));
+    card.querySelector('.syscard__t').textContent = name;
+    var pop = document.createElement('div');
+    pop.className = 'popup'; pop.style.color = col;
+    pop.innerHTML = '<span class="needs-copy" data-needs-copy="system description">Description, verbatim from the prototype.</span>';
+    card.dataset.sys = String(n);
+    if(phone){
+      card.appendChild(pop);
+      syslist.appendChild(card);
+      card.addEventListener('click', function(){ pop.classList.toggle('on'); });
+    } else {
+      stage.appendChild(card); stage.appendChild(pop);
+      card._pop = pop;
+      card.addEventListener('mouseenter', function(){ hoverSys(n, true); });
+      card.addEventListener('mouseleave', function(){ hoverSys(n, false); });
+      card.addEventListener('focus', function(){ hoverSys(n, true); });
+      card.addEventListener('blur', function(){ hoverSys(n, false); });
+      card.tabIndex = 0;
+    }
+  });
+}
+
+function hoverSys(n, on){
+  var nodes = net.nodes(), srcs = net.sources();
+  var idx = srcs[n]; if(idx == null) return;
+  nodes[idx]._grow = on ? 26 : 14;
+  nodes[idx]._ring = on ? 1 : 0;
+  var card = stage.querySelector('.syscard[data-sys="' + n + '"]');
+  if(card && card._pop) placePopup(card, card._pop, on);
+}
+
+/* Popup is display:none when closed so it cannot widen the layout.
+   Measured, then flipped both ways to stay inside the overlay. */
+function placePopup(card, pop, on){
+  if(!on){ pop.classList.remove('on'); return; }
+  pop.classList.add('on');
+  var sr = stage.getBoundingClientRect();
+  var cr = card.getBoundingClientRect();
+  var pr = pop.getBoundingClientRect();
+  var x = cr.right - sr.left + 14;
+  if(x + pr.width > sr.width) x = cr.left - sr.left - pr.width - 14;
+  if(x < 0) x = 4;
+  var y = cr.top - sr.top;
+  if(y + pr.height > sr.height) y = sr.height - pr.height - 4;
+  if(y < 0) y = 4;
+  pop.style.left = x + 'px'; pop.style.top = y + 'px';
+}
+
+/* Label and card placement. Labels never overlap a card and are never
+   hidden; cards never overlap each other. */
+var boxes = [];
+function rectOf(el){ var r = el.getBoundingClientRect(), s = stage.getBoundingClientRect();
+  return { x:r.left-s.left, y:r.top-s.top, w:r.width, h:r.height }; }
+function hit(a,b){ return !(a.x+a.w < b.x || b.x+b.w < a.x || a.y+a.h < b.y || b.y+b.h < a.y); }
+
+function layout(){
+  if(current < 0) return;
+  var nodes = net.nodes(), srcs = net.sources();
+  var sr = stage.getBoundingClientRect();
+  boxes = [];
+
+  /* system cards first: floated outward along the node radial */
+  var cards = stage.querySelectorAll('.syscard');
+  Array.prototype.forEach.call(cards, function(card, n){
+    var nd = nodes[srcs[n]]; if(!nd || nd._x == null) return;
+    var vx = nd._x - sr.width/2, vy = nd._y - sr.height/2;
+    var len = Math.hypot(vx,vy) || 1;
+    var w = card.offsetWidth, h = card.offsetHeight;
+    var x = nd._x + (vx/len)*70 - w/2;
+    var y = nd._y + (vy/len)*70 - h/2;
+    x = Math.max(2, Math.min(sr.width - w - 2, x));
+    y = Math.max(2, Math.min(sr.height - h - 2, y));
+    var box = { x:x, y:y, w:w, h:h };
+    for(var pass=0; pass<24; pass++){
+      var clash = false;
+      for(var b=0;b<boxes.length;b++){ if(hit(box, boxes[b])){ clash = true; break; } }
+      if(!clash) break;
+      box.y += 16;
+      if(box.y + h > sr.height - 2){ box.y = 2; box.x += 26; }
+    }
+    card.style.left = box.x + 'px'; card.style.top = box.y + 'px';
+    boxes.push(box);
+    card._tie = { x:nd._x, y:nd._y, col:SYS_COLOURS[n%3], bx:box.x, by:box.y, bw:w, bh:h };
+  });
+  var cardBoxes = boxes.slice();
+
+  /* labels on outer ring nodes */
+  var labels = stage.querySelectorAll('.oplabel');
+  var outer = [];
+  for(var i=0;i<nodes.length;i++){
+    if(nodes[i]._x == null) continue;
+    if(srcs.indexOf(i) >= 0) continue;
+    if(nodes[i].ring === 0) continue;
+    outer.push(i);
+  }
+  outer.sort(function(a,b){ return nodes[b].ring - nodes[a].ring; });
+
+  Array.prototype.forEach.call(labels, function(lab, n){
+    var nd = nodes[outer[n % Math.max(1,outer.length)]];
+    if(!nd){ lab.style.display='none'; return; }
+    lab.style.display = '';
+    var w = lab.offsetWidth, h = lab.offsetHeight;
+    var right = nd._x < sr.width*0.55;
+    var placed = null;
+    /* pass one: avoid everything already placed */
+    for(var s=0;s<2 && !placed;s++){
+      var side = s === 0 ? right : !right;
+      for(var dy=0; dy<=48 && !placed; dy+=12){
+        for(var sgn=1; sgn>=-1 && !placed; sgn-=2){
+          var x = side ? nd._x + 13 : nd._x - 13 - w;
+          var y = nd._y + sgn*dy - h/2;
+          if(x < 0 || x + w > sr.width || y < 0 || y + h > sr.height) continue;
+          var box = { x:x, y:y, w:w, h:h };
+          var bad = false;
+          for(var b=0;b<boxes.length;b++){ if(hit(box, boxes[b])){ bad = true; break; } }
+          if(!bad) placed = box;
+        }
+      }
+    }
+    /* pass two: allow label to label proximity, never a card */
+    if(!placed){
+      for(var s2=0;s2<2 && !placed;s2++){
+        var side2 = s2 === 0 ? right : !right;
+        for(var dy2=0; dy2<=60 && !placed; dy2+=12){
+          var x2 = side2 ? nd._x + 13 : nd._x - 13 - w;
+          var y2 = nd._y + dy2 - h/2;
+          if(x2 < 0 || x2 + w > sr.width || y2 < 0 || y2 + h > sr.height) continue;
+          var box2 = { x:x2, y:y2, w:w, h:h };
+          var badCard = false;
+          for(var c=0;c<cardBoxes.length;c++){ if(hit(box2, cardBoxes[c])){ badCard = true; break; } }
+          if(!badCard) placed = box2;
+        }
+      }
+    }
+    /* pass three: slide clear of the card it hit */
+    if(!placed){
+      var x3 = Math.max(2, Math.min(sr.width - w - 2, nd._x + 13));
+      var y3 = Math.max(2, Math.min(sr.height - h - 2, nd._y - h/2));
+      var box3 = { x:x3, y:y3, w:w, h:h };
+      for(var c2=0;c2<cardBoxes.length;c2++){
+        if(hit(box3, cardBoxes[c2])){ box3.y = cardBoxes[c2].y + cardBoxes[c2].h + 6; }
+      }
+      if(box3.y + h > sr.height - 2) box3.y = Math.max(2, cardBoxes.length ? cardBoxes[0].y - h - 6 : 2);
+      placed = box3;
+    }
+    lab.style.left = placed.x + 'px'; lab.style.top = placed.y + 'px';
+    boxes.push(placed);
+  });
+}
+
+/* ============================================================
+   OVERLAY OPEN / CLOSE
+   ============================================================ */
+function openOverlay(i){
+  lastFocus = document.activeElement;
+  scrollLock = pageYOffset;
+  document.body.style.position = 'fixed';
+  document.body.style.top = (-scrollLock) + 'px';
+  document.body.style.width = '100%';
+  ov.classList.add('on');
+  ov.setAttribute('aria-hidden','false');
+  ovOpen = true;
+  current = -1;
+  showPanel(i);
+  ovExit.focus();
+}
+function closeOverlay(){
+  ov.classList.remove('on');
+  ov.setAttribute('aria-hidden','true');
+  ovOpen = false;
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo(0, scrollLock);
+  if(lastFocus && lastFocus.focus) lastFocus.focus();
+}
+ovExit.addEventListener('click', closeOverlay);
+ov.addEventListener('click', function(e){ if(e.target === ov) closeOverlay(); });
+window.addEventListener('keydown', function(e){
+  if(!ovOpen) return;
+  if(e.key === 'Escape'){ closeOverlay(); return; }
+  if(e.key === 'ArrowRight'){ e.preventDefault(); page(1); }
+  if(e.key === 'ArrowLeft'){ e.preventDefault(); page(-1); }
+});
+function page(d){
+  var n = (current + d + SERVICES.length) % SERVICES.length;
+  net.fade(0.001);
+  setTimeout(function(){ net.fade(0); showPanel(n); }, 420);
+}
+
+/* ============================================================
+   FRAME LOOP
+   ============================================================ */
+var last = performance.now()/1000, nextLayout = 0;
+function frame(now){
+  var t = now/1000, dt = Math.min(0.05, t - last); last = t;
+  applyScroll();
+  if(ovOpen){
+    if(!reduce.matches) net.step(t, dt);
+    net.draw(t);
+    drawTies();
+    /* First pass once the entry animation has settled, then every 7s.
+       Keyed off a scheduled time rather than an elapsed check, which would
+       have left cards unpositioned for the first seven seconds. */
+    if(t > nextLayout){ layout(); nextLayout = t + 7; }
+  }
+  requestAnimationFrame(frame);
+}
+function drawTies(){
+  var c = document.getElementById('net').getContext('2d');
+  Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(card){
+    var tie = card._tie; if(!tie) return;
+    var tx = tie.bx < tie.x ? tie.bx + tie.bw : tie.bx;
+    var ty = tie.by + tie.bh/2;
+    c.beginPath(); c.moveTo(tie.x, tie.y); c.lineTo(tx, ty);
+    c.lineWidth = 1.2; c.strokeStyle = tie.col; c.globalAlpha = 0.5; c.stroke(); c.globalAlpha = 1;
+  });
+}
+
+/* ============================================================
+   HERO NETWORK, START
+   ============================================================ */
+var heroNet = makeNetwork(heroCanvas);
+function sizeHero(){ heroNet.measure(); heroNet.build(0); }
+
+measureDock();
+applyScroll();
+sizeHero();
+requestAnimationFrame(function loop(now){
+  var t = now/1000;
+  if(!reduce.matches) heroNet.step(t, 0.016);
+  heroNet.draw(t);
+  requestAnimationFrame(loop);
+});
+requestAnimationFrame(frame);
+
+var rz;
+addEventListener('resize', function(){
+  clearTimeout(rz);
+  rz = setTimeout(function(){
+    lastP = -1; measureDock(); applyScroll(); sizeHero();
+    if(ovOpen){ net.measure(); layout(); }
+  }, 140);
+});
+addEventListener('scroll', function(){ if(!ovOpen) applyScroll(); }, { passive:true });
+/* Test hook: lets the collision invariants be checked deterministically
+   rather than waiting on the frame loop. */
+window.__syn = { layout:layout, open:openOverlay, close:closeOverlay, page:showPanel,
+                 net:net, stage:stage, hover:hoverSys };
 setTimeout(function(){ document.getElementById('sticky').classList.add('on'); }, 900);
 })();
 </script>
