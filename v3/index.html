@@ -76,26 +76,27 @@ a:hover{ color:var(--accent); }
 h1,h2,h3,h4{ margin:0; }
 h1,h2{ font-weight:600; color:var(--ink); text-wrap:balance; }
 h1{ font-size:clamp(33px,4.9vw,82px); line-height:1.02; letter-spacing:-.042em; }
-h2{ font-size:clamp(26px,min(3.8vw,7vh),62px); line-height:1.05; letter-spacing:-.038em; }
-#contact h2{ font-size:clamp(28px,min(4.4vw,8vh),72px); line-height:1.02; letter-spacing:-.042em; }
+h2{ font-size:clamp(26px,min(3.8vw,7svh),62px); line-height:1.05; letter-spacing:-.038em; }
+#contact h2{ font-size:clamp(28px,min(4.4vw,8svh),72px); line-height:1.02; letter-spacing:-.042em; }
 em.acc{ font-style:italic; font-weight:400; color:var(--accent); }
 span.acc{ color:var(--accent); }
 p{ margin:0; text-wrap:pretty; }
-.lead{ color:var(--body); font-size:clamp(15px,min(1.45vw,2.9vh),25px); line-height:1.58; }
-.body{ color:var(--muted); font-size:clamp(14px,min(1.2vw,2.5vh),19px); line-height:1.62; }
+.lead{ color:var(--body); font-size:clamp(15px,min(1.45vw,2.9svh),25px); line-height:1.58; }
+.body{ color:var(--muted); font-size:clamp(14px,min(1.2vw,2.5svh),19px); line-height:1.62; }
 
 .screen{
   min-height:100vh;
+  min-height:100dvh;
   scroll-snap-align:start; scroll-snap-stop:always;
-  padding:clamp(74px,11vh,120px) var(--pad-x) clamp(34px,5.5vh,64px);
-  display:flex; flex-direction:column; gap:clamp(22px,4vh,44px);
+  padding:clamp(74px,11svh,120px) var(--pad-x) clamp(34px,5.5svh,64px);
+  display:flex; flex-direction:column; gap:clamp(22px,4svh,44px);
   justify-content:center; position:relative;
 }
 .eyebrow-row{ display:flex; align-items:center; gap:16px; padding-bottom:14px; border-bottom:1px solid var(--hair); }
 .two{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(38px,5.6vw,96px); align-items:start; }
 
 /* ---------- hero ---------- */
-#hero{ height:100vh; justify-content:flex-end; padding-bottom:clamp(34px,5.5vh,64px); }
+#hero{ height:100vh; height:100dvh; justify-content:flex-end; padding-bottom:clamp(34px,5.5svh,64px); }
 /* A canvas is a replaced element: inset:0 with width:auto resolves to its
    intrinsic size, not the viewport, which drew the whole network small and
    pinned to the top left corner. */
@@ -123,12 +124,12 @@ p{ margin:0; text-wrap:pretty; }
    heading. On the wrapper it would use the 16px body size and wrap to one
    word per line. */
 .hero-h1{ position:relative; z-index:2; }
-/* The next screen peeks below an 82vh hero. It stays covered until the scroll
+/* The next screen peeks below an 82svh hero. It stays covered until the scroll
    starts. Under the sticky bar in stacking order, so the bar stays visible. */
 .peekmask{ display:none; }
 @media (max-width:760px){
   .peekmask{
-    display:block; position:fixed; left:0; right:0; top:82vh; bottom:0;
+    display:block; position:fixed; left:0; right:0; top:82vh; top:82dvh; bottom:0;
     background:var(--shell); z-index:15; pointer-events:none;
     transition:opacity .28s var(--ease);
   }
@@ -147,12 +148,12 @@ p{ margin:0; text-wrap:pretty; }
 .rows{ display:flex; flex-direction:column; }
 .srow{
   display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(14px,2vw,30px);
-  width:100%; text-align:left; padding:clamp(14px,2.2vh,26px) 2px;
+  width:100%; text-align:left; padding:clamp(14px,2.2svh,26px) 2px;
   border-top:1px solid var(--hair); min-height:44px;
   transition:padding-left .32s var(--ease);
 }
 .srow:last-child{ border-bottom:1px solid var(--hair); }
-.srow__t{ font-weight:600; color:var(--ink); font-size:clamp(19px,min(2.6vw,4.8vh),41px); letter-spacing:-.032em; transition:color .32s var(--ease); }
+.srow__t{ font-weight:600; color:var(--ink); font-size:clamp(19px,min(2.6vw,4.8svh),41px); letter-spacing:-.032em; transition:color .32s var(--ease); }
 .srow__go{ width:30px; height:30px; border-radius:999px; border:1px solid var(--hair-2); display:grid; place-items:center; color:var(--muted); transition:border-color .32s var(--ease), color .32s var(--ease); }
 .srow__go{ font-size:13px; line-height:1; }
 @media (hover:hover){
@@ -163,7 +164,7 @@ p{ margin:0; text-wrap:pretty; }
 
 /* ---------- 02 steps ---------- */
 .steps{ display:flex; flex-direction:column; }
-.step{ border-top:1px solid var(--hair); padding:clamp(9px,1.5vh,16px) 0; }
+.step{ border-top:1px solid var(--hair); padding:clamp(9px,1.5svh,16px) 0; }
 .step:first-child{ border-top:0; }
 /* The button owns the row grid. Making it display:contents dissolved it into
    the parent and scattered the index, title and body across the tracks. */
@@ -173,32 +174,32 @@ p{ margin:0; text-wrap:pretty; }
   width:100%; text-align:left;
 }
 .step__body{ padding-left:calc(22px + clamp(10px,1.2vw,18px)); margin-top:4px; }
-.step__body p{ font-size:clamp(12.5px,min(1.02vw,2.05vh),16px); line-height:1.5; }
+.step__body p{ font-size:clamp(12.5px,min(1.02vw,2.05svh),16px); line-height:1.5; }
 .step__h{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 /* Desktop renders all four steps open with no toggle: the plus and minus mark
    is phone only. */
 .step__sign{ display:none; }
-.step__t{ font-weight:600; color:var(--ink); font-size:clamp(15.5px,min(1.4vw,2.8vh),22px); letter-spacing:-.02em; }
+.step__t{ font-weight:600; color:var(--ink); font-size:clamp(15.5px,min(1.4vw,2.8svh),22px); letter-spacing:-.02em; }
 .pill{ font-family:var(--m); font-weight:500; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); border:1px solid var(--accent); border-radius:999px; padding:3px 9px; }
-.risk{ display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; border-top:1px solid rgba(155,74,50,0.45); padding-top:clamp(14px,2.2vh,24px); }
+.risk{ display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; border-top:1px solid rgba(155,74,50,0.45); padding-top:clamp(14px,2.2svh,24px); }
 .risk__tail{ color:var(--muted); font-weight:400; }
 .risk__sq{ width:6px; height:6px; background:var(--accent); margin-top:.5em; }
-.risk p{ color:var(--ink); font-weight:600; font-size:clamp(16px,min(1.7vw,3.3vh),25px); line-height:1.4; letter-spacing:-.02em; }
+.risk p{ color:var(--ink); font-weight:600; font-size:clamp(16px,min(1.7vw,3.3svh),25px); line-height:1.4; letter-spacing:-.02em; }
 
 /* ---------- shared card ---------- */
 .card{
   border:1px solid var(--hair); border-left:2px solid rgba(155,74,50,0.34); border-radius:2px;
   background:var(--card-bg);
-  padding:clamp(15px,2vh,22px) clamp(18px,1.8vw,26px);
-  display:flex; flex-direction:column; gap:clamp(6px,1vh,10px);
+  padding:clamp(15px,2svh,22px) clamp(18px,1.8vw,26px);
+  display:flex; flex-direction:column; gap:clamp(6px,1svh,10px);
   transition:border-color .32s var(--ease), background .32s var(--ease), box-shadow .32s var(--ease);
 }
 @media (hover:hover){
   .card:hover{ border-color:rgba(239,231,218,0.2); border-left-color:var(--accent); background:var(--card-bg-hi); box-shadow:0 10px 30px -22px rgba(0,0,0,0.9); }
 }
-.card__t{ font-weight:600; color:var(--ink); font-size:clamp(15px,min(1.3vw,2.6vh),20.5px); letter-spacing:-.02em; }
-.card__c{ color:var(--muted); font-size:clamp(13px,min(1.08vw,2.2vh),17px); line-height:1.5; }
-.cards{ display:flex; flex-direction:column; gap:clamp(9px,1.4vh,15px); }
+.card__t{ font-weight:600; color:var(--ink); font-size:clamp(15px,min(1.3vw,2.6svh),20.5px); letter-spacing:-.02em; }
+.card__c{ color:var(--muted); font-size:clamp(13px,min(1.08vw,2.2svh),17px); line-height:1.5; }
+.cards{ display:flex; flex-direction:column; gap:clamp(9px,1.4svh,15px); }
 
 /* ---------- cta ---------- */
 .cta{
@@ -224,12 +225,12 @@ p{ margin:0; text-wrap:pretty; }
 /* ---------- 05 ---------- */
 #contact{ }
 .ctas{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
-.foot{ margin-top:auto; padding-top:clamp(14px,2.2vh,26px); border-top:1px solid var(--hair); display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; }
+.foot{ margin-top:auto; padding-top:clamp(14px,2.2svh,26px); border-top:1px solid var(--hair); display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; }
 .foot i{ font-style:normal; color:var(--accent); }
 
 /* ---------- sticky ---------- */
 .sticky{
-  position:fixed; right:clamp(14px,2vw,26px); bottom:clamp(14px,2vh,26px); z-index:16;
+  position:fixed; right:clamp(14px,2vw,26px); bottom:clamp(14px,2svh,26px); z-index:16;
   display:inline-flex; align-items:center; gap:.7em;
   background:var(--accent); color:var(--ink); border-radius:2px;
   padding:13px 20px; min-height:44px; font-weight:500; font-size:14px;
@@ -246,7 +247,7 @@ p{ margin:0; text-wrap:pretty; }
   background:radial-gradient(900px 620px at 30% 18%, #201A16, #14100E 72%);
   opacity:0; pointer-events:none; transition:opacity .4s var(--ease);
   display:flex; flex-direction:column;
-  padding:clamp(34px,6.5vh,84px) var(--pad-x) clamp(24px,4vh,52px);
+  padding:clamp(34px,6.5svh,84px) var(--pad-x) clamp(24px,4svh,52px);
   overflow:hidden;
 }
 .ov.on{ opacity:1; pointer-events:auto; }
@@ -271,11 +272,11 @@ p{ margin:0; text-wrap:pretty; }
   transition:color .28s var(--ease), border-color .28s var(--ease), background .28s var(--ease);
 }
 .chip.on{ color:var(--ink); background:rgba(155,74,50,0.14); border-color:var(--accent); }
-.ov__eyebrow{ margin-top:clamp(20px,3.4vh,44px); }
+.ov__eyebrow{ margin-top:clamp(20px,3.4svh,44px); }
 .ov h3{ margin:10px 0 0; font-weight:600; color:var(--ink); font-size:clamp(26px,3vw,44px); letter-spacing:-.035em; line-height:1.06; }
 /* The overlay is a flex column, so the stage needs flex:none or it is
    shrunk below its stated height and the canvas loses its geometry. */
-.stage{ position:relative; width:100%; height:clamp(260px,52vh,620px); flex:0 0 auto; margin-top:clamp(20px,4.2vh,54px); }
+.stage{ position:relative; width:100%; height:clamp(260px,52svh,620px); flex:0 0 auto; margin-top:clamp(20px,4.2svh,54px); }
 .stage canvas{ position:absolute; inset:0; width:100%; height:100%; }
 .oplabel{
   position:absolute; font-family:var(--m); font-weight:400; font-size:10px;
@@ -288,7 +289,7 @@ p{ margin:0; text-wrap:pretty; }
   /* Opaque: the shared 0.022 fill composited on #14100E. A translucent card
      here lets the network edges read through it. */
   background:#191513;
-  padding:clamp(13px,1.7vh,17px) clamp(15px,1.3vw,19px);
+  padding:clamp(13px,1.7svh,17px) clamp(15px,1.3vw,19px);
   display:flex; flex-direction:column; gap:5px; cursor:pointer;
   transition:border-color .32s var(--ease), background .32s var(--ease);
 }
@@ -299,7 +300,7 @@ p{ margin:0; text-wrap:pretty; }
 .popup{
   position:absolute; display:none; z-index:6;
   width:clamp(292px,27vw,430px);
-  padding:clamp(18px,2.2vh,25px) clamp(19px,1.8vw,27px);
+  padding:clamp(18px,2.2svh,25px) clamp(19px,1.8vw,27px);
   border:1px solid; border-radius:2px;
   background:#191513;
   color:var(--body); font-size:clamp(14.5px,1.15vw,17.5px); line-height:1.6;
@@ -337,19 +338,9 @@ p{ margin:0; text-wrap:pretty; }
   .popup{ font-size:14.5px; }
   .wordmark{ font-size:44px; top:56px; }
 
-  /* Short phones: dock the wordmark higher so the band, and the padding that
-     clears it, give the rows back the height they need. */
-  @media (max-height:820px){
-    .plate{ height:88px; }
-    .wordmark{ font-size:36px; top:46px; }
-    .screen{ padding-top:88px; padding-bottom:58px; gap:9px; }
-    .srow{ padding:clamp(8px,1.15vh,18px) 2px; }
-    .lead{ line-height:1.45; }
-    #p-1 .two{ gap:8px; }
-  }
 
   /* Wordmark, network and headline share one screen, next screen peeks. */
-  #hero{ height:82vh; min-height:82vh; }
+  #hero{ height:82vh; min-height:82vh; height:82dvh; min-height:82dvh; }
 
   .clients{ grid-template-columns:repeat(2,minmax(0,1fr)); }
   .pills{ justify-content:flex-start; }
@@ -358,6 +349,53 @@ p{ margin:0; text-wrap:pretty; }
   .sticky{ left:14px; right:14px; bottom:14px; justify-content:center; z-index:16; }
   /* The inline CTA on 03 duplicated the bar, so it is desktop only. */
   .cta--inline{ display:none; }
+
+  /* Screen 03 carries the most copy of any screen, so on a phone it runs at
+     the floor of every type clamp the design already declares, which buys
+     the Operators and Builders cards their place above the fold. */
+  #p-3 .body{ font-size:14px; line-height:1.45; }
+  #p-3 h2{ line-height:1.08; }
+  #p-3 .two{ gap:14px; }
+  #p-3 .two > div:first-child{ gap:10px; }
+  #p-3 .cards{ gap:9px; }
+  #p-3 .card{ padding:11px 16px; gap:6px; }
+  #p-3 .card__t{ font-size:15px; }
+  #p-3 .card__c{ font-size:13px; line-height:1.4; }
+
+  /* Short phones: dock the wordmark higher so the band, and the padding that
+     clears it, give the rows back the height they need. */
+  @media (max-height:820px){
+    .plate{ height:88px; }
+    .wordmark{ font-size:36px; top:46px; }
+    .screen{ padding-top:88px; padding-bottom:58px; gap:9px; }
+    .srow{ padding:clamp(8px,1.15svh,18px) 2px; }
+    .lead{ line-height:1.45; }
+    #p-1 .two{ gap:8px; }
+  }
+
+  /* Shorter still, which is what a phone actually shows once the browser
+     chrome is up. Screens 02 and 03 carry the most copy, so they are the two
+     that need a second pass. */
+  @media (max-height:820px){
+    #p-3 h2{ font-size:25px; }
+    #p-3 .body{ line-height:1.38; }
+    #p-3 .two{ gap:11px; }
+    #p-3 .cards{ gap:7px; }
+    #p-3 .card{ padding:9px 14px; }
+  }
+  @media (max-height:780px){
+    #p-3 .two{ gap:9px; }
+    #p-3 .two > div:first-child{ gap:7px; }
+    #p-3 .cards{ gap:5px; }
+    #p-3 .card{ padding:7px 12px; }
+    #p-3 .card__t{ font-size:14px; }
+  }
+  @media (max-height:750px){
+    #p-2 h2{ font-size:25px; }
+    #p-2 .lead{ font-size:15px; line-height:1.42; }
+    #p-2 .risk{ padding-top:8px; }
+  }
+
 
   /* 02 steps become accordions so the screen fits the fold. */
   .step__btn{ min-height:46px; align-items:center; }
@@ -430,7 +468,7 @@ p{ margin:0; text-wrap:pretty; }
 <section class="screen" id="p-2">
   <div class="eyebrow-row"><span class="mono">02 / How it works</span></div>
   <div class="two">
-    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4vh,26px)">
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4svh,26px)">
       <h2>Turn repetitive manual work into <span class="acc">fast, automated business growth.</span></h2>
       <p class="lead">We specialize in optimizing business operations by replacing repetitive manual tasks with custom systems and smart automations. We save you substantial time and money, with fees tied directly to real, measurable results.</p>
     </div>
@@ -446,7 +484,7 @@ p{ margin:0; text-wrap:pretty; }
 <section class="screen" id="p-3">
   <div class="eyebrow-row"><span class="mono">03 / Who we are</span></div>
   <div class="two">
-    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4vh,26px);align-items:flex-start">
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4svh,26px);align-items:flex-start">
       <h2>We know where you lose time and money because we've already <span class="acc">solved it in our own operations</span></h2>
       <p class="body">Having spent years launching and managing businesses ourselves, we understand operations from the inside. We know where companies waste valuable time: the repetitive manual tasks that eat up hours, the slow workflows, and the everyday operational bottlenecks.</p>
       <p class="body">We design and build custom tech systems tailored specifically to eliminate those inefficiencies. The outcome is always straightforward: significant cost reduction, higher productivity, and real business growth.</p>
@@ -483,7 +521,7 @@ p{ margin:0; text-wrap:pretty; }
 <section class="screen" id="contact">
   <div class="eyebrow-row"><span class="mono">05 / Get started</span></div>
   <div class="two">
-    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4vh,26px)">
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4svh,26px)">
       <h2>Start with a free strategy session. <span class="acc">See where your business can save.</span></h2>
       <p class="lead">We sit down with you to review your operations, map out your workflows, and identify where custom automation can eliminate wasted time and cut costs. You get a clear operational roadmap with zero commitment required.</p>
     </div>
