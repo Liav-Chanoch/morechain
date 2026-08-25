@@ -73,7 +73,8 @@ a:hover{ color:var(--accent); }
 }
 .mono--micro{ font-size:11px; color:var(--dimmer); letter-spacing:.16em; }
 
-h1,h2{ margin:0; font-weight:600; color:var(--ink); text-wrap:balance; }
+h1,h2,h3,h4{ margin:0; }
+h1,h2{ font-weight:600; color:var(--ink); text-wrap:balance; }
 h1{ font-size:clamp(33px,4.9vw,82px); line-height:1.02; letter-spacing:-.042em; }
 h2{ font-size:clamp(26px,min(3.8vw,7vh),62px); line-height:1.05; letter-spacing:-.038em; }
 #contact h2{ font-size:clamp(28px,min(4.4vw,8vh),72px); line-height:1.02; letter-spacing:-.042em; }
@@ -273,7 +274,7 @@ p{ margin:0; text-wrap:pretty; }
   position:absolute; display:none; z-index:6;
   width:clamp(292px,27vw,430px);
   padding:clamp(18px,2.2vh,25px) clamp(19px,1.8vw,27px);
-  border:1px solid currentColor; border-radius:2px;
+  border:1px solid; border-radius:2px;
   background:#191513;
   color:var(--body); font-size:clamp(14.5px,1.15vw,17.5px); line-height:1.6;
 }
@@ -333,12 +334,22 @@ p{ margin:0; text-wrap:pretty; }
   /* The chip row scrolls inside its own band so nothing slides under exit. */
   .chips{ flex:1 1 auto; min-width:0; padding:2px 0; }
   .stage{ height:290px; flex:0 0 auto; }
-  .syscard{ position:static !important; width:100% !important; }
+  /* Compact closed card: one row of title and index, nothing else. */
+  .syscard{
+    position:static !important; width:100% !important;
+    padding:12px 15px; gap:0;
+  }
+  /* Whole card is the tap target, so it stays over the 44px floor. */
+  .syscard__row{ min-height:26px; align-items:center; }
   .syslist{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
+  /* The description is an inset bordered box, not a full bleed rule, and it
+     is body colour rather than the system hue. */
   .popup{
     position:static !important; display:none; width:auto !important;
-    margin-top:10px; padding:14px 15px; border:0; border-top:1px solid currentColor;
-    background:transparent;
+    margin-top:12px; padding:13px 14px;
+    border:1px solid var(--hair-2); border-radius:2px;
+    background:transparent; color:var(--body);
+    font-size:14.5px; line-height:1.6;
   }
   .popup.on{ display:block; }
 }
@@ -840,13 +851,20 @@ function buildDom(svc){
     card.querySelector('.syscard__i').textContent = 'S' + ('0' + (n+1));
     card.querySelector('.syscard__t').textContent = name.t;
     var pop = document.createElement('div');
-    pop.className = 'popup'; pop.style.color = col;
+    pop.className = 'popup';
+    pop.style.borderColor = hexAlpha(col, 0.5);
     pop.textContent = name.d;
     card.dataset.sys = String(n);
     if(phone){
       card.appendChild(pop);
       syslist.appendChild(card);
-      card.addEventListener('click', function(){ pop.classList.toggle('on'); });
+      card.addEventListener('click', function(){
+        var wasOpen = pop.classList.contains('on');
+        /* One open at a time: opening a card closes any other. */
+        Array.prototype.forEach.call(syslist.querySelectorAll('.popup'), function(o){ o.classList.remove('on'); });
+        Array.prototype.forEach.call(syslist.querySelectorAll('.syscard'), function(o){ o.classList.remove('open'); });
+        if(!wasOpen){ pop.classList.add('on'); card.classList.add('open'); }
+      });
     } else {
       stage.appendChild(card); stage.appendChild(pop);
       card._pop = pop;
