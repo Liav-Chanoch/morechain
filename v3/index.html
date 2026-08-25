@@ -145,12 +145,20 @@ p{ margin:0; text-wrap:pretty; }
 
 /* ---------- 02 steps ---------- */
 .steps{ display:flex; flex-direction:column; }
-.step{ border-top:1px solid var(--hair); padding:clamp(13px,2vh,22px) 0; display:grid; grid-template-columns:auto 1fr; gap:clamp(12px,1.5vw,22px); align-items:start; }
+.step{ border-top:1px solid var(--hair); padding:clamp(9px,1.5vh,16px) 0; }
 .step:first-child{ border-top:0; }
+/* The button owns the row grid. Making it display:contents dissolved it into
+   the parent and scattered the index, title and body across the tracks. */
+.step__btn{
+  display:grid; grid-template-columns:22px minmax(0,1fr) auto;
+  gap:clamp(10px,1.2vw,18px); align-items:start;
+  width:100%; text-align:left;
+}
+.step__body{ padding-left:calc(22px + clamp(10px,1.2vw,18px)); margin-top:4px; }
+.step__body p{ font-size:clamp(12.5px,min(1.02vw,2.05vh),16px); line-height:1.5; }
 .step__h{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-/* Desktop renders all four steps open with no toggle: the accordion, and its
-   plus and minus mark, are phone only. */
-.step__btn{ display:contents; }
+/* Desktop renders all four steps open with no toggle: the plus and minus mark
+   is phone only. */
 .step__sign{ display:none; }
 .step__t{ font-weight:600; color:var(--ink); font-size:clamp(15.5px,min(1.4vw,2.8vh),22px); letter-spacing:-.02em; }
 .pill{ font-family:var(--m); font-weight:500; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); border:1px solid var(--accent); border-radius:999px; padding:3px 9px; }
@@ -316,14 +324,9 @@ p{ margin:0; text-wrap:pretty; }
   .cta--inline{ display:none; }
 
   /* 02 steps become accordions so the screen fits the fold. */
-  .step{ grid-template-columns:minmax(0,1fr); gap:0; }
-  .step__btn{
-    display:grid; grid-template-columns:auto 1fr auto; align-items:start; gap:12px;
-    width:100%; text-align:left; min-height:46px; padding:0;
-  }
-  .step__btn .mono{ padding-top:20px; }
-  .step__sign{ font-size:20px; color:var(--muted); line-height:1; padding-top:16px; }
-  .step__body{ display:none; padding-top:8px; }
+  .step__btn{ min-height:46px; align-items:center; }
+  .step__sign{ display:block; font-size:20px; color:var(--muted); line-height:1; }
+  .step__body{ display:none; padding-top:6px; }
   .step.open .step__body{ display:block; }
 
   /* Service sheet. */
@@ -541,7 +544,7 @@ STEPS.forEach(function(st, i){
   var idx = ('0' + (i+1));
   wrap.innerHTML =
     '<button class="step__btn" type="button" aria-expanded="false">' +
-      '<span class="mono">' + idx + '</span>' +
+      '<span class="mono step__n">' + idx + '</span>' +
       '<span class="step__h"><span class="step__t"></span>' + (i === 0 ? '<span class="pill">No charge</span>' : '') + '</span>' +
       '<span class="step__sign" aria-hidden="true">+</span>' +
     '</button>' +
