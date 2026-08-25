@@ -917,6 +917,15 @@ function makeService(canvas, opts){
   }
 
   var P = [];
+  /* Where a node ends up, ignoring the fly in offset. The DOM is placed from
+     these so cards and labels never sit at the origin during the entrance. */
+  function posSettled(nd){
+    var a = nd.a + spin;
+    var r2 = nd.r * (1 + 0.02*Math.sin(breathe + nd.drift));
+    return { x: cx + Math.cos(a)*r2*RX,
+             y: cy + Math.sin(a)*r2*RY + Math.sin(clock*0.8 + nd.drift) * (mobile ? 0.9 : 1.4),
+             e: entered(nd, clock) };
+  }
   function draw(){
     var t = reduce.matches ? 5 : clock;
     ctx.setTransform(Math.min(devicePixelRatio||1,1.5),0,0,Math.min(devicePixelRatio||1,1.5),0,0);
@@ -987,6 +996,7 @@ function makeService(canvas, opts){
   return {
     size:size, build:build, step:step, draw:draw, tie:tie,
     pos:function(i){ return P[i]; }, allPos:function(){ return P; },
+    allPosSettled:function(){ return nodes.map(posSettled); },
     nodes:function(){ return nodes; }, sources:function(){ return srcIdx; },
     labels:function(){ return labelIdx; },
     setHover:function(k){ hoverCard = k; },
@@ -1032,8 +1042,9 @@ function showPanel(i){
   net.size();
   net.build(svc.sys.length, isPhone() ? 6 : 12);
   buildDom(svc);
-  /* Nodes need their entry delays to elapse before they have coordinates. */
-  nextLayout = performance.now()/1000 + (reduce.matches ? 0.05 : 2.6);
+  /* Placed immediately: settled coordinates do not wait on the entrance. */
+  layout(); follow();
+  nextLayout = performance.now()/1000 + 7;
 }
 
 function buildDom(svc){
@@ -1118,7 +1129,7 @@ function hit(a,b){ return !(a.x+a.w < b.x || b.x+b.w < a.x || a.y+a.h < b.y || b
 
 function layout(){
   if(current < 0) return;
-  var P = net.allPos(), srcs = net.sources(), labs = net.labels();
+  var P = net.allPosSettled(), srcs = net.sources(), labs = net.labels();
   var sr = stage.getBoundingClientRect();
   var stacked = isPhone();
   boxes = [];
@@ -1203,7 +1214,7 @@ function layout(){
 /* Cheap per frame pass: the DOM rides the graph by its stored offset. */
 function follow(){
   if(current < 0) return;
-  var P = net.allPos(), srcs = net.sources(), labs = net.labels();
+  var P = net.allPosSettled(), srcs = net.sources(), labs = net.labels();
   var stacked = isPhone();
   if(!stacked) Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(card, n){
     var np = P[srcs[n]]; if(!np || !card._off) return;
@@ -1276,9 +1287,10 @@ function applyFade(){
 function drawTies(){
   if(isPhone()) return;                       /* stacked list: no tie lines */
   var P = net.allPos(), srcs = net.sources();
-  var sr = stage.getBoundingClientRect();
   Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(card, n){
-    var np = P[srcs[n]]; if(!np) return;
+    var np = P[srcs[n]];
+    /* While the node is still flying in, a tie would stretch across the stage. */
+    if(!np || np.e < 0.95) return;
     var x = parseFloat(card.style.left) || 0, y = parseFloat(card.style.top) || 0;
     var w = card.offsetWidth, h = card.offsetHeight;
     /* nearest point on the card edge to the node */
