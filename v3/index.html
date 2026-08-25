@@ -108,12 +108,21 @@ p{ margin:0; text-wrap:pretty; }
 }
 .wordmark i{ font-style:normal; color:var(--accent); }
 .wordmark u{ text-decoration:none; display:inline-block; width:.27em; height:.27em; background:var(--accent); margin-left:.12em; }
-.plate{ position:fixed; left:0; top:0; right:0; height:clamp(72px,11vh,132px); background:rgba(20,16,14,0); z-index:2; pointer-events:none; }
+/* Sized to the wordmark and scaled with it, rather than a full width bar. */
+.plate{
+  position:fixed; z-index:2; pointer-events:none;
+  left:clamp(34px,5.6vw,92px); top:clamp(32px,4.6vw,60px);
+  font-size:clamp(46px,11.2vw,196px);
+  width:5.1em; height:1em;
+  margin:-0.17em -0.34em; padding:0.17em 0.34em;
+  border-radius:0.22em; background:rgba(20,16,14,0);
+  transform-origin:0 0;
+}
 /* ch resolves against the element's own font size, so the cap belongs on the
    heading. On the wrapper it would use the 16px body size and wrap to one
    word per line. */
 .hero-h1{ position:relative; z-index:2; }
-.hero-h1 h1{ max-width:15ch; }
+.hero-h1 h1{ max-width:min(720px,56vw); }
 
 /* ---------- 01 rows ---------- */
 .rows{ display:flex; flex-direction:column; }
@@ -126,7 +135,7 @@ p{ margin:0; text-wrap:pretty; }
 .srow:last-child{ border-bottom:1px solid var(--hair); }
 .srow__t{ font-weight:600; color:var(--ink); font-size:clamp(19px,min(2.6vw,4.8vh),41px); letter-spacing:-.032em; transition:color .32s var(--ease); }
 .srow__go{ width:30px; height:30px; border-radius:999px; border:1px solid var(--hair-2); display:grid; place-items:center; color:var(--muted); transition:border-color .32s var(--ease), color .32s var(--ease); }
-.srow__go svg{ width:11px; height:11px; }
+.srow__go{ font-size:13px; line-height:1; }
 @media (hover:hover){
   .srow:hover{ padding-left:9px; }
   .srow:hover .srow__t,.srow:hover .mono{ color:var(--amber); }
@@ -138,9 +147,14 @@ p{ margin:0; text-wrap:pretty; }
 .step{ border-top:1px solid var(--hair); padding:clamp(13px,2vh,22px) 0; display:grid; grid-template-columns:auto 1fr; gap:clamp(12px,1.5vw,22px); align-items:start; }
 .step:first-child{ border-top:0; }
 .step__h{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+/* Desktop renders all four steps open with no toggle: the accordion, and its
+   plus and minus mark, are phone only. */
+.step__btn{ display:contents; }
+.step__sign{ display:none; }
 .step__t{ font-weight:600; color:var(--ink); font-size:clamp(15.5px,min(1.4vw,2.8vh),22px); letter-spacing:-.02em; }
 .pill{ font-family:var(--m); font-weight:500; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); border:1px solid var(--accent); border-radius:999px; padding:3px 9px; }
-.risk{ display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; border-top:1px solid var(--accent); padding-top:clamp(14px,2.2vh,24px); }
+.risk{ display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; border-top:1px solid rgba(155,74,50,0.45); padding-top:clamp(14px,2.2vh,24px); }
+.risk__tail{ color:var(--muted); font-weight:400; }
 .risk__sq{ width:6px; height:6px; background:var(--accent); margin-top:.5em; }
 .risk p{ color:var(--ink); font-weight:600; font-size:clamp(16px,min(1.7vw,3.3vh),25px); line-height:1.4; letter-spacing:-.02em; }
 
@@ -161,12 +175,13 @@ p{ margin:0; text-wrap:pretty; }
 
 /* ---------- cta ---------- */
 .cta{
+  transition:background .3s var(--ease), transform .3s var(--ease);
   display:inline-flex; align-items:center; gap:.7em; align-self:flex-start;
   background:var(--accent); color:var(--ink); border-radius:2px;
   padding:14px 22px; min-height:44px; font-weight:500; font-size:15px;
   transition:background .3s var(--ease);
 }
-.cta:hover{ background:var(--accent-hi); color:var(--ink); }
+.cta:hover{ background:var(--accent-hi); color:var(--ink); transform:translateY(-2px); }
 .cta--out{ background:transparent; border:1px solid var(--hair-3); }
 .cta--out:hover{ background:var(--card-bg-hi); color:var(--ink); }
 .cta__sq{ width:8px; height:8px; background:var(--shell); }
@@ -195,7 +210,7 @@ p{ margin:0; text-wrap:pretty; }
   transition:opacity .5s var(--ease), transform .5s var(--ease), background .3s var(--ease);
 }
 .sticky.on{ opacity:1; transform:none; }
-.sticky:hover{ background:var(--accent-hi); color:var(--ink); }
+.sticky:hover{ background:var(--accent-hi); color:var(--ink); transform:translateY(-2px); }
 .sticky__sq{ width:8px; height:8px; background:var(--shell); }
 
 /* ---------- service overlay ---------- */
@@ -221,6 +236,7 @@ p{ margin:0; text-wrap:pretty; }
 .ov__div{ width:1px; align-self:stretch; background:var(--hair-2); flex:0 0 auto; }
 .chips{ display:flex; gap:8px; align-items:center; overflow-x:auto; scrollbar-width:none; }
 .chips::-webkit-scrollbar{ display:none; }
+.chip:hover{ color:var(--ink); border-color:rgba(239,231,218,0.34); }
 .chip{
   font-family:var(--m); font-weight:500; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
   color:var(--muted); border:1px solid var(--hair); border-radius:2px;
@@ -246,7 +262,7 @@ p{ margin:0; text-wrap:pretty; }
   display:flex; flex-direction:column; gap:5px; cursor:pointer;
   transition:border-color .32s var(--ease), background .32s var(--ease);
 }
-.syscard:hover{ background:var(--card-bg-hi); }
+.syscard:hover{ background:#2C211A; border-color:var(--accent-hi); }
 .syscard__row{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
 .syscard__i{ font-family:var(--m); font-weight:500; font-size:10px; letter-spacing:.14em; color:currentColor; flex:0 0 auto; }
 .syscard__t{ font-weight:600; color:var(--ink); font-size:clamp(13.5px,1.1vw,16.5px); letter-spacing:-.02em; line-height:1.2; }
@@ -269,6 +285,7 @@ p{ margin:0; text-wrap:pretty; }
   #contact{ padding:88px 20px 110px; }
   .two{ grid-template-columns:minmax(0,1fr); gap:24px; }
   h1{ font-size:34px; }
+  .hero-h1 h1{ max-width:none; }
   h2{ font-size:27px; }
   #contact h2{ font-size:29px; }
   .lead{ font-size:16.5px; }
@@ -367,7 +384,7 @@ p{ margin:0; text-wrap:pretty; }
   </div>
   <div class="risk">
     <span class="risk__sq" aria-hidden="true"></span>
-    <p class="needs-copy" data-needs-copy="risk statement">Risk statement, verbatim from the prototype.</p>
+    <p>If the gain does not appear in your numbers against the baseline you approved, there is nothing to share. <span class="risk__tail">Written into the engagement.</span></p>
   </div>
 </section>
 
@@ -395,7 +412,7 @@ p{ margin:0; text-wrap:pretty; }
   <div class="two two--clients">
     <h2>Some of the operations we have <span class="acc">optimised so far.</span></h2>
     <div class="pills">
-      <span class="sector">Tourism</span><span class="sector">Marine &amp; cruises</span><span class="sector">Sport &amp; leisure</span><span class="sector">Creative studios</span><span class="sector">Relocation</span>
+      <span class="sector">TOURISM</span><span class="sector">MARINE &amp; CRUISES</span><span class="sector">SPORT &amp; LEISURE</span><span class="sector">CREATIVE STUDIOS</span><span class="sector">RELOCATION</span>
     </div>
   </div>
   <div class="clients">
@@ -458,19 +475,19 @@ var SERVICES = [
   { chip:'01 / Revenue', name:'Revenue and sales systems',
     ops:['Inbound lead','Qualification','Sales call','Proposal','Close','Lead scoring','CRM sync','Follow-up','Forecast','Commission','Renewal','Handover'],
     sys:[
-      { t:'AI Sales Copilot', d:null },
+      { t:'AI Sales Copilot', d:'A context-rich assistant trained on the full sales knowledge base, giving reps instant answers and taking the operational load off high-volume pipelines.' },
       { t:'Conversation Intelligence Agent', d:'Reviews sales calls end to end, surfaces coaching notes, flags missed objections, and recommends the next move to close.' },
-      { t:'Autonomous Pipeline Agent', d:null }
+      { t:'Autonomous Pipeline Agent', d:'Operates across every pipeline to execute routine work automatically: follow-ups, reminders, and stage progression against defined business rules.' }
     ] },
   { chip:'02 / Orders', name:'Order and supplier platforms',
     ops:['Order intake','Confirmation','Supplier dispatch','Fulfilment','Payment','Stock check','Purchase order','Delivery notes','Returns','Invoicing','Lead times','Archive'],
-    sys:[ { t:'Proprietary Order Management CRM', d:null }, { t:'Supplier Portal', d:null } ] },
+    sys:[ { t:'Proprietary Order Management CRM', d:'An in-house CRM for centralised order intake, with automated payment request generation triggered directly from order data.' }, { t:'Supplier Portal', d:'A supplier-facing interface for order receipt, confirmation and live status tracking, replacing email coordination with a single source of truth.' } ] },
   { chip:'03 / Pricing', name:'Pricing and quoting engines',
     ops:['Client request','Inventory pull','Package build','Quote issued','Booking','Rate cards','Availability','Margin rules','Ancillaries','Approvals','Cancellation','Supplier feed'],
-    sys:[ { t:'Dynamic Packaging & Pricing Engine', d:null }, { t:'Agent CPQ Platform', d:null } ] },
+    sys:[ { t:'Dynamic Packaging & Pricing Engine', d:'Builds complex multi-component quotes across hotels, flights and ancillaries, powered by live API integrations with external inventory aggregators.' }, { t:'Agent CPQ Platform', d:'A configure, price and quote layer for travel agents, handling dynamic pricing logic, automated commission calculation and client-ready proposals.' } ] },
   { chip:'04 / Finance', name:'Finance automation',
     ops:['Expense capture','Classification','Reconciliation','VAT filing','Reporting','Receipts','Entities','Recurring costs','Bank feed','Receivables','Audit trail','Year end'],
-    sys:[ { t:'Multi-Entity Expense Agent', d:null }, { t:'Automated VAT & Revenue Reporting Agent', d:null } ] }
+    sys:[ { t:'Multi-Entity Expense Agent', d:'Captures and classifies expenses across multiple entities in parallel, with recurring-cost monitoring and anomaly detection.' }, { t:'Automated VAT & Revenue Reporting Agent', d:'Generates monthly and bi-monthly VAT filings with revenue, period-over-period deltas and tax liability, reconciling receivables to surface unbilled revenue.' } ] }
 ];
 var SYS_COLOURS = ['#B4562F','#D0A05C','#C2703A'];
 var STEPS = [
@@ -493,7 +510,7 @@ SERVICES.forEach(function(s, i){
   b.className = 'srow'; b.type = 'button';
   b.innerHTML = '<span class="mono">' + ('0' + (i+1)) + '</span>' +
                 '<span class="srow__t"></span>' +
-                '<span class="srow__go" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+                '<span class="srow__go" aria-hidden="true">&#8594;</span>';
   b.querySelector('.srow__t').textContent = s.name;
   b.addEventListener('click', function(){ openOverlay(i); });
   rowsHost.appendChild(b);
@@ -548,6 +565,7 @@ function applyScroll(){
   var e = easeIO(p);
   var k = 1 + (bigK - 1) * e;
   wordmark.style.transform = 'scale(' + k.toFixed(4) + ')';
+  plate.style.transform = 'scale(' + k.toFixed(4) + ')';
   plate.style.background = 'rgba(20,16,14,' + (0.95 * p).toFixed(3) + ')';
   var h = Math.max(0, 1 - p * 2);
   heroH1.style.opacity = h.toFixed(3);
@@ -559,6 +577,7 @@ function applyScroll(){
    NETWORK ENGINE
    ============================================================ */
 function makeNetwork(canvas, opts){
+  opts = opts || {};
   var ctx = canvas.getContext('2d');
   var W=0,H=0,DPR=1,cxp=0,cyp=0,RX=0,RY=0;
   var nodes=[], edges=[], adj=[], sources=[], pulses=[], t0=0, born=0;
@@ -570,7 +589,17 @@ function makeNetwork(canvas, opts){
     W = Math.max(1, r.width); H = Math.max(1, r.height);
     canvas.width = Math.round(W*DPR); canvas.height = Math.round(H*DPR);
     ctx.setTransform(DPR,0,0,DPR,0,0);
-    cxp = W/2; cyp = H/2; RX = 0.44*W; RY = 0.42*H;
+    if(opts && opts.hero){
+      /* The hero graph is offset, not centred, and its radius is a single
+         circle rather than the stage ellipse. */
+      var mob = W < 760;
+      cxp = mob ? W*0.5 : W*0.60;
+      cyp = mob ? H*0.40 : H*0.47;
+      var R = mob ? Math.min(W*0.46, H*0.30) : Math.min(W*0.40, H*0.46);
+      RX = R; RY = R;
+    } else {
+      cxp = W*0.5; cyp = H*0.5; RX = 0.44*W; RY = 0.42*H;
+    }
   }
 
   function build(nSys){
@@ -704,6 +733,12 @@ function makeNetwork(canvas, opts){
           ctx.beginPath(); ctx.arc(x, y, size*0.95 + 8, 0, 6.2832);
           ctx.lineWidth = 1; ctx.strokeStyle = hexA(col, 0.5*layer*n._ring); ctx.stroke();
         }
+        if(opts.badges){
+          ctx.font = "600 10px 'IBM Plex Mono', monospace";
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillStyle = hexA(col, 0.95*layer);
+          ctx.fillText('S' + ('0' + (si+1)), x, y - size - 9);
+        }
       } else {
         ctx.lineWidth = 1;
         ctx.strokeStyle = n.lit > 0.02
@@ -745,7 +780,7 @@ var ovEyebrow = document.getElementById('ov-eyebrow');
 var ovTitle = document.getElementById('ov-title');
 var stage = document.getElementById('stage');
 var syslist = document.getElementById('syslist');
-var net = makeNetwork(document.getElementById('net'));
+var net = makeNetwork(document.getElementById('net'), { badges:isPhone() });
 var current = -1, ovOpen = false, lastFocus = null, scrollLock = 0;
 
 SERVICES.forEach(function(s,i){
@@ -797,8 +832,7 @@ function buildDom(svc){
     card.querySelector('.syscard__t').textContent = name.t;
     var pop = document.createElement('div');
     pop.className = 'popup'; pop.style.color = col;
-    if(name.d){ pop.textContent = name.d; }
-    else { pop.innerHTML = '<span class="needs-copy" data-needs-copy="system description">Description, verbatim from the prototype.</span>'; }
+    pop.textContent = name.d;
     card.dataset.sys = String(n);
     if(phone){
       card.appendChild(pop);
@@ -1016,7 +1050,7 @@ function drawTies(){
 /* ============================================================
    HERO NETWORK, START
    ============================================================ */
-var heroNet = makeNetwork(heroCanvas);
+var heroNet = makeNetwork(heroCanvas, { hero:true });
 function sizeHero(){ heroNet.measure(); heroNet.build(0); }
 
 measureDock();
