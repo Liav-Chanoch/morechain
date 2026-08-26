@@ -106,19 +106,32 @@ p{ margin:0; text-wrap:pretty; }
   left:var(--pad-x); top:clamp(32px,4.6vw,60px);
   transform-origin:0 0; white-space:nowrap;
   font-weight:600; letter-spacing:-.045em; line-height:1;
-  font-size:clamp(46px,11.2vw,196px); color:var(--ink);
+  font-size:clamp(44px,9.8vw,172px); color:var(--ink);
 }
 .wordmark i{ font-style:normal; color:var(--accent); }
 .wordmark u{ text-decoration:none; display:inline-block; width:.27em; height:.27em; background:var(--accent); margin-left:.12em; }
+@keyframes wm-wipe{ from{ clip-path:inset(0 102% 0 0); } to{ clip-path:inset(0 -2% 0 0); } }
+@keyframes wm-sq{ from{ opacity:0; transform:scale(.24); } to{ opacity:1; transform:scale(1); } }
+.wordmark b, .wordmark i{ display:inline-block; font-weight:inherit; font-style:normal; }
+.wordmark b{ animation:wm-wipe .82s .12s both cubic-bezier(.16,1,.3,1); }
+.wordmark i{ animation:wm-wipe .82s .26s both cubic-bezier(.16,1,.3,1); }
+.wordmark u{ animation:wm-sq .52s .78s both cubic-bezier(.2,.85,.3,1); }
+@media (prefers-reduced-motion: reduce){
+  .wordmark b, .wordmark i, .wordmark u{ animation:none; }
+}
 /* Sized to the wordmark and scaled with it, rather than a full width bar. */
 .plate{
   position:fixed; z-index:2; pointer-events:none;
-  left:clamp(34px,5.6vw,92px); top:clamp(32px,4.6vw,60px);
-  font-size:clamp(46px,11.2vw,196px);
-  width:5.1em; height:1em;
+  left:var(--pad-x); top:clamp(32px,4.6vw,60px);
+  font-size:clamp(44px,9.8vw,172px);
+  /* box-sizing is border-box, so the padding buys no height. Without the
+     1.34em the negative margin only shifted the plate up off the wordmark. */
+  width:5.1em; height:1.34em;
   margin:-0.17em -0.34em; padding:0.17em 0.34em;
   border-radius:0.22em; background:rgba(20,16,14,0);
-  transform-origin:0 0;
+  /* The plate scales with the wordmark, so it has to turn about the
+     wordmark's own corner, which sits 0.34em/0.17em inside its own box. */
+  transform-origin:0.34em 0.17em;
 }
 /* ch resolves against the element's own font size, so the cap belongs on the
    heading. On the wrapper it would use the 16px body size and wrap to one
@@ -137,8 +150,8 @@ p{ margin:0; text-wrap:pretty; }
      wordmark no longer uses. Content scrolls underneath it. The !important
      overrides an inline scale left behind by a resize across the breakpoint. */
   .plate{
-    left:0; right:0; top:0; width:auto; height:104px;
-    font-size:44px; margin:0; padding:0; border-radius:0;
+    left:0; right:0; top:0; width:auto; height:88px;
+    font-size:54px; margin:0; padding:0; border-radius:0;
     transform:none !important;
   }
 }
@@ -312,7 +325,10 @@ p{ margin:0; text-wrap:pretty; }
    PHONE. Fixed type scale, single column, safe areas.
    ========================================================== */
 @media (max-width:760px){
-  .screen{ padding:104px 20px 66px; gap:11px; }
+  .screen{ padding:88px 20px 58px; gap:9px; }
+  .srow{ padding:clamp(8px,1.15svh,18px) 2px; }
+  .lead{ line-height:1.45; }
+  #p-1 .two{ gap:8px; }
   /* Screen 02 has to seat four rows and the risk statement clear of the
      fixed bottom bar, so it runs tighter than the rest. The 44px floor on
      .step__btn already carries the tap target, so row padding is what gets
@@ -320,7 +336,7 @@ p{ margin:0; text-wrap:pretty; }
   #p-2 .step{ padding:2px 0; }
   #p-2 .risk{ padding-top:12px; margin-top:2px; }
   #p-2 .lead{ line-height:1.5; }
-  #contact{ padding:104px 20px 110px; }
+  #contact{ padding:88px 20px 110px; }
   .two{ grid-template-columns:minmax(0,1fr); gap:24px; }
   h1{ font-size:34px; }
   .hero-h1 h1{ max-width:none; }
@@ -336,7 +352,7 @@ p{ margin:0; text-wrap:pretty; }
   .ov h3{ font-size:24px; }
   .syscard__t{ font-size:15px; }
   .popup{ font-size:14.5px; }
-  .wordmark{ font-size:44px; top:56px; }
+  .wordmark{ font-size:54px; top:46px; }
 
 
   /* Wordmark, network and headline share one screen, next screen peeks. */
@@ -353,36 +369,19 @@ p{ margin:0; text-wrap:pretty; }
   /* Screen 03 carries the most copy of any screen, so on a phone it runs at
      the floor of every type clamp the design already declares, which buys
      the Operators and Builders cards their place above the fold. */
-  #p-3 .body{ font-size:14px; line-height:1.45; }
-  #p-3 h2{ line-height:1.08; }
-  #p-3 .two{ gap:14px; }
+  #p-3 .body{ font-size:14px; line-height:1.38; }
+  #p-3 h2{ line-height:1.08; font-size:25px; }
+  #p-3 .two{ gap:11px; }
   #p-3 .two > div:first-child{ gap:10px; }
-  #p-3 .cards{ gap:9px; }
-  #p-3 .card{ padding:11px 16px; gap:6px; }
+  #p-3 .cards{ gap:7px; }
+  #p-3 .card{ padding:9px 14px; gap:6px; }
   #p-3 .card__t{ font-size:15px; }
   #p-3 .card__c{ font-size:13px; line-height:1.4; }
 
-  /* Short phones: dock the wordmark higher so the band, and the padding that
-     clears it, give the rows back the height they need. */
-  @media (max-height:820px){
-    .plate{ height:88px; }
-    .wordmark{ font-size:36px; top:46px; }
-    .screen{ padding-top:88px; padding-bottom:58px; gap:9px; }
-    .srow{ padding:clamp(8px,1.15svh,18px) 2px; }
-    .lead{ line-height:1.45; }
-    #p-1 .two{ gap:8px; }
-  }
 
-  /* Shorter still, which is what a phone actually shows once the browser
-     chrome is up. Screens 02 and 03 carry the most copy, so they are the two
-     that need a second pass. */
-  @media (max-height:820px){
-    #p-3 h2{ font-size:25px; }
-    #p-3 .body{ line-height:1.38; }
-    #p-3 .two{ gap:11px; }
-    #p-3 .cards{ gap:7px; }
-    #p-3 .card{ padding:9px 14px; }
-  }
+  /* Screens 02 and 03 carry the most copy, so they run tighter than the rest
+     at every phone height. Anything keyed to a height media query here would
+     flip as the browser chrome retracts and jump the layout mid scroll. */
   @media (max-height:780px){
     #p-3 .two{ gap:9px; }
     #p-3 .two > div:first-child{ gap:7px; }
@@ -444,7 +443,7 @@ p{ margin:0; text-wrap:pretty; }
 <canvas id="net-hero" aria-hidden="true"></canvas>
 <div class="plate" id="plate" aria-hidden="true"></div>
 <div class="peekmask" id="peekmask" aria-hidden="true"></div>
-<a class="wordmark" id="wordmark" href="#hero" aria-label="Synecura, back to the top">Syne<i>cura</i><u></u></a>
+<a class="wordmark" id="wordmark" href="#hero" aria-label="Synecura, back to the top"><b>Syne</b><i>cura</i><u></u></a>
 
 <!-- HERO -->
 <section class="screen" id="hero">
