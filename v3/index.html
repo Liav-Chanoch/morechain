@@ -128,7 +128,7 @@ p{ margin:0; text-wrap:pretty; }
      1.34em the negative margin only shifted the plate up off the wordmark. */
   width:5.1em; height:1.34em;
   margin:-0.17em -0.34em; padding:0.17em 0.34em;
-  border-radius:0.22em; background:rgba(20,16,14,0);
+  border-radius:0.22em; background:rgba(20,16,14,0.95); opacity:0;
   /* The plate scales with the wordmark, so it has to turn about the
      wordmark's own corner, which sits 0.34em/0.17em inside its own box. */
   transform-origin:0.34em 0.17em;
@@ -154,6 +154,7 @@ p{ margin:0; text-wrap:pretty; }
   .plate{
     left:0; right:0; top:0; width:auto; height:88px;
     font-size:54px; margin:0; padding:0; border-radius:0;
+    background:radial-gradient(1100px 760px at 62% 40%, #201A16, #100C0A 74%) var(--shell) no-repeat fixed;
     transform:none !important;
   }
 }
@@ -665,7 +666,7 @@ function applyScroll(){
   var k = 1 + (bigK - 1) * e;
   wordmark.style.transform = 'scale(' + k.toFixed(4) + ')';
   if(innerWidth > 760) plate.style.transform = 'scale(' + k.toFixed(4) + ')';
-  plate.style.background = 'rgba(20,16,14,' + ((innerWidth > 760 ? 0.95 : 1) * p).toFixed(3) + ')';
+  plate.style.opacity = p.toFixed(3);
   var h = Math.max(0, 1 - p * 2);
   heroH1.style.opacity = h.toFixed(3);
   heroH1.style.transform = 'translateY(' + (-34 * e).toFixed(1) + 'px)';
