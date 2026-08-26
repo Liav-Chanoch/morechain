@@ -347,13 +347,29 @@ p{ margin:0; text-wrap:pretty; }
    The hidden state is applied by script, so with no script or no
    IntersectionObserver every screen simply renders as it always did.
    ========================================================== */
-@keyframes rv-rise{ from{ opacity:0; transform:translateY(12px); } to{ opacity:1; transform:none; } }
+@keyframes rv-rise{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+/* Headings clear a mask on the way up, the vertical cousin of the wordmark's
+   wipe. The negative bottom inset keeps descenders out of the clip. */
+@keyframes rv-mask{
+  from{ opacity:0; clip-path:inset(0 0 100% 0); transform:translateY(18px); }
+  to{ opacity:1; clip-path:inset(0 0 -14% 0); transform:none; }
+}
 @keyframes rv-line{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
 @keyframes pop-rise{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
 html.js-rv .rv{ opacity:0; }
 html.js-rv .screen.in .rv{
-  animation:rv-rise .62s var(--exp) both;
-  animation-delay:calc(var(--i,0) * 55ms);
+  animation:rv-rise .66s var(--exp) both;
+  animation-delay:calc(var(--i,0) * 70ms);
+}
+html.js-rv .screen.in h1.rv, html.js-rv .screen.in h2.rv{
+  animation:rv-mask .82s var(--exp) both;
+  animation-delay:calc(var(--i,0) * 70ms);
+}
+
+/* The hero headline is not observed, since the scroll owns .hero-h1's own
+   transform. It masks in on load instead, just behind the wordmark. */
+@media (prefers-reduced-motion: no-preference){
+  .hero-h1 h1{ animation:rv-mask .9s .42s var(--exp) both; }
 }
 html.js-rv .screen .eyebrow-row::after{ transform:scaleX(0); }
 html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp) both; }
@@ -715,10 +731,14 @@ Array.prototype.forEach.call(document.querySelectorAll('#p-3 .card--d'), functio
   var screens = Array.prototype.slice.call(document.querySelectorAll('.screen'))
     .filter(function(sc){ return sc.id !== 'hero'; });   /* the hero opens on the wordmark and the network */
 
+  /* Never split these: each is one idea and reads as one move. */
+  var ATOMIC = '.eyebrow-row, .risk, .foot, .pills, .ctas, .cta, .srow, .step, .card, .clients';
+
   function collect(el, out){
     Array.prototype.forEach.call(el.children, function(k){
       if(k.matches(LISTS)) Array.prototype.push.apply(out, Array.prototype.slice.call(k.children));
-      else if(k.querySelector(LISTS)) collect(k, out);
+      else if(k.matches(ATOMIC)) out.push(k);
+      else if(k.tagName === 'DIV' && k.children.length) collect(k, out);   /* a wrapper hands over its copy */
       else out.push(k);
     });
     return out;
@@ -746,7 +766,13 @@ Array.prototype.forEach.call(document.querySelectorAll('#p-3 .card--d'), functio
     entries.forEach(function(en){
       if(en.isIntersecting){ reveal(en.target); io.unobserve(en.target); }
     });
-  }, { threshold:0.35 });
+    /* Root shrunk to the top third of the viewport. A screen reaches it only
+       as it settles, so the reveal plays where it can be seen. Judged on the
+       ratio instead, screen 01 fired 136px into the 656px scroll that lands
+       it, and a flick was over before the screen arrived. Shrinking the root
+       also keeps this working for screen 03, which is taller than the
+       viewport and never reaches a high ratio at all. */
+  }, { rootMargin:'0px 0px -68% 0px', threshold:0 });
   screens.forEach(function(sc){ io.observe(sc); });
 
   /* Nothing stays hidden because an observer never fired. */
