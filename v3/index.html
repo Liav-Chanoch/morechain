@@ -435,7 +435,7 @@ html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp
   .step.open .step__body{ display:block; }
 
   /* Service sheet. */
-  .ov{ padding:56px 18px 96px; overflow-y:auto; }
+  .ov{ padding:56px 18px 120px; overflow-y:auto; }
   .ov__bar{ gap:12px; }
   .exit{ min-height:46px; font-size:15px; padding:10px 15px; }
   .ov__div{ display:none; }
@@ -450,20 +450,16 @@ html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp
   /* Whole card is the tap target, so it stays over the 44px floor. */
   .syscard__row{ min-height:26px; align-items:center; }
   .syslist{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
-  /* The description opens upward over the stage instead of pushing the rest
-     of the list down, so every headline stays in place whichever one is open.
-     .syscard is static here, so .syslist is the containing block and all
-     three descriptions land in the same spot above the list. */
-  .syslist{ position:relative; }
+  /* The description sits under the title it belongs to. The foot of the list
+     is held still as it opens, so the list grows upward: that headline and
+     the ones above it move up, and nothing below moves at all. */
   .popup{
-    position:absolute !important; display:none;
-    left:0; right:0; bottom:calc(100% + 12px); width:auto !important;
-    margin-top:0; padding:14px 15px;
+    position:static !important; display:none; width:auto !important;
+    margin:12px 0 0; padding:14px 15px;
     border:1px solid var(--hair-2); border-radius:2px;
-    /* Translucent so the network keeps reading through it. */
+    /* Translucent, so the network still reads through wherever it overlaps. */
     background:rgba(25,21,19,0.86);
     color:var(--body); font-size:14.5px; line-height:1.6;
-    max-height:232px; overflow-y:auto;
   }
   .popup.on{ display:block; animation:pop-rise .34s var(--exp) both; }
   .syscard.open{ background:#241C17; }
@@ -1277,14 +1273,20 @@ function buildDom(svc){
     pop.textContent = name.d;
     card.dataset.sys = String(n);
     if(phone){
+      /* Inside its own card, under the title it belongs to. */
       card.appendChild(pop);
       syslist.appendChild(card);
       card.addEventListener('click', function(){
+        var before = syslist.getBoundingClientRect().bottom;
         var wasOpen = pop.classList.contains('on');
         /* One open at a time: opening a card closes any other. */
         Array.prototype.forEach.call(syslist.querySelectorAll('.popup'), function(o){ o.classList.remove('on'); });
         Array.prototype.forEach.call(syslist.querySelectorAll('.syscard'), function(o){ o.classList.remove('open'); });
         if(!wasOpen){ pop.classList.add('on'); card.classList.add('open'); }
+        /* Hold the foot of the list still, so the description takes its space
+           from above: its own headline and the ones over it move up, and
+           nothing below is driven off the bottom. */
+        ov.scrollTop += syslist.getBoundingClientRect().bottom - before;
       });
     } else {
       stage.appendChild(card); stage.appendChild(pop);
