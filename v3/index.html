@@ -775,8 +775,15 @@ Array.prototype.forEach.call(document.querySelectorAll('#p-3 .card--d'), functio
   }, { rootMargin:'0px 0px -68% 0px', threshold:0 });
   screens.forEach(function(sc){ io.observe(sc); });
 
-  /* Nothing stays hidden because an observer never fired. */
-  setTimeout(function(){ screens.forEach(reveal); }, 2600);
+  /* Backstop for a callback that never arrives. Same rule as the observer,
+     and driven by scrolling, so it can only fire once a screen is arriving. */
+  function sweep(){
+    screens.forEach(function(sc){
+      var r = sc.getBoundingClientRect();
+      if(r.top < innerHeight * 0.32 && r.bottom > 0) reveal(sc);
+    });
+  }
+  addEventListener('scroll', sweep, { passive:true });
 })();
 
 /* ============================================================
