@@ -43,6 +43,7 @@
   --m:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   --pad-x:clamp(34px,5.6vw,92px);
   --ease:cubic-bezier(.4,0,.2,1);
+  --exp:cubic-bezier(.16,1,.3,1);
 }
 *,*::before,*::after{ box-sizing:border-box; }
 html{
@@ -92,7 +93,13 @@ p{ margin:0; text-wrap:pretty; }
   display:flex; flex-direction:column; gap:clamp(22px,4svh,44px);
   justify-content:center; position:relative;
 }
-.eyebrow-row{ display:flex; align-items:center; gap:16px; padding-bottom:14px; border-bottom:1px solid var(--hair); }
+.eyebrow-row{ position:relative; display:flex; align-items:center; gap:16px; padding-bottom:14px; }
+/* A pseudo element rather than a border, so the rule can be drawn in. Same
+   box either way: the line sits on the padding edge. */
+.eyebrow-row::after{
+  content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:var(--hair); transform-origin:0 50%;
+}
 .two{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(38px,5.6vw,96px); align-items:start; }
 
 /* ---------- hero ---------- */
@@ -216,6 +223,14 @@ p{ margin:0; text-wrap:pretty; }
 .card__t{ font-weight:600; color:var(--ink); font-size:clamp(15px,min(1.3vw,2.6svh),20.5px); letter-spacing:-.02em; }
 .card__c{ color:var(--muted); font-size:clamp(13px,min(1.08vw,2.2svh),17px); line-height:1.5; }
 .cards{ display:flex; flex-direction:column; gap:clamp(9px,1.4svh,15px); }
+/* Screen 03 mirrors the step rows on 02: label and title always, body behind
+   a tap. Desktop has the room, so it shows everything and offers no toggle. */
+.card__btn{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:14px;
+  align-items:start; width:100%; text-align:left;
+}
+.card__head{ display:flex; flex-direction:column; gap:clamp(6px,1svh,10px); min-width:0; }
+.card__sign{ display:none; }
 
 /* ---------- cta ---------- */
 .cta{
@@ -325,6 +340,25 @@ p{ margin:0; text-wrap:pretty; }
 .needs-copy{ color:var(--dim); font-style:italic; }
 
 /* ==========================================================
+   SCROLL REVEAL. One device, used everywhere: content rises as its
+   screen arrives, staggered in reading order, and the eyebrow rule
+   draws across. The easing is the wordmark wipe's, so the opening
+   and the scroll read as the same gesture.
+   The hidden state is applied by script, so with no script or no
+   IntersectionObserver every screen simply renders as it always did.
+   ========================================================== */
+@keyframes rv-rise{ from{ opacity:0; transform:translateY(12px); } to{ opacity:1; transform:none; } }
+@keyframes rv-line{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+@keyframes pop-rise{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+html.js-rv .rv{ opacity:0; }
+html.js-rv .screen.in .rv{
+  animation:rv-rise .62s var(--exp) both;
+  animation-delay:calc(var(--i,0) * 55ms);
+}
+html.js-rv .screen .eyebrow-row::after{ transform:scaleX(0); }
+html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp) both; }
+
+/* ==========================================================
    PHONE. Fixed type scale, single column, safe areas.
    ========================================================== */
 @media (max-width:760px){
@@ -369,29 +403,24 @@ p{ margin:0; text-wrap:pretty; }
   /* The inline CTA on 03 duplicated the bar, so it is desktop only. */
   .cta--inline{ display:none; }
 
-  /* Screen 03 carries the most copy of any screen, so on a phone it runs at
-     the floor of every type clamp the design already declares, which buys
-     the Operators and Builders cards their place above the fold. */
-  #p-3 .body{ font-size:14px; line-height:1.38; }
-  #p-3 h2{ line-height:1.08; font-size:25px; }
+  /* Screen 03 used to run at the floor of every type clamp to force three
+     full cards above the fold. Collapsed cards give that height back, so the
+     copy returns to the size the rest of the site uses. */
+  #p-3 h2{ line-height:1.08; }
+  #p-3 .body{ line-height:1.42; }
   #p-3 .two{ gap:11px; }
-  #p-3 .two > div:first-child{ gap:10px; }
-  #p-3 .cards{ gap:7px; }
-  #p-3 .card{ padding:9px 14px; gap:6px; }
-  #p-3 .card__t{ font-size:15px; }
-  #p-3 .card__c{ font-size:13px; line-height:1.4; }
+  #p-3 .two > div:first-child{ gap:7px; }
+  /* Collapsed, a card is a header row, so it is spaced like one. The 44px
+     floor on .card__btn carries the tap target either way. */
+  #p-3 .cards{ gap:6px; }
+  #p-3 .card{ padding:8px 15px; gap:6px; }
+  #p-3 .card__head{ gap:3px; }
+  #p-3 .card__t{ font-size:15.5px; }
 
 
-  /* Screens 02 and 03 carry the most copy, so they run tighter than the rest
-     at every phone height. Anything keyed to a height media query here would
-     flip as the browser chrome retracts and jump the layout mid scroll. */
-  @media (max-height:780px){
-    #p-3 .two{ gap:9px; }
-    #p-3 .two > div:first-child{ gap:7px; }
-    #p-3 .cards{ gap:5px; }
-    #p-3 .card{ padding:7px 12px; }
-    #p-3 .card__t{ font-size:14px; }
-  }
+  /* Screen 02 still carries a lot of copy. Anything keyed to a height media
+     query here would flip as the browser chrome retracts and jump the layout
+     mid scroll, so this stays limited to heights no phone crosses. */
   @media (max-height:750px){
     #p-2 h2{ font-size:25px; }
     #p-2 .lead{ font-size:15px; line-height:1.42; }
@@ -421,22 +450,38 @@ p{ margin:0; text-wrap:pretty; }
   /* Whole card is the tap target, so it stays over the 44px floor. */
   .syscard__row{ min-height:26px; align-items:center; }
   .syslist{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
-  /* The description is an inset bordered box, not a full bleed rule, and it
-     is body colour rather than the system hue. */
+  /* The description opens upward over the stage instead of pushing the rest
+     of the list down, so every headline stays in place whichever one is open.
+     .syscard is static here, so .syslist is the containing block and all
+     three descriptions land in the same spot above the list. */
+  .syslist{ position:relative; }
   .popup{
-    position:static !important; display:none; width:auto !important;
-    margin-top:12px; padding:13px 14px;
+    position:absolute !important; display:none;
+    left:0; right:0; bottom:calc(100% + 12px); width:auto !important;
+    margin-top:0; padding:14px 15px;
     border:1px solid var(--hair-2); border-radius:2px;
-    background:transparent; color:var(--body);
-    font-size:14.5px; line-height:1.6;
+    /* Translucent so the network keeps reading through it. */
+    background:rgba(25,21,19,0.86);
+    color:var(--body); font-size:14.5px; line-height:1.6;
+    max-height:232px; overflow-y:auto;
   }
-  .popup.on{ display:block; }
+  .popup.on{ display:block; animation:pop-rise .34s var(--exp) both; }
+  .syscard.open{ background:#241C17; }
+
+  /* Screen 03: label and title, body behind a tap. */
+  .card--d .card__btn{ min-height:44px; align-items:center; }
+  .card--d .card__sign{
+    display:block; font-family:var(--m); font-size:18px; line-height:1;
+    color:var(--accent);
+  }
+  .card--d .card__body{ display:none; }
+  .card--d.open .card__body{ display:block; }
 }
 @media (max-width:400px){
   .clients{ grid-template-columns:minmax(0,1fr); }
 }
 @media (prefers-reduced-motion: reduce){
-  *{ transition-duration:1ms !important; animation-duration:1ms !important; }
+  *{ transition-duration:1ms !important; animation-duration:1ms !important; animation-delay:0ms !important; }
 }
 </style>
 </head>
@@ -493,9 +538,9 @@ p{ margin:0; text-wrap:pretty; }
       <a class="cta cta--inline" href="#contact"><span class="cta__sq" aria-hidden="true"></span>Book your free characterization session</a>
     </div>
     <div class="cards">
-      <article class="card"><span class="mono">Operators</span><h3 class="card__t">Years of hands-on business management</h3><p class="card__c">We know how real businesses operate day to day. This background lets us identify operational friction quickly and turn lost time into measurable financial savings.</p></article>
-      <article class="card"><span class="mono">Builders</span><h3 class="card__t">Proven track record in custom software development</h3><p class="card__c">Every system is built completely from scratch around your company’s unique workflow. We do not sell generic templates or one-size-fits-all fixes.</p></article>
-      <article class="card"><span class="mono">The edge</span><h3 class="card__t">Modern, smart automation tools</h3><p class="card__c">We use current, advanced automation technology instead of outdated legacy software. That lets us solve operational challenges fast, cost-effectively, and with zero unnecessary complexity.</p></article>
+      <article class="card card--d"><button class="card__btn" type="button" aria-expanded="false"><span class="card__head"><span class="mono">Operators</span><h3 class="card__t">Years of hands-on business management</h3></span><span class="card__sign" aria-hidden="true">+</span></button><div class="card__body"><p class="card__c">We know how real businesses operate day to day. This background lets us identify operational friction quickly and turn lost time into measurable financial savings.</p></div></article>
+      <article class="card card--d"><button class="card__btn" type="button" aria-expanded="false"><span class="card__head"><span class="mono">Builders</span><h3 class="card__t">Proven track record in custom software development</h3></span><span class="card__sign" aria-hidden="true">+</span></button><div class="card__body"><p class="card__c">Every system is built completely from scratch around your company’s unique workflow. We do not sell generic templates or one-size-fits-all fixes.</p></div></article>
+      <article class="card card--d"><button class="card__btn" type="button" aria-expanded="false"><span class="card__head"><span class="mono">The edge</span><h3 class="card__t">Modern, smart automation tools</h3></span><span class="card__sign" aria-hidden="true">+</span></button><div class="card__body"><p class="card__c">We use current, advanced automation technology instead of outdated legacy software. That lets us solve operational challenges fast, cost-effectively, and with zero unnecessary complexity.</p></div></article>
     </div>
   </div>
 </section>
@@ -637,6 +682,80 @@ STEPS.forEach(function(st, i){
   });
   stepsHost.appendChild(wrap);
 });
+
+/* ============================================================
+   SCREEN 03 DISCLOSURE
+   Same contract as the step rows: a phone behaviour only, one open
+   at a time, desktop renders every body with no toggle.
+   ============================================================ */
+Array.prototype.forEach.call(document.querySelectorAll('#p-3 .card--d'), function(card){
+  var btn = card.querySelector('.card__btn');
+  var sign = card.querySelector('.card__sign');
+  btn.addEventListener('click', function(){
+    if(!isPhone()) return;
+    var willOpen = !card.classList.contains('open');
+    Array.prototype.forEach.call(document.querySelectorAll('#p-3 .card--d'), function(o){
+      o.classList.remove('open');
+      o.querySelector('.card__sign').textContent = '+';
+      o.querySelector('.card__btn').setAttribute('aria-expanded', 'false');
+    });
+    if(willOpen){
+      card.classList.add('open');
+      sign.textContent = '\u2212';
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+
+/* ============================================================
+   SCROLL REVEAL
+   Targets are a screen's own children, except that a list hands its
+   items over so they stagger individually rather than as one block.
+   The class comes off once the animation ends, so nothing is left
+   holding a transform that a hover state would need to override.
+   ============================================================ */
+(function(){
+  var LISTS = '.rows, .steps, .cards, .clients';
+  var screens = Array.prototype.slice.call(document.querySelectorAll('.screen'))
+    .filter(function(sc){ return sc.id !== 'hero'; });   /* the hero opens on the wordmark and the network */
+
+  function collect(el, out){
+    Array.prototype.forEach.call(el.children, function(k){
+      if(k.matches(LISTS)) Array.prototype.push.apply(out, Array.prototype.slice.call(k.children));
+      else if(k.querySelector(LISTS)) collect(k, out);
+      else out.push(k);
+    });
+    return out;
+  }
+
+  function reveal(sc){
+    if(sc.classList.contains('in')) return;
+    sc.classList.add('in');
+  }
+
+  if(!('IntersectionObserver' in window)) return;
+
+  screens.forEach(function(sc){
+    collect(sc, []).forEach(function(el, i){
+      el.classList.add('rv');
+      el.style.setProperty('--i', String(Math.min(i, 10)));
+    });
+    sc.addEventListener('animationend', function(e){
+      if(e.target.classList && e.target.classList.contains('rv')) e.target.classList.remove('rv');
+    });
+  });
+  document.documentElement.classList.add('js-rv');
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ reveal(en.target); io.unobserve(en.target); }
+    });
+  }, { threshold:0.35 });
+  screens.forEach(function(sc){ io.observe(sc); });
+
+  /* Nothing stays hidden because an observer never fired. */
+  setTimeout(function(){ screens.forEach(reveal); }, 2600);
+})();
 
 /* ============================================================
    HERO DOCK
