@@ -142,8 +142,10 @@ p{ margin:0; text-wrap:pretty; }
 .peekmask{ display:none; }
 @media (max-width:760px){
   .peekmask{
-    display:block; position:fixed; left:0; right:0; top:82vh; top:82dvh; bottom:0;
-    background:var(--shell); z-index:15; pointer-events:none;
+    display:block; position:fixed; left:0; right:0; top:82vh; top:82dvh;
+    bottom:auto; height:100vh; height:100dvh;
+    background:radial-gradient(1100px 760px at 62% 40%, #201A16, #100C0A 74%) var(--shell) no-repeat fixed;
+    z-index:15; pointer-events:none;
     transition:opacity .28s var(--ease);
   }
   /* Full width band rather than a plate sized in em off a font size the
@@ -218,12 +220,12 @@ p{ margin:0; text-wrap:pretty; }
 .cta{
   transition:background .3s var(--ease), transform .3s var(--ease);
   display:inline-flex; align-items:center; gap:.7em; align-self:flex-start;
-  background:var(--accent); color:var(--ink); border-radius:2px;
+  background:var(--accent); color:var(--shell); border-radius:2px;
   padding:14px 22px; min-height:44px; font-weight:500; font-size:15px;
   transition:background .3s var(--ease);
 }
-.cta:hover{ background:var(--accent-hi); color:var(--ink); transform:translateY(-2px); }
-.cta--out{ background:transparent; border:1px solid var(--hair-3); }
+.cta:hover{ background:var(--accent-hi); color:var(--shell); transform:translateY(-2px); }
+.cta--out{ background:transparent; border:1px solid var(--hair-3); color:var(--ink); }
 .cta--out:hover{ background:var(--card-bg-hi); color:var(--ink); }
 .cta__sq{ width:8px; height:8px; background:var(--shell); }
 .cta--out .cta__sq{ background:var(--accent); }
@@ -245,13 +247,13 @@ p{ margin:0; text-wrap:pretty; }
 .sticky{
   position:fixed; right:clamp(14px,2vw,26px); bottom:clamp(14px,2svh,26px); z-index:16;
   display:inline-flex; align-items:center; gap:.7em;
-  background:var(--accent); color:var(--ink); border-radius:2px;
+  background:var(--accent); color:var(--shell); border-radius:2px;
   padding:13px 20px; min-height:44px; font-weight:500; font-size:14px;
   opacity:0; transform:translateY(6px);
   transition:opacity .5s var(--ease), transform .5s var(--ease), background .3s var(--ease);
 }
 .sticky.on{ opacity:1; transform:none; }
-.sticky:hover{ background:var(--accent-hi); color:var(--ink); transform:translateY(-2px); }
+.sticky:hover{ background:var(--accent-hi); color:var(--shell); transform:translateY(-2px); }
 .sticky__sq{ width:8px; height:8px; background:var(--shell); }
 
 /* ---------- service overlay ---------- */
