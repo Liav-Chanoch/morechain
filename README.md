@@ -4,8 +4,7 @@ Marketing site for **Synecura**, which builds custom operational systems
 (automation, internal tools, process redesign) for owner-run businesses and
 prices itself as a share of the verified gain.
 
-Built to the brief in `HANDOFF - morechain.md`. Live at
-<https://liav-chanoch.github.io/morechain/>.
+Built to a supplied design brief. Live at <https://synecura.com>.
 
 > **Copy status.** All screens now carry the approved strings, supplied in
 > `FIXES - make chain.md` and copied across verbatim. Screen 02's four step
@@ -176,7 +175,7 @@ Waiting on the client, per section 10 of the brief:
 - A real client quote with name, role and company, plus the two counters
 - Logo files for the six clients, to replace the text names
 - The real LinkedIn URL (currently a dead anchor)
-- Confirmation that `hello@morechain.co` is live
+- Confirmation that `info@synecura.com` is live
 
 Waiting on a decision here:
 
