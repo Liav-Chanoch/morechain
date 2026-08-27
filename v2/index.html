@@ -225,7 +225,7 @@ html.js-rv #p-1.in .srow__go{
   animation-delay:calc(var(--i,0) * 70ms + 620ms);
 }
 
-/* Screen 01, desktop refinement.
+/* Screens 01 and 02, desktop refinement.
    The id is needed to scope these, which outranks the phone block below, so
    they are fenced in a query the phone can never match. */
 @media (min-width:761px){
@@ -239,6 +239,9 @@ html.js-rv #p-1.in .srow__go{
   /* A 30px circle read as a faint dot beside a 33px title. The row title
      still sets the row height at this size, so nothing moves. */
   #p-1 .srow__go{ width:34px; height:34px; font-size:14px; }
+  /* The steps column carries four titles and four paragraphs against a
+     headline and one paragraph, and outran the left column by 108px. */
+  #p-2 .two{ grid-template-columns:0.9fr 1.1fr; }
 }
 
 /* ---------- 02 steps ---------- */
@@ -248,11 +251,11 @@ html.js-rv #p-1.in .srow__go{
 /* The button owns the row grid. Making it display:contents dissolved it into
    the parent and scattered the index, title and body across the tracks. */
 .step__btn{
-  display:grid; grid-template-columns:22px minmax(0,1fr) auto;
+  display:grid; grid-template-columns:18px minmax(0,1fr) auto;
   gap:clamp(10px,1.2vw,18px); align-items:start;
-  width:100%; text-align:left;
+  width:100%; text-align:left; padding:0;
 }
-.step__body{ padding-left:calc(22px + clamp(10px,1.2vw,18px)); margin-top:4px; }
+.step__body{ padding-left:calc(18px + clamp(10px,1.2vw,18px)); margin-top:4px; }
 .step__body p{ font-size:clamp(12.5px,min(1.02vw,2.05svh),16px); line-height:1.5; }
 .step__h{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 /* Desktop renders all four steps open with no toggle: the plus and minus mark
@@ -263,7 +266,7 @@ html.js-rv #p-1.in .srow__go{
 .risk{ display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; border-top:1px solid rgba(155,74,50,0.45); padding-top:clamp(14px,2.2svh,24px); }
 .risk__tail{ color:var(--muted); font-weight:400; }
 .risk__sq{ width:6px; height:6px; background:var(--accent); margin-top:.5em; }
-.risk p{ color:var(--ink); font-weight:600; font-size:clamp(16px,min(1.7vw,3.3svh),25px); line-height:1.4; letter-spacing:-.02em; }
+.risk p{ color:var(--ink); font-weight:600; font-size:clamp(16px,min(1.7vw,3.3svh),25px); line-height:1.4; letter-spacing:-.02em; max-width:37em; }
 
 /* ---------- shared card ---------- */
 .card{
@@ -283,7 +286,7 @@ html.js-rv #p-1.in .srow__go{
    a tap. Desktop has the room, so it shows everything and offers no toggle. */
 .card__btn{
   display:grid; grid-template-columns:minmax(0,1fr) auto; gap:14px;
-  align-items:start; width:100%; text-align:left;
+  align-items:start; width:100%; text-align:left; padding:0;
 }
 .card__head{ display:flex; flex-direction:column; gap:clamp(6px,1svh,10px); min-width:0; }
 .card__sign{ display:none; }
