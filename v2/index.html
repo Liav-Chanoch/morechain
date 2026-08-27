@@ -28,8 +28,8 @@
   --ink:#EFE7DA;
   --body:#CBBFB0;
   --muted:#9A8D80;
-  --dim:#786C61;
-  --dimmer:#6B6057;
+  --dim:#948779;
+  --dimmer:#8E8175;
   --accent:#9B4A32;
   --accent-hi:#B25940;
   --amber:#CE8A52;
@@ -242,6 +242,17 @@ html.js-rv #p-1.in .srow__go{
   /* The steps column carries four titles and four paragraphs against a
      headline and one paragraph, and outran the left column by 108px. */
   #p-2 .two{ grid-template-columns:0.9fr 1.1fr; }
+  /* A name pinned to the left of a 371px box read as an empty input. Centred
+     in its own plaque it reads as a roster, and the grid still holds three by
+     two at every width rather than orphaning a cell onto its own row. */
+  #p-4 .clients .card{
+    align-items:center; text-align:center;
+    padding-top:clamp(17px,2.3svh,24px); padding-bottom:clamp(17px,2.3svh,24px);
+    /* The accent left border marks a card you can open on screen 03. Nothing
+       opens here, and against centred text it read as a stray tick, so the
+       plaque takes one even hairline. */
+    border-left-color:var(--hair);
+  }
 }
 
 /* ---------- 02 steps ---------- */
@@ -324,16 +335,17 @@ html.js-rv #p-1.in .srow__go{
 .field{ display:flex; flex-direction:column; gap:5px; }
 .field > label{
   font-family:var(--m); font-weight:500; text-transform:uppercase;
-  font-size:10.5px; letter-spacing:.14em; color:var(--dim);
+  font-size:11px; letter-spacing:.14em; color:var(--dim);
 }
 .field__wrap{ position:relative; }
 .field input, .field textarea{
   width:100%; background:transparent; border:0; border-radius:0;
   border-bottom:1px solid var(--hair-2);
   padding:5px 0 9px; margin:0;
-  font-family:var(--f); font-size:clamp(15px,1.15vw,17px); line-height:1.5;
+  font-family:var(--f); font-size:clamp(15.5px,1.3vw,18px); line-height:1.5;
   color:var(--ink);
 }
+.field input{ min-height:44px; }
 .field textarea{ resize:vertical; min-height:74px; }
 .field__wrap::after{
   content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
@@ -512,6 +524,9 @@ html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp
   #contact .form{ gap:11px; }
   #contact .field textarea{ min-height:62px; }
   #contact .form__alt{ margin-top:12px; padding-top:11px; font-size:13.5px; }
+  /* 17px of link is not a tap target. The row is already scrolling on a phone,
+     so the height this adds costs nothing. */
+  #contact .form__alt a{ display:inline-flex; align-items:center; min-height:44px; }
   #contact .form__status{ font-size:13.5px; }
   .two{ grid-template-columns:minmax(0,1fr); gap:24px; }
   h1{ font-size:34px; }
