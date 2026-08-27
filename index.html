@@ -175,7 +175,7 @@ p{ margin:0; text-wrap:pretty; }
 .rows{ display:flex; flex-direction:column; }
 .srow{
   position:relative;
-  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(12px,1.35vw,20px);
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(14px,2vw,30px);
   width:100%; text-align:left; padding:clamp(14px,2.2svh,26px) 2px;
   border-top:1px solid var(--hair); min-height:44px;
   transition:padding-left .32s var(--ease), background-color .32s var(--ease);
@@ -189,7 +189,7 @@ p{ margin:0; text-wrap:pretty; }
 }
 .srow:last-child{ border-bottom:1px solid var(--hair); }
 .srow__t{ font-weight:600; color:var(--ink); font-size:clamp(19px,min(2.6vw,4.8svh),41px); letter-spacing:-.032em; transition:color .32s var(--ease); }
-.srow__go{ width:30px; height:30px; border-radius:999px; border:1px solid var(--hair-3); display:grid; place-items:center; color:var(--muted); transition:border-color .32s var(--ease), color .32s var(--ease); }
+.srow__go{ width:30px; height:30px; border-radius:999px; border:1px solid var(--hair-2); display:grid; place-items:center; color:var(--muted); transition:border-color .32s var(--ease), color .32s var(--ease); }
 .srow__go{ font-size:13px; line-height:1; }
 .srow__go{ transition:border-color .32s var(--ease), color .32s var(--ease), background-color .32s var(--ease), transform .32s var(--exp); }
 @media (hover:hover){
@@ -222,22 +222,6 @@ p{ margin:0; text-wrap:pretty; }
 html.js-rv #p-1.in .srow__go{
   animation:go-wake .72s var(--exp);
   animation-delay:calc(var(--i,0) * 70ms + 620ms);
-}
-
-/* Screen 01, desktop refinement.
-   The id is needed to scope these, which outranks the phone block below, so
-   they are fenced in a query the phone can never match. */
-@media (min-width:761px){
-  /* The headline runs four lines against the paragraph's five, which left the
-     right column short. A little more width on the left evens the two. */
-  #p-1 .two{ grid-template-columns:1.1fr 0.9fr; }
-  /* The list label belongs to the list. On the flat screen gap it sat the same
-     distance from the paragraph above as from the rows below, and read as
-     floating between them. */
-  #p-1 > .mono{ margin-bottom:calc(-1 * clamp(11px,1.9svh,20px)); }
-  /* A 30px circle read as a faint dot beside a 33px title. The row title
-     still sets the row height at this size, so nothing moves. */
-  #p-1 .srow__go{ width:34px; height:34px; font-size:14px; }
 }
 
 /* ---------- 02 steps ---------- */
