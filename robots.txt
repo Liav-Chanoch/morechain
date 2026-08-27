@@ -1,10 +1,14 @@
 User-agent: *
 Allow: /
 
-# Earlier designs, kept for reference. The noindex meta is on those pages too,
-# but a crawler can reach the path without ever parsing the meta, so disallow
-# it here as well.
+# Paths that are not for search. The noindex meta is on those pages too, but a
+# crawler can reach a path without ever parsing the meta, so disallow it here
+# as well.
+# green and blue are earlier designs, kept for reference.
 Disallow: /green/
 Disallow: /blue/
+# v2 is a working copy of the live design, for review before anything reaches
+# the root. It is never linked to and never enters the sitemap.
+Disallow: /v2/
 
 Sitemap: https://synecura.com/sitemap.xml

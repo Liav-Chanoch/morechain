@@ -1,0 +1,1800 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Synecura, custom built systems for operations</title>
+<meta name="description" content="Synecura builds automated systems made specifically for your business. Start with a free strategy session and see where your business can save.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://synecura.com/">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#14100E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Synecura">
+<meta property="og:title" content="Synecura, custom built systems that save you time and money">
+<meta property="og:url" content="https://synecura.com/">
+<meta property="og:image" content="https://synecura.com/v2/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:description" content="Synecura builds automated systems made specifically for your business. Start with a free strategy session and see where your business can save.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --shell:#14100E;
+  --ink:#EFE7DA;
+  --body:#CBBFB0;
+  --muted:#9A8D80;
+  --dim:#786C61;
+  --dimmer:#6B6057;
+  --accent:#9B4A32;
+  --accent-hi:#B25940;
+  --amber:#CE8A52;
+  --amber-cta:#D0A05C;
+  --amber-cta-hi:#DDB273;
+  --sys1:#B4562F;
+  --sys2:#D0A05C;
+  --sys3:#C2703A;
+  --hair:rgba(239,231,218,0.10);
+  --hair-2:rgba(239,231,218,0.14);
+  --hair-3:rgba(239,231,218,0.18);
+  --slate:rgba(239,231,218,0.20);
+  --card-bg:rgba(239,231,218,0.022);
+  --card-bg-hi:rgba(239,231,218,0.05);
+  --f:"Archivo",system-ui,-apple-system,sans-serif;
+  --m:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --pad-x:clamp(34px,5.6vw,92px);
+  --ease:cubic-bezier(.4,0,.2,1);
+  --exp:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{ box-sizing:border-box; }
+html{
+  background:var(--shell);
+  scroll-snap-type:y proximity;
+}
+@media (min-height:640px){ html{ scroll-snap-type:y mandatory; } }
+@media (prefers-reduced-motion: reduce){ html{ scroll-snap-type:none; } }
+body{
+  margin:0;
+  background:radial-gradient(1100px 760px at 62% 40%, #201A16, #100C0A 74%) var(--shell) no-repeat fixed;
+  color:var(--body);
+  font-family:var(--f); font-weight:400;
+  -webkit-font-smoothing:antialiased;
+}
+/* Off canvas layers would widen the document without this. */
+.wrap{ overflow-x:clip; position:relative; }
+::selection{ background:var(--accent); color:var(--shell); }
+img{ max-width:100%; display:block; }
+button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
+a{ color:inherit; text-decoration:none; transition:color .28s var(--ease); }
+a:hover{ color:var(--accent); }
+:focus-visible{ outline:2px solid var(--amber); outline-offset:3px; border-radius:2px; }
+
+.mono{
+  font-family:var(--m); font-weight:500; text-transform:uppercase;
+  font-size:11px; letter-spacing:.14em; color:var(--dim);
+}
+.mono--micro{ font-size:11px; color:var(--dimmer); letter-spacing:.16em; }
+
+h1,h2,h3,h4{ margin:0; }
+h1,h2{ font-weight:600; color:var(--ink); text-wrap:balance; }
+h1{ font-size:clamp(33px,4.9vw,82px); line-height:1.02; letter-spacing:-.042em; }
+h2{ font-size:clamp(26px,min(3.8vw,7svh),62px); line-height:1.05; letter-spacing:-.038em; }
+#contact h2{ font-size:clamp(28px,min(4.4vw,8svh),72px); line-height:1.02; letter-spacing:-.042em; }
+em.acc{ font-style:italic; font-weight:400; color:var(--accent); }
+span.acc{ color:var(--accent); }
+p{ margin:0; text-wrap:pretty; }
+.lead{ color:var(--body); font-size:clamp(15px,min(1.45vw,2.9svh),25px); line-height:1.58; }
+.body{ color:var(--muted); font-size:clamp(14px,min(1.2vw,2.5svh),19px); line-height:1.62; }
+
+.screen{
+  min-height:100vh;
+  min-height:100dvh;
+  scroll-snap-align:start; scroll-snap-stop:always;
+  padding:clamp(74px,11svh,120px) var(--pad-x) clamp(34px,5.5svh,64px);
+  display:flex; flex-direction:column; gap:clamp(22px,4svh,44px);
+  justify-content:center; position:relative;
+}
+.eyebrow-row{ position:relative; display:flex; align-items:center; gap:16px; padding-bottom:14px; }
+/* A pseudo element rather than a border, so the rule can be drawn in. Same
+   box either way: the line sits on the padding edge. */
+.eyebrow-row::after{
+  content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:var(--hair); transform-origin:0 50%;
+}
+.two{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(38px,5.6vw,96px); align-items:start; }
+
+/* ---------- hero ---------- */
+#hero{ height:100vh; height:100dvh; justify-content:flex-end; padding-bottom:clamp(34px,5.5svh,64px); }
+/* A canvas is a replaced element: inset:0 with width:auto resolves to its
+   intrinsic size, not the viewport, which drew the whole network small and
+   pinned to the top left corner. */
+#net-hero{ position:fixed; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; }
+.wordmark{
+  position:fixed; z-index:3;
+  left:var(--pad-x); top:clamp(32px,4.6vw,60px);
+  transform-origin:0 0; white-space:nowrap;
+  font-weight:600; letter-spacing:-.045em; line-height:1;
+  font-size:clamp(44px,9.8vw,172px); color:var(--ink);
+}
+.wordmark i{ font-style:normal; color:var(--accent); }
+.wordmark u{ text-decoration:none; display:inline-block; width:.27em; height:.27em; background:var(--accent); margin-left:.12em; }
+@keyframes wm-wipe{ from{ clip-path:inset(0 102% 0 0); } to{ clip-path:inset(0 -2% 0 0); } }
+@keyframes wm-sq{ from{ opacity:0; transform:scale(.24); } to{ opacity:1; transform:scale(1); } }
+.wordmark b, .wordmark i{ display:inline-block; font-weight:inherit; font-style:normal; }
+.wordmark b{ animation:wm-wipe .82s .12s both cubic-bezier(.16,1,.3,1); }
+.wordmark i{ animation:wm-wipe .82s .26s both cubic-bezier(.16,1,.3,1); }
+.wordmark u{ animation:wm-sq .52s .78s both cubic-bezier(.2,.85,.3,1); }
+@media (prefers-reduced-motion: reduce){
+  .wordmark b, .wordmark i, .wordmark u{ animation:none; }
+}
+/* Sized to the wordmark and scaled with it, rather than a full width bar. */
+.plate{
+  position:fixed; z-index:2; pointer-events:none;
+  left:var(--pad-x); top:clamp(32px,4.6vw,60px);
+  font-size:clamp(44px,9.8vw,172px);
+  /* box-sizing is border-box, so the padding buys no height. Without the
+     1.34em the negative margin only shifted the plate up off the wordmark. */
+  width:5.1em; height:1.34em;
+  margin:-0.17em -0.34em; padding:0.17em 0.34em;
+  border-radius:0.22em; background:rgba(20,16,14,0.95); opacity:0;
+  /* The plate scales with the wordmark, so it has to turn about the
+     wordmark's own corner, which sits 0.34em/0.17em inside its own box. */
+  transform-origin:0.34em 0.17em;
+}
+/* ch resolves against the element's own font size, so the cap belongs on the
+   heading. On the wrapper it would use the 16px body size and wrap to one
+   word per line. */
+.hero-h1{ position:relative; z-index:2; }
+/* The next screen peeks below an 82svh hero. It stays covered until the scroll
+   starts. Under the sticky bar in stacking order, so the bar stays visible. */
+.peekmask{ display:none; }
+@media (max-width:760px){
+  .peekmask{
+    display:block; position:fixed; left:0; right:0; top:82vh; top:82dvh;
+    bottom:auto; height:100vh; height:100dvh;
+    background:radial-gradient(1100px 760px at 62% 40%, #201A16, #100C0A 74%) var(--shell) no-repeat fixed;
+    z-index:15; pointer-events:none;
+    transition:opacity .28s var(--ease);
+  }
+  /* Full width band rather than a plate sized in em off a font size the
+     wordmark no longer uses. Content scrolls underneath it. The !important
+     overrides an inline scale left behind by a resize across the breakpoint. */
+  .plate{
+    left:0; right:0; top:0; width:auto; height:88px;
+    font-size:54px; margin:0; padding:0; border-radius:0;
+    background:radial-gradient(1100px 760px at 62% 40%, #201A16, #100C0A 74%) var(--shell) no-repeat fixed;
+    transform:none !important;
+  }
+}
+.hero-h1 h1{ max-width:min(720px,56vw); }
+
+/* ---------- 01 rows ---------- */
+.rows{ display:flex; flex-direction:column; }
+.srow{
+  position:relative;
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(12px,1.35vw,20px);
+  width:100%; text-align:left; padding:clamp(14px,2.2svh,26px) 2px;
+  border-top:1px solid var(--hair); min-height:44px;
+  transition:padding-left .32s var(--ease), background-color .32s var(--ease);
+}
+/* The amber edge the row lights on approach, the same device the cards carry
+   on their left border. Reads as heat without a bloom. */
+.srow::before{
+  content:''; position:absolute; left:0; top:8%; bottom:8%; width:2px;
+  background:var(--amber); transform:scaleY(0); transform-origin:50% 50%;
+  transition:transform .34s var(--exp);
+}
+.srow:last-child{ border-bottom:1px solid var(--hair); }
+.srow__t{ font-weight:600; color:var(--ink); font-size:clamp(19px,min(2.6vw,4.8svh),41px); letter-spacing:-.032em; transition:color .32s var(--ease); }
+.srow__go{ width:30px; height:30px; border-radius:999px; border:1px solid var(--hair-3); display:grid; place-items:center; color:var(--muted); transition:border-color .32s var(--ease), color .32s var(--ease); }
+.srow__go{ font-size:13px; line-height:1; }
+.srow__go{ transition:border-color .32s var(--ease), color .32s var(--ease), background-color .32s var(--ease), transform .32s var(--exp); }
+@media (hover:hover){
+  .srow:hover{ padding-left:16px; background-color:rgba(206,138,82,0.07); }
+  .srow:hover::before{ transform:scaleY(1); }
+  .srow:hover .srow__t,.srow:hover .mono{ color:var(--amber); }
+  .srow:hover .srow__go{ border-color:var(--amber); color:var(--amber); background-color:rgba(206,138,82,0.14); transform:translateX(4px); }
+}
+/* A phone has no hover, so the press has to carry the feedback. */
+.srow:active{ padding-left:16px; background-color:rgba(206,138,82,0.11); }
+.srow:active::before{ transform:scaleY(1); }
+.srow:active .srow__t{ color:var(--amber); }
+.srow:active .srow__go{ border-color:var(--amber); color:var(--amber); transform:translateX(4px); }
+
+/* A phone has no hover to give, so the rows announce themselves: a soft amber
+   pass down the list, one at a time, on a long cycle with a rest between
+   passes. It rides a pseudo element rather than the row, so it never competes
+   with the background the press state sets. */
+@keyframes row-glow{
+  0%{   box-shadow:0 0 0 0 rgba(206,138,82,0);          background-color:rgba(206,138,82,0); }
+  11%{  box-shadow:0 0 18px 1px rgba(206,138,82,0.264); background-color:rgba(206,138,82,0.06); }
+  34%,
+  100%{ box-shadow:0 0 0 0 rgba(206,138,82,0);          background-color:rgba(206,138,82,0); }
+}
+
+/* Once the rows have arrived the arrows nudge, one after another: the cue
+   that these go somewhere, on a phone where nothing hovers. No fill mode, so
+   it leaves nothing behind for the press and hover states to fight. */
+@keyframes go-wake{ 0%{ transform:none; } 45%{ transform:translateX(5px); } 100%{ transform:none; } }
+html.js-rv #p-1.in .srow__go{
+  animation:go-wake .72s var(--exp);
+  animation-delay:calc(var(--i,0) * 70ms + 620ms);
+}
+
+/* Screen 01, desktop refinement.
+   The id is needed to scope these, which outranks the phone block below, so
+   they are fenced in a query the phone can never match. */
+@media (min-width:761px){
+  /* The headline runs four lines against the paragraph's five, which left the
+     right column short. A little more width on the left evens the two. */
+  #p-1 .two{ grid-template-columns:1.1fr 0.9fr; }
+  /* The list label belongs to the list. On the flat screen gap it sat the same
+     distance from the paragraph above as from the rows below, and read as
+     floating between them. */
+  #p-1 > .mono{ margin-bottom:calc(-1 * clamp(11px,1.9svh,20px)); }
+  /* A 30px circle read as a faint dot beside a 33px title. The row title
+     still sets the row height at this size, so nothing moves. */
+  #p-1 .srow__go{ width:34px; height:34px; font-size:14px; }
+}
+
+/* ---------- 02 steps ---------- */
+.steps{ display:flex; flex-direction:column; }
+.step{ border-top:1px solid var(--hair); padding:clamp(9px,1.5svh,16px) 0; }
+.step:first-child{ border-top:0; }
+/* The button owns the row grid. Making it display:contents dissolved it into
+   the parent and scattered the index, title and body across the tracks. */
+.step__btn{
+  display:grid; grid-template-columns:22px minmax(0,1fr) auto;
+  gap:clamp(10px,1.2vw,18px); align-items:start;
+  width:100%; text-align:left;
+}
+.step__body{ padding-left:calc(22px + clamp(10px,1.2vw,18px)); margin-top:4px; }
+.step__body p{ font-size:clamp(12.5px,min(1.02vw,2.05svh),16px); line-height:1.5; }
+.step__h{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+/* Desktop renders all four steps open with no toggle: the plus and minus mark
+   is phone only. */
+.step__sign{ display:none; }
+.step__t{ font-weight:600; color:var(--ink); font-size:clamp(15.5px,min(1.4vw,2.8svh),22px); letter-spacing:-.02em; }
+.pill{ font-family:var(--m); font-weight:500; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); border:1px solid var(--accent); border-radius:999px; padding:3px 9px; }
+.risk{ display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; border-top:1px solid rgba(155,74,50,0.45); padding-top:clamp(14px,2.2svh,24px); }
+.risk__tail{ color:var(--muted); font-weight:400; }
+.risk__sq{ width:6px; height:6px; background:var(--accent); margin-top:.5em; }
+.risk p{ color:var(--ink); font-weight:600; font-size:clamp(16px,min(1.7vw,3.3svh),25px); line-height:1.4; letter-spacing:-.02em; }
+
+/* ---------- shared card ---------- */
+.card{
+  border:1px solid var(--hair); border-left:2px solid rgba(155,74,50,0.34); border-radius:2px;
+  background:var(--card-bg);
+  padding:clamp(15px,2svh,22px) clamp(18px,1.8vw,26px);
+  display:flex; flex-direction:column; gap:clamp(6px,1svh,10px);
+  transition:border-color .32s var(--ease), background .32s var(--ease), box-shadow .32s var(--ease);
+}
+@media (hover:hover){
+  .card:hover{ border-color:rgba(239,231,218,0.2); border-left-color:var(--accent); background:var(--card-bg-hi); box-shadow:0 10px 30px -22px rgba(0,0,0,0.9); }
+}
+.card__t{ font-weight:600; color:var(--ink); font-size:clamp(15px,min(1.3vw,2.6svh),20.5px); letter-spacing:-.02em; }
+.card__c{ color:var(--muted); font-size:clamp(13px,min(1.08vw,2.2svh),17px); line-height:1.5; }
+.cards{ display:flex; flex-direction:column; gap:clamp(9px,1.4svh,15px); }
+/* Screen 03 mirrors the step rows on 02: label and title always, body behind
+   a tap. Desktop has the room, so it shows everything and offers no toggle. */
+.card__btn{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:14px;
+  align-items:start; width:100%; text-align:left;
+}
+.card__head{ display:flex; flex-direction:column; gap:clamp(6px,1svh,10px); min-width:0; }
+.card__sign{ display:none; }
+
+/* ---------- cta ---------- */
+.cta{
+  transition:background .3s var(--ease), transform .3s var(--ease);
+  display:inline-flex; align-items:center; gap:.7em; align-self:flex-start;
+  background:var(--accent); color:var(--shell); border-radius:2px;
+  padding:14px 22px; min-height:44px; font-weight:500; font-size:15px;
+  transition:background .3s var(--ease);
+}
+.cta:hover{ background:var(--accent-hi); color:var(--shell); transform:translateY(-2px); }
+.cta--out{ background:transparent; border:1px solid var(--hair-3); color:var(--ink); }
+.cta--out:hover{ background:var(--card-bg-hi); color:var(--ink); }
+.cta__sq{ width:8px; height:8px; background:var(--shell); }
+.cta--out .cta__sq{ background:var(--accent); }
+
+/* ---------- 04 clients ---------- */
+.pills{ display:flex; flex-wrap:wrap; gap:8px; }
+.two--clients .pills{ justify-content:flex-end; align-content:flex-start; }
+.sector{ font-family:var(--m); font-weight:500; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); border:1px solid var(--hair); border-radius:999px; padding:7px 13px; }
+.clients{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(8px,1vw,12px); }
+.clients .card{ font-weight:500; color:var(--ink); font-size:clamp(13px,1.05vw,16.5px); }
+
+/* ---------- 05 ---------- */
+#contact{ }
+.ctas{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
+
+/* ---------- contact form ----------
+   Fields are underlined, not boxed. Every structural element on this site is a
+   hairline, so a rounded input box would be the one borrowed shape on the page.
+   The rule lights amber on focus, the same move the service rows make. */
+.form{ display:flex; flex-direction:column; gap:clamp(13px,2.1svh,20px); }
+.field{ display:flex; flex-direction:column; gap:5px; }
+.field > label{
+  font-family:var(--m); font-weight:500; text-transform:uppercase;
+  font-size:10.5px; letter-spacing:.14em; color:var(--dim);
+}
+.field__wrap{ position:relative; }
+.field input, .field textarea{
+  width:100%; background:transparent; border:0; border-radius:0;
+  border-bottom:1px solid var(--hair-2);
+  padding:5px 0 9px; margin:0;
+  font-family:var(--f); font-size:clamp(15px,1.15vw,17px); line-height:1.5;
+  color:var(--ink);
+}
+.field textarea{ resize:vertical; min-height:74px; }
+.field__wrap::after{
+  content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:var(--amber); transform:scaleX(0); transform-origin:0 50%;
+  transition:transform .34s var(--exp);
+}
+.field__wrap:focus-within::after{ transform:scaleX(1); }
+.field input::placeholder, .field textarea::placeholder{ color:var(--dimmer); }
+/* Off screen rather than hidden, so a bot fills it and a screen reader skips it. */
+.hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+.form__send{ align-self:flex-start; min-height:44px; }
+.form__send[disabled]{ opacity:.55; cursor:default; }
+.form__status{ font-size:14px; line-height:1.5; color:var(--body); margin:0; }
+.form__status:empty{ display:none; }
+.form__status[data-state="err"]{ color:var(--amber); }
+.form__status[data-state="ok"]{ color:var(--ink); }
+.form__alt{
+  display:flex; flex-wrap:wrap; align-items:center; gap:8px 20px;
+  margin-top:clamp(14px,2.2svh,20px); padding-top:clamp(12px,2svh,18px);
+  border-top:1px solid var(--hair); font-size:14px; color:var(--dim);
+}
+.form__alt a{ color:var(--body); text-decoration:none; border-bottom:1px solid var(--hair-2); padding-bottom:1px; }
+.form__alt a:hover{ color:var(--amber); border-bottom-color:var(--amber); }
+.foot{ margin-top:auto; padding-top:clamp(14px,2.2svh,26px); border-top:1px solid var(--hair); display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; }
+.foot i{ font-style:normal; color:var(--accent); }
+
+/* ---------- sticky ---------- */
+.sticky{
+  position:fixed; right:clamp(14px,2vw,26px); bottom:clamp(14px,2svh,26px); z-index:16;
+  display:inline-flex; align-items:center; gap:.7em;
+  background:var(--accent); color:var(--shell); border-radius:2px;
+  padding:13px 20px; min-height:44px; font-weight:500; font-size:14px;
+  opacity:0; transform:translateY(6px);
+  transition:opacity .5s var(--ease), transform .5s var(--ease), background .3s var(--ease);
+}
+.sticky.on{ opacity:1; transform:none; }
+.sticky:hover{ background:var(--accent-hi); color:var(--shell); transform:translateY(-2px); }
+.sticky__sq{ width:8px; height:8px; background:var(--shell); }
+
+/* ---------- service overlay ---------- */
+.ov{
+  position:fixed; inset:0; z-index:40;
+  background:radial-gradient(900px 620px at 30% 18%, #201A16, #14100E 72%);
+  opacity:0; pointer-events:none; transition:opacity .4s var(--ease);
+  display:flex; flex-direction:column;
+  padding:clamp(34px,6.5svh,84px) var(--pad-x) clamp(24px,4svh,52px);
+  overflow:hidden;
+}
+.ov.on{ opacity:1; pointer-events:auto; }
+.ov__bar{ display:flex; align-items:center; gap:clamp(12px,1.6vw,22px); flex-wrap:nowrap; }
+.exit{
+  display:inline-flex; align-items:center; gap:11px;
+  background:var(--amber-cta); color:var(--shell);
+  border-radius:2px; padding:11px 18px; min-height:50px;
+  font-weight:600; font-size:16px; flex:0 0 auto;
+  transition:background .28s var(--ease), transform .28s var(--ease);
+}
+.exit:hover{ background:var(--amber-cta-hi); color:var(--shell); transform:translateX(-3px); }
+.exit__c{ width:26px; height:26px; border-radius:999px; background:var(--shell); color:var(--amber-cta); display:grid; place-items:center; font-size:13px; flex:0 0 auto; }
+.ov__div{ width:1px; align-self:stretch; background:var(--hair-2); flex:0 0 auto; }
+.chips{ display:flex; gap:8px; align-items:center; overflow-x:auto; scrollbar-width:none; }
+.chips::-webkit-scrollbar{ display:none; }
+.chip:hover{ color:var(--ink); border-color:rgba(239,231,218,0.34); }
+.chip{
+  font-family:var(--m); font-weight:500; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); border:1px solid var(--hair); border-radius:2px;
+  padding:0 14px; min-height:44px; display:inline-flex; align-items:center; white-space:nowrap;
+  transition:color .28s var(--ease), border-color .28s var(--ease), background .28s var(--ease);
+}
+.chip.on{ color:var(--ink); background:rgba(155,74,50,0.14); border-color:var(--accent); }
+.ov__eyebrow{ margin-top:clamp(20px,3.4svh,44px); }
+.ov h3{ margin:10px 0 0; font-weight:600; color:var(--ink); font-size:clamp(26px,3vw,44px); letter-spacing:-.035em; line-height:1.06; }
+/* The overlay is a flex column, so the stage needs flex:none or it is
+   shrunk below its stated height and the canvas loses its geometry. */
+.stage{ position:relative; width:100%; height:clamp(260px,52svh,620px); flex:0 0 auto; margin-top:clamp(20px,4.2svh,54px); }
+.stage canvas{ position:absolute; inset:0; width:100%; height:100%; }
+.oplabel{
+  position:absolute; font-family:var(--m); font-weight:400; font-size:10px;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--ink);
+  white-space:nowrap; pointer-events:none;
+}
+.syscard{
+  position:absolute; width:clamp(200px,19vw,300px);
+  border:1px solid; border-left:2px solid; border-radius:2px;
+  /* Opaque: the shared 0.022 fill composited on #14100E. A translucent card
+     here lets the network edges read through it. */
+  background:#191513;
+  padding:clamp(13px,1.7svh,17px) clamp(15px,1.3vw,19px);
+  display:flex; flex-direction:column; gap:5px; cursor:pointer;
+  transition:border-color .32s var(--ease), background .32s var(--ease);
+}
+.syscard:hover{ background:#2C211A; }
+.syscard__row{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+.syscard__i{ font-family:var(--m); font-weight:500; font-size:10px; letter-spacing:.14em; color:currentColor; flex:0 0 auto; }
+.syscard__t{ font-weight:600; color:var(--ink); font-size:clamp(13.5px,1.1vw,16.5px); letter-spacing:-.02em; line-height:1.2; }
+.popup{
+  position:absolute; display:none; z-index:6;
+  width:clamp(292px,27vw,430px);
+  padding:clamp(18px,2.2svh,25px) clamp(19px,1.8vw,27px);
+  border:1px solid; border-radius:2px;
+  background:#191513;
+  color:var(--body); font-size:clamp(14.5px,1.15vw,17.5px); line-height:1.6;
+}
+.popup.on{ display:block; }
+.needs-copy{ color:var(--dim); font-style:italic; }
+
+/* ==========================================================
+   SCROLL REVEAL. One device, used everywhere: content rises as its
+   screen arrives, staggered in reading order, and the eyebrow rule
+   draws across. The easing is the wordmark wipe's, so the opening
+   and the scroll read as the same gesture.
+   The hidden state is applied by script, so with no script or no
+   IntersectionObserver every screen simply renders as it always did.
+   ========================================================== */
+@keyframes rv-rise{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+/* Headings clear a mask on the way up, the vertical cousin of the wordmark's
+   wipe. The negative bottom inset keeps descenders out of the clip. */
+@keyframes rv-mask{
+  from{ opacity:0; clip-path:inset(0 0 100% 0); transform:translateY(18px); }
+  to{ opacity:1; clip-path:inset(0 0 -14% 0); transform:none; }
+}
+@keyframes rv-line{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+@keyframes pop-rise{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+html.js-rv .rv{ opacity:0; }
+html.js-rv .screen.in .rv{
+  animation:rv-rise .66s var(--exp) both;
+  animation-delay:calc(var(--i,0) * 70ms);
+}
+html.js-rv .screen.in h1.rv, html.js-rv .screen.in h2.rv{
+  animation:rv-mask .82s var(--exp) both;
+  animation-delay:calc(var(--i,0) * 70ms);
+}
+
+/* The hero headline is not observed, since the scroll owns .hero-h1's own
+   transform. It masks in on load instead, just behind the wordmark. */
+@media (prefers-reduced-motion: no-preference){
+  .hero-h1 h1{ animation:rv-mask .9s .42s var(--exp) both; }
+}
+html.js-rv .screen .eyebrow-row::after{ transform:scaleX(0); }
+html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp) both; }
+
+/* ==========================================================
+   PHONE. Fixed type scale, single column, safe areas.
+   ========================================================== */
+@media (max-width:760px){
+  .screen{ padding:88px 20px 58px; gap:9px; }
+  .srow{ padding:clamp(8px,1.15svh,18px) 2px; }
+  /* Reduced motion is handled by the query, not by the global 1ms override:
+     that would turn an infinite animation into a strobe. */
+  @media (prefers-reduced-motion: no-preference){
+    html.js-rv #p-1.in .srow::after{
+      content:''; position:absolute; inset:-1px; border-radius:2px;
+      pointer-events:none; animation:row-glow 10.98s var(--ease) infinite;
+    }
+    /* Held past the entrance and the arrow nudge, then 0.9s apart down the
+       list. Each row stays lit about 3.7s, longer than the whole stagger, so
+       all four carry some light at once and the pass reads as one slow swell
+       rather than a row lighting at a time. */
+    html.js-rv #p-1.in .srow:nth-child(1)::after{ animation-delay:2.24s; }
+    html.js-rv #p-1.in .srow:nth-child(2)::after{ animation-delay:3.14s; }
+    html.js-rv #p-1.in .srow:nth-child(3)::after{ animation-delay:4.04s; }
+    html.js-rv #p-1.in .srow:nth-child(4)::after{ animation-delay:4.94s; }
+  }
+  .lead{ line-height:1.45; }
+  #p-1 .two{ gap:8px; }
+  /* Screen 02 has to seat four rows and the risk statement clear of the
+     fixed bottom bar, so it runs tighter than the rest. The 44px floor on
+     .step__btn already carries the tap target, so row padding is what gets
+     traded away rather than row height. */
+  #p-2 .step{ padding:2px 0; }
+  #p-2 .risk{ padding-top:12px; margin-top:2px; }
+  #p-2 .lead{ line-height:1.5; }
+  #contact{ padding:88px 20px 110px; }
+  /* The form has to sit clear of the booking bar on a phone, so it runs
+     tighter than on the desktop. The footer below it is allowed to scroll. */
+  #contact .form{ gap:11px; }
+  #contact .field textarea{ min-height:62px; }
+  #contact .form__alt{ margin-top:12px; padding-top:11px; font-size:13.5px; }
+  #contact .form__status{ font-size:13.5px; }
+  .two{ grid-template-columns:minmax(0,1fr); gap:24px; }
+  h1{ font-size:34px; }
+  .hero-h1 h1{ max-width:none; }
+  h2{ font-size:27px; }
+  #contact h2{ font-size:29px; }
+  .lead{ font-size:16.5px; }
+  #p-2 .lead{ font-size:17px; }
+  .body{ font-size:15px; }
+  .card__c{ font-size:14px; }
+  .card__t{ font-size:16px; }
+  .step__t{ font-size:17px; }
+  .srow__t{ font-size:21px; }
+  .ov h3{ font-size:24px; }
+  .syscard__t{ font-size:15px; }
+  .popup{ font-size:14.5px; }
+  .wordmark{ font-size:54px; top:46px; }
+
+
+  /* Wordmark, network and headline share one screen, next screen peeks. */
+  #hero{ height:82vh; min-height:82vh; height:82dvh; min-height:82dvh; }
+
+  .clients{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .pills{ justify-content:flex-start; }
+
+  /* Full width bottom bar replaces the corner button. */
+  .sticky{ left:14px; right:14px; bottom:14px; justify-content:center; z-index:16; }
+  /* The inline CTA on 03 duplicated the bar, so it is desktop only. */
+  .cta--inline{ display:none; }
+
+  /* Screen 03 used to run at the floor of every type clamp to force three
+     full cards above the fold. Collapsed cards give that height back, so the
+     copy returns to the size the rest of the site uses. */
+  #p-3 h2{ line-height:1.08; }
+  #p-3 .body{ line-height:1.42; }
+  #p-3 .two{ gap:11px; }
+  #p-3 .two > div:first-child{ gap:7px; }
+  /* Collapsed, a card is a header row, so it is spaced like one. The 44px
+     floor on .card__btn carries the tap target either way. */
+  #p-3 .cards{ gap:6px; }
+  #p-3 .card{ padding:8px 15px; gap:6px; }
+  #p-3 .card__head{ gap:3px; }
+  #p-3 .card__t{ font-size:15.5px; }
+
+
+  /* Screen 02 still carries a lot of copy. Anything keyed to a height media
+     query here would flip as the browser chrome retracts and jump the layout
+     mid scroll, so this stays limited to heights no phone crosses. */
+  @media (max-height:750px){
+    #p-2 h2{ font-size:25px; }
+    #p-2 .lead{ font-size:15px; line-height:1.42; }
+    #p-2 .risk{ padding-top:8px; }
+    /* Short phones: the send button has to stay clear of the booking bar. */
+    #contact h2{ font-size:25px; }
+    #contact .lead{ font-size:15px; line-height:1.42; }
+    #contact .two{ gap:16px; }
+    #contact .field textarea{ min-height:54px; }
+  }
+
+
+  /* 02 steps become accordions so the screen fits the fold. */
+  .step__btn{ min-height:46px; align-items:center; }
+  .step__sign{ display:block; font-size:20px; color:var(--muted); line-height:1; }
+  .step__body{ display:none; padding-top:6px; }
+  .step.open .step__body{ display:block; }
+
+  /* Service sheet. */
+  .ov{ padding:56px 18px 120px; overflow-y:auto; }
+  .ov__bar{ gap:12px; }
+  .exit{ min-height:46px; font-size:15px; padding:10px 15px; }
+  .ov__div{ display:none; }
+  /* The chip row scrolls inside its own band so nothing slides under exit. */
+  .chips{ flex:1 1 auto; min-width:0; padding:2px 0; }
+  .stage{ height:290px; flex:0 0 auto; }
+  /* Compact closed card: one row of title and index, nothing else. */
+  .syscard{
+    position:static !important; width:100% !important;
+    padding:12px 15px; gap:0;
+  }
+  /* Whole card is the tap target, so it stays over the 44px floor. */
+  .syscard__row{ min-height:26px; align-items:center; }
+  .syslist{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
+  /* The description sits under the title it belongs to. The foot of the list
+     is held still as it opens, so the list grows upward: that headline and
+     the ones above it move up, and nothing below moves at all. */
+  .popup{
+    position:static !important; display:none; width:auto !important;
+    margin:12px 0 0; padding:14px 15px;
+    border:1px solid var(--hair-2); border-radius:2px;
+    /* Translucent, so the network still reads through wherever it overlaps. */
+    background:rgba(25,21,19,0.86);
+    color:var(--body); font-size:14.5px; line-height:1.6;
+  }
+  .popup.on{ display:block; animation:pop-rise .34s var(--exp) both; }
+  .syscard.open{ background:#241C17; }
+
+  /* Screen 03: label and title, body behind a tap. */
+  .card--d .card__btn{ min-height:44px; align-items:center; }
+  .card--d .card__sign{
+    display:block; font-family:var(--m); font-size:18px; line-height:1;
+    color:var(--accent);
+  }
+  .card--d .card__body{ display:none; }
+  .card--d.open .card__body{ display:block; }
+}
+@media (max-width:400px){
+  .clients{ grid-template-columns:minmax(0,1fr); }
+}
+@media (prefers-reduced-motion: reduce){
+  *{ transition-duration:1ms !important; animation-duration:1ms !important; animation-delay:0ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<canvas id="net-hero" aria-hidden="true"></canvas>
+<div class="plate" id="plate" aria-hidden="true"></div>
+<div class="peekmask" id="peekmask" aria-hidden="true"></div>
+<a class="wordmark" id="wordmark" href="#hero" aria-label="Synecura, back to the top"><b>Syne</b><i>cura</i><u></u></a>
+
+<!-- HERO -->
+<section class="screen" id="hero">
+  <div class="hero-h1">
+    <h1>Custom built systems that save you <em class="acc">time and money</em></h1>
+  </div>
+</section>
+
+<!-- 01 -->
+<section class="screen" id="p-1">
+  <div class="eyebrow-row"><span class="mono">01 / What we do</span></div>
+  <div class="two">
+    <h2>We build automated systems that are custom made <span class="acc">specifically for your business.</span></h2>
+    <p class="lead">We specialize in identifying business inefficiencies that cost you valuable time and money, building tailored systems that deliver precise solutions for every operational challenge. Our expertise lies in transforming repetitive, manual tasks into smart, automated workflows that work for you.</p>
+  </div>
+  <span class="mono">Some of what we do</span>
+  <div class="rows" id="rows"></div>
+</section>
+
+<!-- 02 -->
+<section class="screen" id="p-2">
+  <div class="eyebrow-row"><span class="mono">02 / How it works</span></div>
+  <div class="two">
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4svh,26px)">
+      <h2>Turn repetitive manual work into <span class="acc">fast, automated business growth.</span></h2>
+      <p class="lead">We specialize in optimizing business operations by replacing repetitive manual tasks with custom systems and smart automations. We save you substantial time and money, with fees tied directly to real, measurable results.</p>
+    </div>
+    <div class="steps" id="steps"></div>
+  </div>
+  <div class="risk">
+    <span class="risk__sq" aria-hidden="true"></span>
+    <p>If the gain does not appear in your numbers against the baseline you approved, there is nothing to share. <span class="risk__tail">Written into the engagement.</span></p>
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="screen" id="p-3">
+  <div class="eyebrow-row"><span class="mono">03 / Who we are</span></div>
+  <div class="two">
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4svh,26px);align-items:flex-start">
+      <h2>We know where you lose time and money because we've already <span class="acc">solved it in our own operations</span></h2>
+      <p class="body">Having spent years launching and managing businesses ourselves, we understand operations from the inside. We know where companies waste valuable time: the repetitive manual tasks that eat up hours, the slow workflows, and the everyday operational bottlenecks.</p>
+      <p class="body">We design and build custom tech systems tailored specifically to eliminate those inefficiencies. The outcome is always straightforward: significant cost reduction, higher productivity, and real business growth.</p>
+      <a class="cta cta--inline" href="#contact"><span class="cta__sq" aria-hidden="true"></span>Book your free characterization session</a>
+    </div>
+    <div class="cards">
+      <article class="card card--d"><button class="card__btn" type="button" aria-expanded="false"><span class="card__head"><span class="mono">Operators</span><h3 class="card__t">Years of hands-on business management</h3></span><span class="card__sign" aria-hidden="true">+</span></button><div class="card__body"><p class="card__c">We know how real businesses operate day to day. This background lets us identify operational friction quickly and turn lost time into measurable financial savings.</p></div></article>
+      <article class="card card--d"><button class="card__btn" type="button" aria-expanded="false"><span class="card__head"><span class="mono">Builders</span><h3 class="card__t">Proven track record in custom software development</h3></span><span class="card__sign" aria-hidden="true">+</span></button><div class="card__body"><p class="card__c">Every system is built completely from scratch around your company’s unique workflow. We do not sell generic templates or one-size-fits-all fixes.</p></div></article>
+      <article class="card card--d"><button class="card__btn" type="button" aria-expanded="false"><span class="card__head"><span class="mono">The edge</span><h3 class="card__t">Modern, smart automation tools</h3></span><span class="card__sign" aria-hidden="true">+</span></button><div class="card__body"><p class="card__c">We use current, advanced automation technology instead of outdated legacy software. That lets us solve operational challenges fast, cost-effectively, and with zero unnecessary complexity.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="screen" id="p-4">
+  <div class="eyebrow-row"><span class="mono">04 / Our clients</span></div>
+  <div class="two two--clients">
+    <h2>Some of the operations we have <span class="acc">optimised so far.</span></h2>
+    <div class="pills">
+      <span class="sector">TOURISM</span><span class="sector">MARINE &amp; CRUISES</span><span class="sector">SPORT &amp; LEISURE</span><span class="sector">CREATIVE STUDIOS</span><span class="sector">RELOCATION</span>
+    </div>
+  </div>
+  <div class="clients">
+    <article class="card">dereh-haski.co.il</article>
+    <article class="card">tour-guide.co.il</article>
+    <article class="card">snowpro.co.il</article>
+    <article class="card">corfuprivatecruises.com</article>
+    <article class="card">Ponygrll Studios</article>
+    <article class="card">MikMak Relocations</article>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="screen" id="contact">
+  <div class="eyebrow-row"><span class="mono">05 / Get started</span></div>
+  <div class="two">
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4svh,26px)">
+      <h2>Start with a free strategy session. <span class="acc">See where your business can save.</span></h2>
+      <p class="lead">We sit down with you to review your operations, map out your workflows, and identify where custom automation can eliminate wasted time and cut costs. You get a clear operational roadmap with zero commitment required.</p>
+    </div>
+    <div>
+      <form class="form" id="contact-form" novalidate>
+        <div class="field">
+          <label for="cf-name">Name</label>
+          <div class="field__wrap"><input id="cf-name" name="name" type="text" autocomplete="name" required></div>
+        </div>
+        <div class="field">
+          <label for="cf-email">Email</label>
+          <div class="field__wrap"><input id="cf-email" name="email" type="email" autocomplete="email" required></div>
+        </div>
+        <div class="field">
+          <label for="cf-message">What you want to automate</label>
+          <div class="field__wrap"><textarea id="cf-message" name="message" rows="3" required></textarea></div>
+        </div>
+        <div class="hp"><label for="cf-company">Company</label><input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off"></div>
+        <button class="cta form__send" type="submit" id="cf-send"><span class="cta__sq" aria-hidden="true"></span><span id="cf-send-label">Send request</span></button>
+        <p class="form__status" id="cf-status" role="status" aria-live="polite"></p>
+      </form>
+      <div class="form__alt">
+        <a href="mailto:info@synecura.com">info@synecura.com</a>
+        <a href="#" data-pending="booking">Book a session</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="mono mono--micro">Syne<i>cura</i> &#183; Custom systems for operations</span>
+    <span class="mono mono--micro">&#169; 2026</span>
+  </div>
+</section>
+
+</div>
+
+<a class="sticky" id="sticky" href="#contact"><span class="sticky__sq" aria-hidden="true"></span>Book the free session</a>
+
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="ov__bar">
+    <button class="exit" id="ov-exit"><span class="exit__c" aria-hidden="true">&#8592;</span>Services</button>
+    <span class="ov__div" aria-hidden="true"></span>
+    <div class="chips" id="ov-chips"></div>
+  </div>
+  <span class="mono ov__eyebrow" id="ov-eyebrow"></span>
+  <h3 id="ov-title"></h3>
+  <div class="stage" id="stage"><canvas id="net" aria-hidden="true"></canvas></div>
+  <div class="syslist" id="syslist"></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var reduce = matchMedia('(prefers-reduced-motion: reduce)');
+var isPhone = function(){ return innerWidth <= 760; };
+
+/* ============================================================
+   CONTENT. Operation labels and system names are from the brief.
+   The nine system descriptions live in the prototype, which is not
+   in this repo, so they are marked rather than invented.
+   ============================================================ */
+var SERVICES = [
+  { chip:'01 / Revenue', name:'Revenue and sales systems',
+    ops:['Inbound lead','Qualification','Sales call','Proposal','Close','Lead scoring','CRM sync','Follow-up','Forecast','Commission','Renewal','Handover'],
+    sys:[
+      { t:'AI Sales Copilot', d:'A context-rich assistant trained on the full sales knowledge base, giving reps instant answers and taking the operational load off high-volume pipelines.' },
+      { t:'Conversation Intelligence Agent', d:'Reviews sales calls end to end, surfaces coaching notes, flags missed objections, and recommends the next move to close.' },
+      { t:'Autonomous Pipeline Agent', d:'Operates across every pipeline to execute routine work automatically: follow-ups, reminders, and stage progression against defined business rules.' }
+    ] },
+  { chip:'02 / Orders', name:'Order and supplier platforms',
+    ops:['Order intake','Confirmation','Supplier dispatch','Fulfilment','Payment','Stock check','Purchase order','Delivery notes','Returns','Invoicing','Lead times','Archive'],
+    sys:[ { t:'Proprietary Order Management CRM', d:'An in-house CRM for centralised order intake, with automated payment request generation triggered directly from order data.' }, { t:'Supplier Portal', d:'A supplier-facing interface for order receipt, confirmation and live status tracking, replacing email coordination with a single source of truth.' } ] },
+  { chip:'03 / Pricing', name:'Pricing and quoting engines',
+    ops:['Client request','Inventory pull','Package build','Quote issued','Booking','Rate cards','Availability','Margin rules','Ancillaries','Approvals','Cancellation','Supplier feed'],
+    sys:[ { t:'Dynamic Packaging & Pricing Engine', d:'Builds complex multi-component quotes across hotels, flights and ancillaries, powered by live API integrations with external inventory aggregators.' }, { t:'Agent CPQ Platform', d:'A configure, price and quote layer for travel agents, handling dynamic pricing logic, automated commission calculation and client-ready proposals.' } ] },
+  { chip:'04 / Finance', name:'Finance automation',
+    ops:['Expense capture','Classification','Reconciliation','VAT filing','Reporting','Receipts','Entities','Recurring costs','Bank feed','Receivables','Audit trail','Year end'],
+    sys:[ { t:'Multi-Entity Expense Agent', d:'Captures and classifies expenses across multiple entities in parallel, with recurring-cost monitoring and anomaly detection.' }, { t:'Automated VAT & Revenue Reporting Agent', d:'Generates monthly and bi-monthly VAT filings with revenue, period-over-period deltas and tax liability, reconciling receivables to surface unbilled revenue.' } ] }
+];
+var SYS_COLOURS = ['#B4562F','#D0A05C','#C2703A'];
+function hexAlpha(hex, a){
+  var n = parseInt(hex.slice(1), 16);
+  return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + a + ')';
+}
+var STEPS = [
+  { t:'Discovery',
+    d:'A free strategy session with business owners and senior management. We analyze your core operations, map out where time and money are going to repetitive work, and give you a full analysis you keep, whatever you decide next.' },
+  { t:'Action Plan',
+    d:'A clear, data-backed plan detailing exactly which manual processes we will automate, the expected time and cost savings, and the exact metrics we will track together.' },
+  { t:'Custom Build',
+    d:'A tailor-made system engineered around your exact operational needs: fully integrated with your existing software, highly secure, and easy for your team to run independently.' },
+  { t:'Growth & Optimization',
+    d:'A flexible ongoing partnership where our fee reflects the real money and hours saved. As your business scales, we continue to streamline and automate new areas of your operations.' }
+];
+
+/* ============================================================
+   01 rows and 02 steps
+   ============================================================ */
+var rowsHost = document.getElementById('rows');
+SERVICES.forEach(function(s, i){
+  var b = document.createElement('button');
+  b.className = 'srow'; b.type = 'button';
+  b.innerHTML = '<span class="mono">' + ('0' + (i+1)) + '</span>' +
+                '<span class="srow__t"></span>' +
+                '<span class="srow__go" aria-hidden="true">&#8594;</span>';
+  b.querySelector('.srow__t').textContent = s.name;
+  b.addEventListener('click', function(){ openOverlay(i); });
+  rowsHost.appendChild(b);
+});
+
+var stepsHost = document.getElementById('steps');
+STEPS.forEach(function(st, i){
+  var wrap = document.createElement('div');
+  wrap.className = 'step';
+  var idx = ('0' + (i+1));
+  wrap.innerHTML =
+    '<button class="step__btn" type="button" aria-expanded="false">' +
+      '<span class="mono step__n">' + idx + '</span>' +
+      '<span class="step__h"><span class="step__t"></span>' + (i === 0 ? '<span class="pill">No charge</span>' : '') + '</span>' +
+      '<span class="step__sign" aria-hidden="true">+</span>' +
+    '</button>' +
+    '<div class="step__body"><p class="body"></p></div>';
+  wrap.querySelector('.step__t').textContent = st.t;
+  wrap.querySelector('.step__body p').textContent = st.d;
+  var btn = wrap.querySelector('.step__btn');
+  btn.addEventListener('click', function(){
+    if(!isPhone()) return;                       /* accordion is a phone behaviour */
+    var open = wrap.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    wrap.querySelector('.step__sign').textContent = open ? '−' : '+';
+  });
+  stepsHost.appendChild(wrap);
+});
+
+/* ============================================================
+   CONTACT FORM
+   One endpoint constant. Until it is set the request still goes
+   somewhere: it opens a prefilled mail rather than failing silently.
+   ============================================================ */
+(function(){
+  var form = document.getElementById('contact-form');
+  if(!form) return;
+
+  /* Set this to the form endpoint once one is chosen. Empty means the
+     mail fallback below is used. */
+  var ENDPOINT = '';
+
+  var status = document.getElementById('cf-status');
+  var send   = document.getElementById('cf-send');
+  var label  = document.getElementById('cf-send-label');
+  /* form.name is the form's own property, so fields are read off elements. */
+  var el = form.elements;
+
+  function say(msg, state){
+    status.textContent = msg || '';
+    if(state) status.setAttribute('data-state', state); else status.removeAttribute('data-state');
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(el['company'].value) return;                  /* honeypot: a person never fills this */
+
+    var data = {
+      name:    el['name'].value.trim(),
+      email:   el['email'].value.trim(),
+      message: el['message'].value.trim()
+    };
+
+    if(!data.name){ say('Add your name so we know who is asking.', 'err'); el['name'].focus(); return; }
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)){
+      say('Enter a complete email address so we can reply.', 'err'); el['email'].focus(); return;
+    }
+    if(!data.message){ say('Tell us what you want to automate.', 'err'); el['message'].focus(); return; }
+
+    if(!ENDPOINT){
+      var body = 'Name: ' + data.name + '\nEmail: ' + data.email + '\n\n' + data.message;
+      location.href = 'mailto:info@synecura.com'
+        + '?subject=' + encodeURIComponent('Session request from ' + data.name)
+        + '&body=' + encodeURIComponent(body);
+      say('Opening your mail app with the request ready to send.', 'ok');
+      return;
+    }
+
+    send.disabled = true; label.textContent = 'Sending';
+    say('');
+    fetch(ENDPOINT, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Accept':'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(r){
+      if(!r.ok) throw new Error(String(r.status));
+      form.reset();
+      say('Request sent. We will come back to you by email.', 'ok');
+    })
+    .catch(function(){
+      say('That did not send. Email info@synecura.com and we will pick it up.', 'err');
+    })
+    .then(function(){
+      send.disabled = false; label.textContent = 'Send request';
+    });
+  });
+})();
+
+/* ============================================================
+   SCREEN 03 DISCLOSURE
+   Same contract as the step rows: a phone behaviour only, one open
+   at a time, desktop renders every body with no toggle.
+   ============================================================ */
+Array.prototype.forEach.call(document.querySelectorAll('#p-3 .card--d'), function(card){
+  var btn = card.querySelector('.card__btn');
+  var sign = card.querySelector('.card__sign');
+  btn.addEventListener('click', function(){
+    if(!isPhone()) return;
+    var willOpen = !card.classList.contains('open');
+    Array.prototype.forEach.call(document.querySelectorAll('#p-3 .card--d'), function(o){
+      o.classList.remove('open');
+      o.querySelector('.card__sign').textContent = '+';
+      o.querySelector('.card__btn').setAttribute('aria-expanded', 'false');
+    });
+    if(willOpen){
+      card.classList.add('open');
+      sign.textContent = '\u2212';
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+
+/* ============================================================
+   SCROLL REVEAL
+   Targets are a screen's own children, except that a list hands its
+   items over so they stagger individually rather than as one block.
+   The class comes off once the animation ends, so nothing is left
+   holding a transform that a hover state would need to override.
+   ============================================================ */
+(function(){
+  var LISTS = '.rows, .steps, .cards, .clients';
+  var screens = Array.prototype.slice.call(document.querySelectorAll('.screen'))
+    .filter(function(sc){ return sc.id !== 'hero'; });   /* the hero opens on the wordmark and the network */
+
+  /* Never split these: each is one idea and reads as one move. */
+  var ATOMIC = '.eyebrow-row, .risk, .foot, .pills, .ctas, .cta, .srow, .step, .card, .clients, .form__alt';
+
+  function collect(el, out){
+    Array.prototype.forEach.call(el.children, function(k){
+      if(k.matches(LISTS)) Array.prototype.push.apply(out, Array.prototype.slice.call(k.children));
+      else if(k.matches(ATOMIC)) out.push(k);
+      else if(k.tagName === 'DIV' && k.children.length) collect(k, out);   /* a wrapper hands over its copy */
+      else out.push(k);
+    });
+    return out;
+  }
+
+  function reveal(sc){
+    if(sc.classList.contains('in')) return;
+    sc.classList.add('in');
+  }
+
+  if(!('IntersectionObserver' in window)) return;
+
+  screens.forEach(function(sc){
+    collect(sc, []).forEach(function(el, i){
+      el.classList.add('rv');
+      el.style.setProperty('--i', String(Math.min(i, 10)));
+    });
+    sc.addEventListener('animationend', function(e){
+      if(e.target.classList && e.target.classList.contains('rv')) e.target.classList.remove('rv');
+    });
+  });
+  document.documentElement.classList.add('js-rv');
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ reveal(en.target); io.unobserve(en.target); }
+    });
+    /* Root shrunk to the top third of the viewport. A screen reaches it only
+       as it settles, so the reveal plays where it can be seen. Judged on the
+       ratio instead, screen 01 fired 136px into the 656px scroll that lands
+       it, and a flick was over before the screen arrived. Shrinking the root
+       also keeps this working for screen 03, which is taller than the
+       viewport and never reaches a high ratio at all. */
+  }, { rootMargin:'0px 0px -68% 0px', threshold:0 });
+  screens.forEach(function(sc){ io.observe(sc); });
+
+  /* Backstop for a callback that never arrives. Same rule as the observer,
+     and driven by scrolling, so it can only fire once a screen is arriving. */
+  function sweep(){
+    screens.forEach(function(sc){
+      var r = sc.getBoundingClientRect();
+      if(r.top < innerHeight * 0.32 && r.bottom > 0) reveal(sc);
+    });
+  }
+  addEventListener('scroll', sweep, { passive:true });
+  addEventListener('resize', sweep);
+  var guard = setInterval(function(){
+    sweep();
+    if(!document.querySelector('.screen:not(.in) .rv')) clearInterval(guard);
+  }, 400);
+})();
+
+/* ============================================================
+   HERO DOCK
+   ============================================================ */
+var wordmark = document.getElementById('wordmark');
+var plate = document.getElementById('plate');
+var peekmask = document.getElementById('peekmask');
+var heroH1 = document.querySelector('.hero-h1');
+var heroCanvas = document.getElementById('net-hero');
+var bigK = 1, range = 1;
+
+function measureDock(){
+  wordmark.style.transform = '';
+  var fs = parseFloat(getComputedStyle(wordmark).fontSize) || 100;
+  bigK = 22 / fs;
+  range = Math.max(1, innerHeight * 0.8);
+}
+function easeIO(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
+
+var lastP = -1;
+function applyScroll(){
+  var p = Math.min(1, Math.max(0, pageYOffset / range));
+  if(peekmask) peekmask.style.opacity = pageYOffset > 2 ? '0' : '1';
+  if(p === lastP) return;
+  lastP = p;
+  var e = easeIO(p);
+  var k = 1 + (bigK - 1) * e;
+  wordmark.style.transform = 'scale(' + k.toFixed(4) + ')';
+  if(innerWidth > 760) plate.style.transform = 'scale(' + k.toFixed(4) + ')';
+  plate.style.opacity = p.toFixed(3);
+  var h = Math.max(0, 1 - p * 2);
+  heroH1.style.opacity = h.toFixed(3);
+  heroH1.style.transform = 'translateY(' + (-34 * e).toFixed(1) + 'px)';
+  heroCanvas.style.opacity = (1 - 0.7 * p).toFixed(3);
+}
+
+/* ============================================================
+   NETWORK ENGINE
+   ============================================================ */
+/* ============================================================
+   SHARED DRAWING LANGUAGE
+   ============================================================ */
+var ACC = '#9B4A32', HOT = '#CE8A52', AMB = '#8A6A3E';
+var SLATE = 'rgba(239,231,218,0.20)';
+function hexA(hex, a){
+  var n = parseInt(hex.slice(1), 16);
+  return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + Math.max(0,a).toFixed(3) + ')';
+}
+function outC(t){ return 1 - Math.pow(1 - t, 3); }
+function angDist(a, b){ var d = Math.abs(a-b) % 6.28318; return d > 3.14159 ? 6.28318 - d : d; }
+function rr(ctx, x, y, s){
+  var h = s/2, rad = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(x-h+rad,y-h); ctx.lineTo(x+h-rad,y-h); ctx.quadraticCurveTo(x+h,y-h,x+h,y-h+rad);
+  ctx.lineTo(x+h,y+h-rad); ctx.quadraticCurveTo(x+h,y+h,x+h-rad,y+h);
+  ctx.lineTo(x-h+rad,y+h); ctx.quadraticCurveTo(x-h,y+h,x-h,y+h-rad);
+  ctx.lineTo(x-h,y-h+rad); ctx.quadraticCurveTo(x-h,y-h,x-h+rad,y-h); ctx.closePath();
+}
+function fitCanvas(canvas, ctx){
+  var dpr = Math.min(devicePixelRatio || 1, 1.5);
+  var w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return { w:w, h:h };
+}
+
+/* ============================================================
+   HERO NETWORK
+   Its own constants: they are not the service ones.
+   ============================================================ */
+function makeHero(canvas, opts){
+  opts = opts || {};
+  var density = opts.density == null ? 2 : opts.density;
+  var speed = opts.speed == null ? 1 : opts.speed;
+  var ctx = canvas.getContext('2d');
+  var W=0,H=0,cx=0,cy=0,R=0,mobile=false;
+  var nodes=[], edges=[], pulses=[], clock=0, seeded=false;
+  var CYCLE = 13;
+
+  function size(){
+    var d = fitCanvas(canvas, ctx); W = d.w; H = d.h;
+    mobile = W < 760;
+    cx = mobile ? W*0.5 : W*0.60;
+    cy = mobile ? H*0.40 : H*0.47;
+    R  = mobile ? Math.min(W*0.46, H*0.30) : Math.min(W*0.40, H*0.46);
+  }
+
+  function build(){
+    nodes=[]; edges=[]; pulses=[]; seeded=false;
+    var rings = (density === 1 ? 2 : density === 3 ? 4 : 3) + (Math.random() < 0.4 ? 1 : 0);
+    nodes.push({ r:0, a:0, hub:true });
+    var starts=[0];
+    for(var k=1;k<=rings;k++){
+      var count = 5 + k*2 + Math.floor(Math.random()*4);
+      var off = Math.random()*6.28318;
+      starts.push(nodes.length);
+      for(var i=0;i<count;i++){
+        nodes.push({ r: k/rings + (Math.random()-0.5)*0.075,
+                     a: off + (i/count)*6.28318 + (Math.random()-0.5)*0.20,
+                     ring:k });
+      }
+      var st = starts[k], n = count;
+      for(var j=0;j<n;j++){
+        if(Math.random() < 0.16) continue;
+        edges.push({ a:st+j, b:st+((j+1)%n) });
+      }
+      var skip = (k === 1 ? 0.52 : 0.26);
+      for(var m=0;m<n;m++){
+        if(Math.random() < skip) continue;
+        var ps = starts[k-1], pe = st, best = ps, bd = 9;
+        for(var q=ps;q<pe;q++){
+          var d2 = angDist(nodes[q].a, nodes[st+m].a);
+          if(d2 < bd){ bd = d2; best = q; }
+        }
+        edges.push({ a:best, b:st+m });
+      }
+    }
+    nodes.forEach(function(nd){
+      nd.adj = []; nd.lit = 0; nd.drift = Math.random()*6.28318;
+      var far = 1.5 + Math.random()*0.8, ang = Math.random()*6.28318;
+      nd.ox = Math.cos(ang)*far; nd.oy = Math.sin(ang)*far;
+      nd.delay = 0.12 + nd.r*1.0 + Math.random()*0.4;
+    });
+    edges.forEach(function(e,i){
+      e.lit = 0; e.delay = 1.7 + i*0.013 + Math.random()*0.25;
+      nodes[e.a].adj.push(i); nodes[e.b].adj.push(i);
+    });
+    clock = 0;
+  }
+
+  function entered(nd, t){ return outC(Math.min(1, Math.max(0, (t - nd.delay)/1.5))); }
+  function posOf(nd, t, spin){
+    var e = entered(nd, t);
+    var a = nd.a + spin;
+    var rad = nd.r * R;
+    var x = Math.cos(a)*rad, y = Math.sin(a)*rad;
+    /* fly in from outside */
+    x += nd.ox * R * (1-e); y += nd.oy * R * (1-e);
+    y += Math.sin(clock*0.9 + nd.drift) * (mobile ? 1.1 : 1.8) * e;
+    return { x:x, y:y, e:e };
+  }
+
+  function step(dt){
+    clock += dt * speed;
+    if(clock > CYCLE){ build(); return; }
+    var t = clock;
+    if(!seeded && t > 4.6){
+      seeded = true;
+      nodes[0].adj.forEach(function(ei){ pulses.push({ e:ei, from:0, t:0 }); });
+    }
+    if(t > 4.6 && t < CYCLE - 2.2){
+      for(var i=pulses.length-1;i>=0;i--){
+        var q = pulses[i]; q.t += dt * 1.5;
+        edges[q.e].lit = 1;
+        if(q.t >= 1){
+          var ed = edges[q.e], other = ed.a === q.from ? ed.b : ed.a;
+          nodes[other].lit = 1;
+          nodes[other].adj.forEach(function(ei){
+            if(ei === q.e || pulses.length >= 90) return;
+            if(Math.random() < 0.62) pulses.push({ e:ei, from:other, t:0 });
+          });
+          pulses.splice(i,1);
+        }
+      }
+    }
+    edges.forEach(function(e){ if(e.lit>0) e.lit = Math.max(0, e.lit - dt*0.55); });
+    nodes.forEach(function(n){ if(n.lit>0) n.lit = Math.max(0, n.lit - dt*0.30); });
+  }
+
+  function draw(){
+    var t = reduce.matches ? 6.5 : clock;
+    var spin = reduce.matches ? 0 : clock * 0.021;
+    var diss = Math.min(1, Math.max(0, (t - (CYCLE - 1.9))/1.7));
+    var fa = reduce.matches ? 1 : 1 - diss;
+    ctx.setTransform(Math.min(devicePixelRatio||1,1.5),0,0,Math.min(devicePixelRatio||1,1.5),0,0);
+    ctx.clearRect(0,0,W,H);
+    ctx.save(); ctx.translate(cx, cy);
+
+    var P = nodes.map(function(nd){ return posOf(nd, t, spin); });
+
+    edges.forEach(function(e){
+      var ep = Math.min(1, Math.max(0, (t - e.delay)/0.85));
+      if(ep <= 0) return;
+      if(P[e.a].e < 0.35 || P[e.b].e < 0.35) return;
+      ep = outC(ep);
+      var A=P[e.a], B=P[e.b];
+      ctx.globalAlpha = fa;
+      ctx.beginPath(); ctx.moveTo(A.x,A.y);
+      ctx.lineTo(A.x+(B.x-A.x)*ep, A.y+(B.y-A.y)*ep);
+      if(e.lit > 0.02){ ctx.strokeStyle = hexA(HOT, 0.45 + 0.45*e.lit); ctx.lineWidth = 1.4; }
+      else if(ep < 1){ ctx.strokeStyle = hexA(ACC, mobile ? 0.82 : 0.6); ctx.lineWidth = 1; }
+      else { ctx.strokeStyle = SLATE; ctx.lineWidth = 1; }
+      ctx.stroke();
+    });
+
+    if(!reduce.matches) pulses.forEach(function(q){
+      var ed = edges[q.e], A = P[ed.a === q.from ? ed.a : ed.b], B = P[ed.a === q.from ? ed.b : ed.a];
+      var x = A.x + (B.x-A.x)*Math.min(1,q.t), y = A.y + (B.y-A.y)*Math.min(1,q.t);
+      ctx.globalAlpha = fa * 0.9;
+      ctx.beginPath(); ctx.arc(x,y,2,0,6.28318); ctx.fillStyle = HOT; ctx.fill();
+    });
+
+    nodes.forEach(function(nd,i){
+      var p = P[i], e = p.e;
+      if(e <= 0) return;
+      var sz = (nd.hub ? 13 : 7) * (mobile ? 0.82 : 1);
+      ctx.globalAlpha = fa * (0.25 + 0.75*e);
+      rr(ctx, p.x, p.y, sz);
+      if(nd.lit > 0.02){ ctx.fillStyle = hexA(HOT, 0.26*nd.lit); ctx.fill(); }
+      else if(nd.hub){ ctx.fillStyle = hexA(ACC, 0.16); ctx.fill(); }
+      if(e < 1){ ctx.lineWidth = 1.1; ctx.strokeStyle = hexA(AMB, (mobile ? 0.95 : 0.7)*(1-e)); ctx.stroke(); }
+      if(nd.lit > 0.02){ ctx.strokeStyle = HOT; ctx.lineWidth = 1.4; }
+      else if(nd.hub){ ctx.strokeStyle = hexA(ACC, 0.7); ctx.lineWidth = 1.1; }
+      else { ctx.strokeStyle = SLATE; ctx.lineWidth = 1.1; }
+      ctx.stroke();
+      if(nd.hub && nd.lit > 0.02){
+        var inn = sz*0.44;
+        ctx.fillStyle = hexA(HOT, nd.lit);
+        ctx.fillRect(p.x-inn/2, p.y-inn/2, inn, inn);
+      }
+    });
+    ctx.globalAlpha = 1; ctx.restore();
+  }
+
+  return { size:size, build:build, step:step, draw:draw };
+}
+
+/* ============================================================
+   SERVICE NETWORK
+   Geometry from the stage box. No rebuild while a panel is open.
+   ============================================================ */
+function makeService(canvas, opts){
+  opts = opts || {};
+  var ctx = canvas.getContext('2d');
+  var W=0,H=0,cx=0,cy=0,RX=0,RY=0,mobile=false;
+  var nodes=[], edges=[], pulses=[], srcIdx=[], labelIdx=[];
+  var clock=0, spin=0, breathe=0, wave=-1, fade=0, dissolving=false, hoverCard=-1;
+
+  function size(){
+    var d = fitCanvas(canvas, ctx); W = d.w; H = d.h;
+    mobile = W < 760;
+    cx = W*0.5; cy = H*0.5; RX = W*0.44; RY = H*0.42;
+  }
+
+  function build(cardCount, labelCount){
+    nodes=[]; edges=[]; pulses=[]; srcIdx=[]; labelIdx=[];
+    clock=0; spin=0; breathe=0; wave=-1; fade=0; dissolving=false; hoverCard=-1;
+    var rings = 3 + (Math.random() < 0.45 ? 1 : 0);
+    nodes.push({ r:0, a:0, hub:true, ring:0 });
+    var starts=[0];
+    for(var k=1;k<=rings;k++){
+      var count = 6 + k*2 + Math.floor(Math.random()*4);
+      var off = Math.random()*6.28318;
+      starts.push(nodes.length);
+      for(var i=0;i<count;i++){
+        nodes.push({ r: k/rings + (Math.random()-0.5)*0.07,
+                     a: off + (i/count)*6.28318 + (Math.random()-0.5)*0.2, ring:k });
+      }
+      var st=starts[k], n=count;
+      for(var j=0;j<n;j++){
+        if(Math.random() < 0.18) continue;
+        edges.push({ a:st+j, b:st+((j+1)%n) });
+      }
+      var skip = (k === 1 ? 0.45 : 0.28);
+      for(var m=0;m<n;m++){
+        if(Math.random() < skip) continue;
+        var ps=starts[k-1], pe=st, best=ps, bd=9;
+        for(var q=ps;q<pe;q++){
+          var dd = angDist(nodes[q].a, nodes[st+m].a);
+          if(dd < bd){ bd = dd; best = q; }
+        }
+        edges.push({ a:best, b:st+m });
+      }
+    }
+    nodes.forEach(function(nd){
+      nd.adj=[]; nd.lit=0; nd.gw=0; nd.drift=Math.random()*6.28318;
+      nd.delay = 0.1 + nd.r*0.9 + Math.random()*0.3;
+      var far = 1.4 + Math.random()*0.8, ang = Math.random()*6.28318;
+      nd.ox = Math.cos(ang)*far; nd.oy = Math.sin(ang)*far;
+    });
+    edges.forEach(function(e,i){
+      e.lit=0; e.delay = 1.1 + i*0.011 + Math.random()*0.2;
+      nodes[e.a].adj.push(i); nodes[e.b].adj.push(i);
+    });
+
+    /* sources: one ring-2 node per card, spread around the circle */
+    var srcRing = rings < 3 ? 1 : 2;
+    var used = {};
+    for(var c=0;c<cardCount;c++){
+      var want = -1.9 + c * (5.0 / cardCount), pick=-1, bestd=99;
+      for(var i2=0;i2<nodes.length;i2++){
+        if(used[i2] || nodes[i2].ring !== srcRing) continue;
+        var dd2 = angDist(nodes[i2].a, want);
+        if(dd2 < bestd){ bestd = dd2; pick = i2; }
+      }
+      if(pick < 0) continue;
+      used[pick]=1; nodes[pick].src = true; nodes[pick].sysK = c; srcIdx.push(pick);
+    }
+    /* labels: outer, unused, nearest a target angle and the outer radius */
+    for(var l=0;l<labelCount;l++){
+      var wantA = -3.1 + l * (6.28318 / labelCount), lp=-1, lb=99;
+      for(var i3=0;i3<nodes.length;i3++){
+        if(used[i3] || nodes[i3].ring < 2 || nodes[i3].src) continue;
+        var sc = angDist(nodes[i3].a, wantA) + Math.abs(1 - nodes[i3].r);
+        if(sc < lb){ lb = sc; lp = i3; }
+      }
+      if(lp < 0) continue;
+      used[lp]=1; labelIdx.push(lp);
+    }
+  }
+
+  function entered(nd, t){ return outC(Math.min(1, Math.max(0, (t - nd.delay)/0.9))); }
+  function posOf(nd, t){
+    var e = entered(nd, t);
+    var a = nd.a + spin;
+    var r2 = nd.r * (1 + 0.02*Math.sin(breathe + nd.drift));
+    var x = cx + Math.cos(a)*r2*RX, y = cy + Math.sin(a)*r2*RY;
+    x += nd.ox * RX * (1-e); y += nd.oy * RY * (1-e);
+    y += Math.sin(clock*0.8 + nd.drift) * (mobile ? 0.9 : 1.4) * e;
+    return { x:x, y:y, e:e };
+  }
+
+  function step(dt){
+    clock += dt;
+    if(!reduce.matches){ spin += dt*0.014; breathe += dt*0.055; }
+    var grow = Math.min(1, Math.max(0, clock/0.7));
+    fade = dissolving ? Math.max(0, fade - dt*2.6) : grow;
+    if(reduce.matches) return;
+    var t = clock;
+    var w = Math.floor((t - 2.6) / 6.2);
+    if(t > 2.6 && w !== wave){
+      wave = w;
+      srcIdx.forEach(function(sn, k){
+        setTimeout(function(){
+          if(!nodes[sn]) return;
+          nodes[sn].lit = 1;
+          nodes[sn].adj.forEach(function(ei){ if(pulses.length < 60) pulses.push({ e:ei, from:sn, t:0 }); });
+        }, k*260);
+      });
+    }
+    for(var i=pulses.length-1;i>=0;i--){
+      var q = pulses[i]; q.t += dt*1.35;
+      edges[q.e].lit = 1;
+      if(q.t >= 1){
+        var ed = edges[q.e], other = ed.a === q.from ? ed.b : ed.a;
+        nodes[other].lit = 1;
+        nodes[other].adj.forEach(function(ei){
+          if(ei === q.e || pulses.length >= 60) return;
+          if(Math.random() < 0.42) pulses.push({ e:ei, from:other, t:0 });
+        });
+        pulses.splice(i,1);
+      }
+    }
+    edges.forEach(function(e){ if(e.lit>0) e.lit = Math.max(0, e.lit - dt*0.85); });
+    nodes.forEach(function(n){
+      if(n.lit>0) n.lit = Math.max(0, n.lit - dt*0.55);
+      var target = (n.src && srcIdx[hoverCard] === nodes.indexOf(n)) ? 1 : 0;
+      n.gw += (target - n.gw) * Math.min(1, dt*7);
+    });
+  }
+
+  var P = [];
+  /* Where a node ends up, ignoring the fly in offset. The DOM is placed from
+     these so cards and labels never sit at the origin during the entrance. */
+  function posSettled(nd){
+    var a = nd.a + spin;
+    var r2 = nd.r * (1 + 0.02*Math.sin(breathe + nd.drift));
+    return { x: cx + Math.cos(a)*r2*RX,
+             y: cy + Math.sin(a)*r2*RY + Math.sin(clock*0.8 + nd.drift) * (mobile ? 0.9 : 1.4),
+             e: entered(nd, clock) };
+  }
+  function draw(){
+    var t = reduce.matches ? 5 : clock;
+    ctx.setTransform(Math.min(devicePixelRatio||1,1.5),0,0,Math.min(devicePixelRatio||1,1.5),0,0);
+    ctx.clearRect(0,0,W,H);
+    P = nodes.map(function(nd){ return posOf(nd, t); });
+
+    edges.forEach(function(e){
+      var ep = Math.min(1, Math.max(0, (t - e.delay)/0.6));
+      if(ep <= 0) return;
+      if(P[e.a].e < 0.35 || P[e.b].e < 0.35) return;
+      ep = outC(ep);
+      var A=P[e.a], B=P[e.b];
+      ctx.beginPath(); ctx.moveTo(A.x,A.y);
+      ctx.lineTo(A.x+(B.x-A.x)*ep, A.y+(B.y-A.y)*ep);
+      if(e.lit > 0.02){ ctx.strokeStyle = hexA(HOT, 0.26 + 0.46*e.lit); ctx.lineWidth = 1.3; }
+      else { ctx.strokeStyle = SLATE; ctx.lineWidth = 1; }
+      ctx.stroke();
+    });
+
+    if(!reduce.matches) pulses.forEach(function(q){
+      var ed = edges[q.e];
+      var A = P[q.from], B = P[ed.a === q.from ? ed.b : ed.a];
+      if(!A || !B) return;
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.arc(A.x+(B.x-A.x)*Math.min(1,q.t), A.y+(B.y-A.y)*Math.min(1,q.t), 2, 0, 6.28318);
+      ctx.fillStyle = HOT; ctx.fill(); ctx.globalAlpha = 1;
+    });
+
+    nodes.forEach(function(nd,i){
+      var p = P[i]; if(p.e <= 0) return;
+      var col = nd.src ? SYS_COLOURS[nd.sysK % 3] : null;
+      var sz = (nd.src ? 14 + 12*nd.gw : nd.hub ? 11 : 7) * (mobile ? 0.85 : 1);
+      ctx.globalAlpha = 0.25 + 0.75*p.e;
+      rr(ctx, p.x, p.y, sz);
+      if(nd.src){ ctx.fillStyle = hexA(col, 0.22); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.4; }
+      else if(nd.lit > 0.02){ ctx.fillStyle = hexA(HOT, 0.24*nd.lit); ctx.fill(); ctx.strokeStyle = HOT; ctx.lineWidth = 1.3; }
+      else if(nd.hub){ ctx.fillStyle = hexA(ACC, 0.12); ctx.fill(); ctx.strokeStyle = hexA(ACC, 0.7); ctx.lineWidth = 1.1; }
+      else { ctx.strokeStyle = SLATE; ctx.lineWidth = 1.1; }
+      ctx.stroke();
+      if(nd.src){
+        var inn = sz*0.40;
+        ctx.fillStyle = col; ctx.fillRect(p.x-inn/2, p.y-inn/2, inn, inn);
+        if(nd.lit > 0.02){
+          ctx.beginPath(); ctx.arc(p.x,p.y, sz*(0.8 + (1-nd.lit)*1.6), 0, 6.28318);
+          ctx.strokeStyle = hexA(col, 0.45*nd.lit); ctx.lineWidth = 1; ctx.stroke();
+        }
+        if(nd.gw > 0.01){
+          ctx.beginPath(); ctx.arc(p.x,p.y, sz*0.95 + 8, 0, 6.28318);
+          ctx.strokeStyle = hexA(col, 0.6*nd.gw); ctx.lineWidth = 1.1; ctx.stroke();
+        }
+        if(opts.badges){
+          ctx.font = "600 10px 'IBM Plex Mono', monospace";
+          ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+          ctx.fillStyle = hexA(col, 0.95);
+          ctx.fillText('S0' + (nd.sysK+1), p.x + sz*0.72, p.y);
+        }
+      }
+      ctx.globalAlpha = 1;
+    });
+  }
+
+  function tie(x1,y1,x2,y2,k){
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+    ctx.lineWidth = 1.2; ctx.strokeStyle = hexA(SYS_COLOURS[k%3], 0.6); ctx.stroke();
+  }
+
+  return {
+    size:size, build:build, step:step, draw:draw, tie:tie,
+    pos:function(i){ return P[i]; }, allPos:function(){ return P; },
+    allPosSettled:function(){ return nodes.map(posSettled); },
+    nodes:function(){ return nodes; }, sources:function(){ return srcIdx; },
+    labels:function(){ return labelIdx; },
+    setHover:function(k){ hoverCard = k; },
+    fadeValue:function(){ return fade; },
+    dissolve:function(v){ dissolving = v; },
+    centre:function(){ return { cx:cx, cy:cy, W:W, H:H }; }
+  };
+}
+
+/* ============================================================
+   OVERLAY: chips, labels, system cards, popups
+   ============================================================ */
+var ov = document.getElementById('ov');
+var ovExit = document.getElementById('ov-exit');
+var ovChips = document.getElementById('ov-chips');
+var ovEyebrow = document.getElementById('ov-eyebrow');
+var ovTitle = document.getElementById('ov-title');
+var stage = document.getElementById('stage');
+var syslist = document.getElementById('syslist');
+var net = makeService(document.getElementById('net'), { badges:isPhone() });
+var current = -1, ovOpen = false, lastFocus = null, scrollLock = 0;
+
+SERVICES.forEach(function(s,i){
+  var c = document.createElement('button');
+  c.className = 'chip'; c.type = 'button'; c.textContent = s.chip;
+  c.addEventListener('click', function(){ showPanel(i); });
+  ovChips.appendChild(c);
+});
+
+function clearStage(){
+  Array.prototype.slice.call(stage.querySelectorAll('.oplabel,.syscard,.popup')).forEach(function(el){ el.remove(); });
+  syslist.innerHTML = '';
+}
+
+function showPanel(i){
+  if(i === current) return;
+  var svc = SERVICES[i];
+  current = i;
+  Array.prototype.forEach.call(ovChips.children, function(c,n){ c.classList.toggle('on', n === i); });
+  ovEyebrow.textContent = ('0' + (i+1)) + ' / ' + svc.name;
+  ovTitle.textContent = svc.name;
+  clearStage();
+  net.size();
+  net.build(svc.sys.length, isPhone() ? 6 : 12);
+  buildDom(svc);
+  /* Placed immediately: settled coordinates do not wait on the entrance. */
+  layout(); follow();
+  nextLayout = performance.now()/1000 + 7;
+}
+
+function buildDom(svc){
+  var phone = isPhone();
+  var opCount = phone ? 6 : 12;
+  svc.ops.slice(0, opCount).forEach(function(txt, n){
+    var el = document.createElement('span');
+    el.className = 'oplabel';
+    el.textContent = txt;
+    /* first five are the core stages, the rest are peripheral */
+    el.dataset.core = n < 5 ? '1' : '0';
+    el.dataset.base = n < 5 ? '0.42' : '0.26';
+    el.style.opacity = el.dataset.base;
+    stage.appendChild(el);
+  });
+  svc.sys.forEach(function(name, n){
+    var col = SYS_COLOURS[n % 3];
+    var card = document.createElement('article');
+    card.className = 'syscard';
+    card.style.color = col;
+    card.style.borderColor = hexAlpha(col, 0.55);
+    card.style.borderLeftColor = col;
+    card.innerHTML = '<span class="syscard__row"><h4 class="syscard__t"></h4><span class="syscard__i"></span></span>';
+    card.querySelector('.syscard__i').textContent = 'S' + ('0' + (n+1));
+    card.querySelector('.syscard__t').textContent = name.t;
+    var pop = document.createElement('div');
+    pop.className = 'popup';
+    pop.style.borderColor = hexAlpha(col, 0.5);
+    pop.textContent = name.d;
+    card.dataset.sys = String(n);
+    if(phone){
+      /* Inside its own card, under the title it belongs to. */
+      card.appendChild(pop);
+      syslist.appendChild(card);
+      card.addEventListener('click', function(){
+        var before = syslist.getBoundingClientRect().bottom;
+        var wasOpen = pop.classList.contains('on');
+        /* One open at a time: opening a card closes any other. */
+        Array.prototype.forEach.call(syslist.querySelectorAll('.popup'), function(o){ o.classList.remove('on'); });
+        Array.prototype.forEach.call(syslist.querySelectorAll('.syscard'), function(o){ o.classList.remove('open'); });
+        if(!wasOpen){ pop.classList.add('on'); card.classList.add('open'); }
+        /* Hold the foot of the list still, so the description takes its space
+           from above: its own headline and the ones over it move up, and
+           nothing below is driven off the bottom. */
+        ov.scrollTop += syslist.getBoundingClientRect().bottom - before;
+      });
+    } else {
+      stage.appendChild(card); stage.appendChild(pop);
+      card._pop = pop;
+      card.addEventListener('mouseenter', function(){ hoverSys(n, true); });
+      card.addEventListener('mouseleave', function(){ hoverSys(n, false); });
+      card.addEventListener('focus', function(){ hoverSys(n, true); });
+      card.addEventListener('blur', function(){ hoverSys(n, false); });
+      card.tabIndex = 0;
+    }
+  });
+}
+
+function hoverSys(n, on){
+  net.setHover(on ? n : -1);
+  var card = stage.querySelector('.syscard[data-sys="' + n + '"]');
+  if(card && card._pop) placePopup(card, card._pop, on);
+}
+
+/* Popup is display:none when closed so it cannot widen the layout.
+   Measured, then flipped both ways to stay inside the overlay. */
+function placePopup(card, pop, on){
+  if(!on){ pop.classList.remove('on'); return; }
+  pop.classList.add('on');
+  var sr = stage.getBoundingClientRect();
+  var cr = card.getBoundingClientRect();
+  var pr = pop.getBoundingClientRect();
+  var x = cr.right - sr.left + 14;
+  if(x + pr.width > sr.width) x = cr.left - sr.left - pr.width - 14;
+  if(x < 0) x = 4;
+  var y = cr.top - sr.top;
+  if(y + pr.height > sr.height) y = sr.height - pr.height - 4;
+  if(y < 0) y = 4;
+  pop.style.left = x + 'px'; pop.style.top = y + 'px';
+}
+
+/* Label and card placement. Labels never overlap a card and are never
+   hidden; cards never overlap each other. */
+var boxes = [];
+function rectOf(el){ var r = el.getBoundingClientRect(), s = stage.getBoundingClientRect();
+  return { x:r.left-s.left, y:r.top-s.top, w:r.width, h:r.height }; }
+function hit(a,b){ return !(a.x+a.w < b.x || b.x+b.w < a.x || a.y+a.h < b.y || b.y+b.h < a.y); }
+
+function layout(){
+  if(current < 0) return;
+  var P = net.allPosSettled(), srcs = net.sources(), labs = net.labels();
+  var sr = stage.getBoundingClientRect();
+  var stacked = isPhone();
+  boxes = [];
+
+  var cards = stage.querySelectorAll('.syscard');
+  if(!stacked) Array.prototype.forEach.call(cards, function(card, n){
+    var np = P[srcs[n]]; if(!np) return;
+    var w = card.offsetWidth, h = card.offsetHeight;
+    var vx = np.x - sr.width/2, vy = np.y - sr.height/2;
+    var len = Math.hypot(vx, vy) || 1;
+    var x = np.x + (vx/len)*(w*0.42 + 34) - w/2;
+    var y = np.y + (vy/len)*(h*0.5 + 40) - h/2;
+    x = Math.max(2, Math.min(sr.width - w - 2, x));
+    y = Math.max(2, Math.min(sr.height - h - 2, y));
+    var box = { x:x, y:y, w:w, h:h };
+    for(var pass=0; pass<26; pass++){
+      var clash = false;
+      for(var b=0;b<boxes.length;b++){ if(hit(box, boxes[b])){ clash = true; break; } }
+      if(!clash) break;
+      box.y += 12;
+      if(box.y + h > sr.height - 2){ box.y = 2; box.x += 12; }
+      box.x = Math.max(2, Math.min(sr.width - w - 2, box.x));
+    }
+    card._off = { dx: box.x - np.x, dy: box.y - np.y };
+    card.style.left = box.x + 'px'; card.style.top = box.y + 'px';
+    boxes.push(box);
+  });
+  var cardBoxes = boxes.slice();
+
+  /* On the phone a 68 by 52 box is reserved around each source so a label
+     never lands on the S0n badge. */
+  if(stacked) srcs.forEach(function(si){
+    var np = P[si]; if(!np) return;
+    cardBoxes.push({ x:np.x-10, y:np.y-26, w:68, h:52 });
+    boxes.push({ x:np.x-10, y:np.y-26, w:68, h:52 });
+  });
+
+  var labels = stage.querySelectorAll('.oplabel');
+  Array.prototype.forEach.call(labels, function(lab, n){
+    var np = P[labs[n]];
+    if(!np){ lab.style.display='none'; return; }
+    lab.style.display = '';
+    var w = lab.offsetWidth, h = lab.offsetHeight;
+    var right = np.x < sr.width*0.55;
+    var placed = null;
+    for(var pass=0; pass<2 && !placed; pass++){
+      for(var s2=0; s2<2 && !placed; s2++){
+        var side = s2 === 0 ? right : !right;
+        for(var dy=0; dy<=60 && !placed; dy+=12){
+          for(var sg=1; sg>=-1 && !placed; sg-=2){
+            var x = side ? np.x + 13 : np.x - 13 - w;
+            var y = np.y + sg*dy - h/2;
+            if(x < 0 || x + w > sr.width || y < 0 || y + h > sr.height) continue;
+            var box = { x:x, y:y, w:w, h:h };
+            var bad = false, list = pass === 0 ? boxes : cardBoxes;
+            for(var b=0;b<list.length;b++){ if(hit(box, list[b])){ bad = true; break; } }
+            if(!bad) placed = box;
+          }
+        }
+      }
+    }
+    if(!placed){
+      var bx = Math.max(2, Math.min(sr.width - w - 2, np.x + 13));
+      var by = Math.max(2, Math.min(sr.height - h - 2, np.y - h/2));
+      placed = { x:bx, y:by, w:w, h:h };
+      for(var c=0;c<cardBoxes.length;c++){
+        if(hit(placed, cardBoxes[c])) placed.y = cardBoxes[c].y + cardBoxes[c].h + 6;
+      }
+      if(placed.y + h > sr.height - 2) placed.y = Math.max(2, placed.y - h - 12);
+    }
+    lab.style.left = placed.x + 'px'; lab.style.top = placed.y + 'px';
+    lab._off = { dx: placed.x - np.x, dy: placed.y - np.y };
+    /* first five are the core stages, the rest fade by distance from centre */
+    var mid = sr.height/2;
+    lab.style.opacity = lab.dataset.core === '1'
+      ? '0.42'
+      : (0.2 + 0.12*(1 - Math.abs(placed.y - mid)/mid)).toFixed(3);
+    boxes.push(placed);
+  });
+}
+
+/* Cheap per frame pass: the DOM rides the graph by its stored offset. */
+function follow(){
+  if(current < 0) return;
+  var P = net.allPosSettled(), srcs = net.sources(), labs = net.labels();
+  var stacked = isPhone();
+  if(!stacked) Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(card, n){
+    var np = P[srcs[n]]; if(!np || !card._off) return;
+    card.style.left = (np.x + card._off.dx) + 'px';
+    card.style.top  = (np.y + card._off.dy) + 'px';
+  });
+  Array.prototype.forEach.call(stage.querySelectorAll('.oplabel'), function(lab, n){
+    var np = P[labs[n]]; if(!np || !lab._off) return;
+    lab.style.left = (np.x + lab._off.dx) + 'px';
+    lab.style.top  = (np.y + lab._off.dy) + 'px';
+  });
+}
+
+/* ============================================================
+   OVERLAY OPEN / CLOSE
+   ============================================================ */
+function openOverlay(i){
+  lastFocus = document.activeElement;
+  scrollLock = pageYOffset;
+  document.body.style.position = 'fixed';
+  document.body.style.top = (-scrollLock) + 'px';
+  document.body.style.width = '100%';
+  ov.classList.add('on');
+  ov.setAttribute('aria-hidden','false');
+  ovOpen = true;
+  current = -1;
+  showPanel(i);
+  ovExit.focus();
+}
+function closeOverlay(){
+  ov.classList.remove('on');
+  ov.setAttribute('aria-hidden','true');
+  ovOpen = false;
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo(0, scrollLock);
+  if(lastFocus && lastFocus.focus) lastFocus.focus();
+}
+ovExit.addEventListener('click', closeOverlay);
+ov.addEventListener('click', function(e){ if(e.target === ov) closeOverlay(); });
+window.addEventListener('keydown', function(e){
+  if(!ovOpen) return;
+  if(e.key === 'Escape'){ closeOverlay(); return; }
+  if(e.key === 'ArrowRight'){ e.preventDefault(); page(1); }
+  if(e.key === 'ArrowLeft'){ e.preventDefault(); page(-1); }
+});
+function page(d){
+  var n = (current + d + SERVICES.length) % SERVICES.length;
+  net.dissolve(true);
+  setTimeout(function(){ net.dissolve(false); lastFade = -1; showPanel(n); }, 420);
+}
+
+/* ============================================================
+   FRAME LOOP
+   ============================================================ */
+var last = performance.now()/1000, nextLayout = 0, lastFade = -1;
+
+function applyFade(){
+  var f = net.fadeValue();
+  if(Math.abs(f - lastFade) <= 0.008) return;
+  lastFade = f;
+  document.getElementById('net').style.opacity = f;
+  Array.prototype.forEach.call(stage.querySelectorAll('.oplabel'), function(l){
+    l.style.opacity = (parseFloat(l.dataset.base || l.style.opacity || 0.3) * f).toFixed(3);
+  });
+  Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(c){ c.style.opacity = f; });
+}
+
+function drawTies(){
+  if(isPhone()) return;                       /* stacked list: no tie lines */
+  var P = net.allPos(), srcs = net.sources();
+  Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(card, n){
+    var np = P[srcs[n]];
+    /* While the node is still flying in, a tie would stretch across the stage. */
+    if(!np || np.e < 0.95) return;
+    var x = parseFloat(card.style.left) || 0, y = parseFloat(card.style.top) || 0;
+    var w = card.offsetWidth, h = card.offsetHeight;
+    /* nearest point on the card edge to the node */
+    var ax = Math.max(x, Math.min(x + w, np.x));
+    var ay = Math.max(y, Math.min(y + h, np.y));
+    net.tie(np.x, np.y, ax, ay, n);
+  });
+}
+
+function frame(now){
+  var t = now/1000, dt = Math.min(0.05, t - last); last = t;
+  applyScroll();
+  if(!reduce.matches){ heroNet.step(dt); }
+  heroNet.draw();
+  if(ovOpen){
+    if(!reduce.matches) net.step(dt);
+    net.draw();
+    drawTies();
+    if(t > nextLayout){ layout(); nextLayout = t + 7; }
+    follow();
+    applyFade();
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ============================================================
+   START. One rAF loop drives both pieces.
+   ============================================================ */
+var heroNet = makeHero(heroCanvas, { density:2, speed:1 });
+function sizeHero(){ heroNet.size(); heroNet.build(); }
+
+measureDock();
+applyScroll();
+sizeHero();
+requestAnimationFrame(frame);
+
+var rz;
+addEventListener('resize', function(){
+  clearTimeout(rz);
+  rz = setTimeout(function(){
+    lastP = -1; measureDock(); applyScroll(); sizeHero();
+    if(ovOpen){ net.size(); layout(); }
+  }, 140);
+});
+addEventListener('scroll', function(){ if(!ovOpen) applyScroll(); }, { passive:true });
+window.__syn = { layout:layout, open:openOverlay, close:closeOverlay, page:showPanel,
+                 net:net, hero:heroNet, stage:stage, hover:hoverSys, follow:follow };
+setTimeout(function(){ document.getElementById('sticky').classList.add('on'); }, 900);
+})();
+</script>
+</body>
+</html>
