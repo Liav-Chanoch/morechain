@@ -170,19 +170,43 @@ p{ margin:0; text-wrap:pretty; }
 /* ---------- 01 rows ---------- */
 .rows{ display:flex; flex-direction:column; }
 .srow{
+  position:relative;
   display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(14px,2vw,30px);
   width:100%; text-align:left; padding:clamp(14px,2.2svh,26px) 2px;
   border-top:1px solid var(--hair); min-height:44px;
-  transition:padding-left .32s var(--ease);
+  transition:padding-left .32s var(--ease), background-color .32s var(--ease);
+}
+/* The amber edge the row lights on approach, the same device the cards carry
+   on their left border. Reads as heat without a bloom. */
+.srow::before{
+  content:''; position:absolute; left:0; top:8%; bottom:8%; width:2px;
+  background:var(--amber); transform:scaleY(0); transform-origin:50% 50%;
+  transition:transform .34s var(--exp);
 }
 .srow:last-child{ border-bottom:1px solid var(--hair); }
 .srow__t{ font-weight:600; color:var(--ink); font-size:clamp(19px,min(2.6vw,4.8svh),41px); letter-spacing:-.032em; transition:color .32s var(--ease); }
 .srow__go{ width:30px; height:30px; border-radius:999px; border:1px solid var(--hair-2); display:grid; place-items:center; color:var(--muted); transition:border-color .32s var(--ease), color .32s var(--ease); }
 .srow__go{ font-size:13px; line-height:1; }
+.srow__go{ transition:border-color .32s var(--ease), color .32s var(--ease), background-color .32s var(--ease), transform .32s var(--exp); }
 @media (hover:hover){
-  .srow:hover{ padding-left:9px; }
+  .srow:hover{ padding-left:16px; background-color:rgba(206,138,82,0.07); }
+  .srow:hover::before{ transform:scaleY(1); }
   .srow:hover .srow__t,.srow:hover .mono{ color:var(--amber); }
-  .srow:hover .srow__go{ border-color:var(--amber); color:var(--amber); }
+  .srow:hover .srow__go{ border-color:var(--amber); color:var(--amber); background-color:rgba(206,138,82,0.14); transform:translateX(4px); }
+}
+/* A phone has no hover, so the press has to carry the feedback. */
+.srow:active{ padding-left:16px; background-color:rgba(206,138,82,0.11); }
+.srow:active::before{ transform:scaleY(1); }
+.srow:active .srow__t{ color:var(--amber); }
+.srow:active .srow__go{ border-color:var(--amber); color:var(--amber); transform:translateX(4px); }
+
+/* Once the rows have arrived the arrows nudge, one after another: the cue
+   that these go somewhere, on a phone where nothing hovers. No fill mode, so
+   it leaves nothing behind for the press and hover states to fight. */
+@keyframes go-wake{ 0%{ transform:none; } 45%{ transform:translateX(5px); } 100%{ transform:none; } }
+html.js-rv #p-1.in .srow__go{
+  animation:go-wake .72s var(--exp);
+  animation-delay:calc(var(--i,0) * 70ms + 620ms);
 }
 
 /* ---------- 02 steps ---------- */
@@ -784,6 +808,11 @@ Array.prototype.forEach.call(document.querySelectorAll('#p-3 .card--d'), functio
     });
   }
   addEventListener('scroll', sweep, { passive:true });
+  addEventListener('resize', sweep);
+  var guard = setInterval(function(){
+    sweep();
+    if(!document.querySelector('.screen:not(.in) .rv')) clearInterval(guard);
+  }, 400);
 })();
 
 /* ============================================================
