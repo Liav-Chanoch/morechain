@@ -175,7 +175,7 @@ p{ margin:0; text-wrap:pretty; }
 .rows{ display:flex; flex-direction:column; }
 .srow{
   position:relative;
-  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(14px,2vw,30px);
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(12px,1.35vw,20px);
   width:100%; text-align:left; padding:clamp(14px,2.2svh,26px) 2px;
   border-top:1px solid var(--hair); min-height:44px;
   transition:padding-left .32s var(--ease), background-color .32s var(--ease);
@@ -189,7 +189,7 @@ p{ margin:0; text-wrap:pretty; }
 }
 .srow:last-child{ border-bottom:1px solid var(--hair); }
 .srow__t{ font-weight:600; color:var(--ink); font-size:clamp(19px,min(2.6vw,4.8svh),41px); letter-spacing:-.032em; transition:color .32s var(--ease); }
-.srow__go{ width:30px; height:30px; border-radius:999px; border:1px solid var(--hair-2); display:grid; place-items:center; color:var(--muted); transition:border-color .32s var(--ease), color .32s var(--ease); }
+.srow__go{ width:30px; height:30px; border-radius:999px; border:1px solid var(--hair-3); display:grid; place-items:center; color:var(--muted); transition:border-color .32s var(--ease), color .32s var(--ease); }
 .srow__go{ font-size:13px; line-height:1; }
 .srow__go{ transition:border-color .32s var(--ease), color .32s var(--ease), background-color .32s var(--ease), transform .32s var(--exp); }
 @media (hover:hover){
@@ -222,6 +222,22 @@ p{ margin:0; text-wrap:pretty; }
 html.js-rv #p-1.in .srow__go{
   animation:go-wake .72s var(--exp);
   animation-delay:calc(var(--i,0) * 70ms + 620ms);
+}
+
+/* Screen 01, desktop refinement.
+   The id is needed to scope these, which outranks the phone block below, so
+   they are fenced in a query the phone can never match. */
+@media (min-width:761px){
+  /* The headline runs four lines against the paragraph's five, which left the
+     right column short. A little more width on the left evens the two. */
+  #p-1 .two{ grid-template-columns:1.1fr 0.9fr; }
+  /* The list label belongs to the list. On the flat screen gap it sat the same
+     distance from the paragraph above as from the rows below, and read as
+     floating between them. */
+  #p-1 > .mono{ margin-bottom:calc(-1 * clamp(11px,1.9svh,20px)); }
+  /* A 30px circle read as a faint dot beside a 33px title. The row title
+     still sets the row height at this size, so nothing moves. */
+  #p-1 .srow__go{ width:34px; height:34px; font-size:14px; }
 }
 
 /* ---------- 02 steps ---------- */
@@ -295,6 +311,48 @@ html.js-rv #p-1.in .srow__go{
 /* ---------- 05 ---------- */
 #contact{ }
 .ctas{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
+
+/* ---------- contact form ----------
+   Fields are underlined, not boxed. Every structural element on this site is a
+   hairline, so a rounded input box would be the one borrowed shape on the page.
+   The rule lights amber on focus, the same move the service rows make. */
+.form{ display:flex; flex-direction:column; gap:clamp(13px,2.1svh,20px); }
+.field{ display:flex; flex-direction:column; gap:5px; }
+.field > label{
+  font-family:var(--m); font-weight:500; text-transform:uppercase;
+  font-size:10.5px; letter-spacing:.14em; color:var(--dim);
+}
+.field__wrap{ position:relative; }
+.field input, .field textarea{
+  width:100%; background:transparent; border:0; border-radius:0;
+  border-bottom:1px solid var(--hair-2);
+  padding:5px 0 9px; margin:0;
+  font-family:var(--f); font-size:clamp(15px,1.15vw,17px); line-height:1.5;
+  color:var(--ink);
+}
+.field textarea{ resize:vertical; min-height:74px; }
+.field__wrap::after{
+  content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:var(--amber); transform:scaleX(0); transform-origin:0 50%;
+  transition:transform .34s var(--exp);
+}
+.field__wrap:focus-within::after{ transform:scaleX(1); }
+.field input::placeholder, .field textarea::placeholder{ color:var(--dimmer); }
+/* Off screen rather than hidden, so a bot fills it and a screen reader skips it. */
+.hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+.form__send{ align-self:flex-start; min-height:44px; }
+.form__send[disabled]{ opacity:.55; cursor:default; }
+.form__status{ font-size:14px; line-height:1.5; color:var(--body); margin:0; }
+.form__status:empty{ display:none; }
+.form__status[data-state="err"]{ color:var(--amber); }
+.form__status[data-state="ok"]{ color:var(--ink); }
+.form__alt{
+  display:flex; flex-wrap:wrap; align-items:center; gap:8px 20px;
+  margin-top:clamp(14px,2.2svh,20px); padding-top:clamp(12px,2svh,18px);
+  border-top:1px solid var(--hair); font-size:14px; color:var(--dim);
+}
+.form__alt a{ color:var(--body); text-decoration:none; border-bottom:1px solid var(--hair-2); padding-bottom:1px; }
+.form__alt a:hover{ color:var(--amber); border-bottom-color:var(--amber); }
 .foot{ margin-top:auto; padding-top:clamp(14px,2.2svh,26px); border-top:1px solid var(--hair); display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; }
 .foot i{ font-style:normal; color:var(--accent); }
 
@@ -445,6 +503,12 @@ html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp
   #p-2 .risk{ padding-top:12px; margin-top:2px; }
   #p-2 .lead{ line-height:1.5; }
   #contact{ padding:88px 20px 110px; }
+  /* The form has to sit clear of the booking bar on a phone, so it runs
+     tighter than on the desktop. The footer below it is allowed to scroll. */
+  #contact .form{ gap:11px; }
+  #contact .field textarea{ min-height:62px; }
+  #contact .form__alt{ margin-top:12px; padding-top:11px; font-size:13.5px; }
+  #contact .form__status{ font-size:13.5px; }
   .two{ grid-template-columns:minmax(0,1fr); gap:24px; }
   h1{ font-size:34px; }
   .hero-h1 h1{ max-width:none; }
@@ -496,6 +560,11 @@ html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp
     #p-2 h2{ font-size:25px; }
     #p-2 .lead{ font-size:15px; line-height:1.42; }
     #p-2 .risk{ padding-top:8px; }
+    /* Short phones: the send button has to stay clear of the booking bar. */
+    #contact h2{ font-size:25px; }
+    #contact .lead{ font-size:15px; line-height:1.42; }
+    #contact .two{ gap:16px; }
+    #contact .field textarea{ min-height:54px; }
   }
 
 
@@ -639,9 +708,28 @@ html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp
       <h2>Start with a free strategy session. <span class="acc">See where your business can save.</span></h2>
       <p class="lead">We sit down with you to review your operations, map out your workflows, and identify where custom automation can eliminate wasted time and cut costs. You get a clear operational roadmap with zero commitment required.</p>
     </div>
-    <div class="ctas">
-      <a class="cta" href="mailto:info@synecura.com"><span class="cta__sq" aria-hidden="true"></span>info@synecura.com</a>
-      <a class="cta cta--out" href="#" data-pending="booking"><span class="cta__sq" aria-hidden="true"></span>Book a session</a>
+    <div>
+      <form class="form" id="contact-form" novalidate>
+        <div class="field">
+          <label for="cf-name">Name</label>
+          <div class="field__wrap"><input id="cf-name" name="name" type="text" autocomplete="name" required></div>
+        </div>
+        <div class="field">
+          <label for="cf-email">Email</label>
+          <div class="field__wrap"><input id="cf-email" name="email" type="email" autocomplete="email" required></div>
+        </div>
+        <div class="field">
+          <label for="cf-message">What you want to automate</label>
+          <div class="field__wrap"><textarea id="cf-message" name="message" rows="3" required></textarea></div>
+        </div>
+        <div class="hp"><label for="cf-company">Company</label><input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off"></div>
+        <button class="cta form__send" type="submit" id="cf-send"><span class="cta__sq" aria-hidden="true"></span><span id="cf-send-label">Send request</span></button>
+        <p class="form__status" id="cf-status" role="status" aria-live="polite"></p>
+      </form>
+      <div class="form__alt">
+        <a href="mailto:info@synecura.com">info@synecura.com</a>
+        <a href="#" data-pending="booking">Book a session</a>
+      </div>
     </div>
   </div>
   <div class="foot">
@@ -751,6 +839,76 @@ STEPS.forEach(function(st, i){
 });
 
 /* ============================================================
+   CONTACT FORM
+   One endpoint constant. Until it is set the request still goes
+   somewhere: it opens a prefilled mail rather than failing silently.
+   ============================================================ */
+(function(){
+  var form = document.getElementById('contact-form');
+  if(!form) return;
+
+  /* Set this to the form endpoint once one is chosen. Empty means the
+     mail fallback below is used. */
+  var ENDPOINT = '';
+
+  var status = document.getElementById('cf-status');
+  var send   = document.getElementById('cf-send');
+  var label  = document.getElementById('cf-send-label');
+  /* form.name is the form's own property, so fields are read off elements. */
+  var el = form.elements;
+
+  function say(msg, state){
+    status.textContent = msg || '';
+    if(state) status.setAttribute('data-state', state); else status.removeAttribute('data-state');
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(el['company'].value) return;                  /* honeypot: a person never fills this */
+
+    var data = {
+      name:    el['name'].value.trim(),
+      email:   el['email'].value.trim(),
+      message: el['message'].value.trim()
+    };
+
+    if(!data.name){ say('Add your name so we know who is asking.', 'err'); el['name'].focus(); return; }
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)){
+      say('Enter a complete email address so we can reply.', 'err'); el['email'].focus(); return;
+    }
+    if(!data.message){ say('Tell us what you want to automate.', 'err'); el['message'].focus(); return; }
+
+    if(!ENDPOINT){
+      var body = 'Name: ' + data.name + '\nEmail: ' + data.email + '\n\n' + data.message;
+      location.href = 'mailto:info@synecura.com'
+        + '?subject=' + encodeURIComponent('Session request from ' + data.name)
+        + '&body=' + encodeURIComponent(body);
+      say('Opening your mail app with the request ready to send.', 'ok');
+      return;
+    }
+
+    send.disabled = true; label.textContent = 'Sending';
+    say('');
+    fetch(ENDPOINT, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Accept':'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(r){
+      if(!r.ok) throw new Error(String(r.status));
+      form.reset();
+      say('Request sent. We will come back to you by email.', 'ok');
+    })
+    .catch(function(){
+      say('That did not send. Email info@synecura.com and we will pick it up.', 'err');
+    })
+    .then(function(){
+      send.disabled = false; label.textContent = 'Send request';
+    });
+  });
+})();
+
+/* ============================================================
    SCREEN 03 DISCLOSURE
    Same contract as the step rows: a phone behaviour only, one open
    at a time, desktop renders every body with no toggle.
@@ -787,7 +945,7 @@ Array.prototype.forEach.call(document.querySelectorAll('#p-3 .card--d'), functio
     .filter(function(sc){ return sc.id !== 'hero'; });   /* the hero opens on the wordmark and the network */
 
   /* Never split these: each is one idea and reads as one move. */
-  var ATOMIC = '.eyebrow-row, .risk, .foot, .pills, .ctas, .cta, .srow, .step, .card, .clients';
+  var ATOMIC = '.eyebrow-row, .risk, .foot, .pills, .ctas, .cta, .srow, .step, .card, .clients, .form__alt';
 
   function collect(el, out){
     Array.prototype.forEach.call(el.children, function(k){
