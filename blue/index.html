@@ -1,0 +1,1517 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Synecura, blue variant</title>
+<meta name="description" content="Synecura builds custom operational systems for owner-run businesses and takes its fee out of the verified gain. Every system is built for one operation alone.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://synecura.com/">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#060A10">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Synecura">
+<meta property="og:title" content="Synecura, systems that pay for themselves">
+<meta property="og:description" content="Every operation has headroom. We find where it sits, build the system that captures it, and take our fee out of the gain.">
+<meta property="og:url" content="https://synecura.com/">
+<meta property="og:image" content="https://synecura.com/blue/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================
+   TOKENS. No hue outside this list.
+   ========================================================== */
+:root{
+  /* ---- VARIANT PALETTE -------------------------------------------------
+     This block is the whole difference between variants. A third variant is
+     a change to these nine lines and nothing else. The canvas reads the rgb
+     triples once at init, never per frame. */
+  --brand:#3ca8d2;
+  --brand-rgb:60,168,210;
+  --brand-ink:#05121A;
+  --accent:#7ed4e8;
+  --accent-rgb:126,212,232;
+  --amber:#e8a050;
+  --amber-rgb:232,160,80;
+  --slate-rgb:168,190,208;
+  --shell:#060A10;
+  /* --------------------------------------------------------------------- */
+
+  --bg:var(--shell);
+  --panel:#0C1116;
+  --ink:#E9EEF3;
+  --ink-2:#C6D1DB;
+  --muted:#8593A0;
+  --faint:#6F7D89;
+  --faint-2:#5C6873;
+  --green:var(--brand);
+  --mint:var(--accent);
+  --slate:rgba(var(--slate-rgb),0.26);
+  --hair:rgba(255,255,255,0.09);
+  --chrome-bg:rgba(6,10,16,0.93);
+
+  --f:"Archivo",system-ui,-apple-system,sans-serif;
+  --m:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --r:22px;
+  --gut:12px;
+  --ease:cubic-bezier(.4,0,.2,1);
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ background:var(--bg); scroll-behavior:auto; }
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--f); font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{ max-width:100%; display:block; }
+button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
+a{ color:inherit; text-decoration:none; }
+:focus-visible{ outline:2px solid var(--green); outline-offset:3px; border-radius:4px; }
+
+.mono{
+  font-family:var(--m); font-weight:500; text-transform:uppercase;
+  letter-spacing:.14em; font-size:clamp(9px,1.35vh,14px);
+}
+
+/* Variant switch, bottom centre, present in both versions. */
+.variant{
+  position:fixed; left:50%; bottom:calc(var(--gut) + 66px); transform:translateX(-50%);
+  z-index:60; display:inline-flex; align-items:center; gap:.55em;
+  font-family:var(--m); font-weight:500; font-size:9px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  background:var(--chrome-bg); border:1px solid var(--hair); border-radius:999px;
+  padding:8px 14px; text-decoration:none; white-space:nowrap;
+  transition:color 200ms var(--ease), border-color 200ms var(--ease);
+}
+.variant:hover{ color:var(--ink); border-color:var(--green); }
+.variant b{ color:var(--green); font-weight:500; }
+@media (max-width:760px){ .variant{ display:none; } }
+
+/* ==========================================================
+   CHAIN CANVAS
+   Sits over the card backgrounds and under the fixed chrome, so
+   the copy reads across it and it can be inset to clear the CTA
+   above and the step buttons below. pointer-events stay off.
+   ========================================================== */
+#chain{
+  position:fixed; inset:0; z-index:2;
+  /* A canvas is a replaced element, so inset:0 with width:auto resolves to
+     its intrinsic (backing store) size rather than stretching to the
+     viewport. Without these two the element renders at DPR times the
+     viewport and everything lands off screen to the right. */
+  width:100%; height:100%;
+  pointer-events:none;
+  transition:opacity 240ms linear;
+}
+
+/* ==========================================================
+   CARD STACK
+   Each card pins to the top while the next slides over it.
+   ========================================================== */
+.stack{ position:relative; z-index:1; }
+
+.card{
+  position:sticky; top:0;
+  height:100vh; height:100svh;
+  /* Gutter as padding, not as a margin on the box: a margin collapses
+     through and makes the scroll pitch larger than the card height, which
+     puts every goTo target between two cards. */
+  padding:var(--gut);
+}
+.card__box{
+  position:relative; overflow:hidden;
+  height:100%;
+  margin:0;
+  border:1px solid var(--hair);
+  border-radius:var(--r);
+  display:flex; flex-direction:column;
+  transform-origin:50% 42%;
+  will-change:transform;
+  transition:border-color 260ms var(--ease);
+}
+/* Dark overlay that composites, rather than a filter on a full
+   viewport layer, which repaints every frame. */
+.card__dim{
+  position:absolute; inset:0; z-index:6;
+  background:#04070A; opacity:0; pointer-events:none;
+  will-change:opacity;
+}
+.card__in{
+  position:relative; z-index:3;
+  flex:1; min-height:0;
+  display:flex; flex-direction:column;
+  /* The right padding is large on purpose: the text column has to end
+     before the chain lane, which sits at about 86% of the viewport. */
+  padding:clamp(56px,10.5vh,96px) clamp(30px,17.5vw,250px) clamp(52px,10vh,92px) clamp(32px,6vw,88px);
+}
+/* Label and its rule stay pinned at the top; the content block is centred
+   in whatever space is left, and a footer (screen 05) falls to the bottom. */
+.content{ margin-block:auto; display:flex; flex-direction:column; min-height:0; width:100%; }
+.hair{ height:1px; background:var(--hair); margin-top:clamp(10px,1.8vh,18px); flex:0 0 auto; }
+
+.card[data-i="0"] .card__box{ background:linear-gradient(150deg,#111A22,#080D11 60%); }
+.card[data-i="1"] .card__box{ background:linear-gradient(165deg,#0E141A,#0A0F14 70%); }
+.card[data-i="2"] .card__box{ background:linear-gradient(165deg,#111820,#0A0F14 70%); }
+.card[data-i="3"] .card__box{ background:linear-gradient(165deg,#0E141A,#0A0F14 70%); }
+.card[data-i="4"] .card__box{ background:linear-gradient(165deg,#111820,#0A0F14 70%); }
+.card[data-i="5"] .card__box{ background:linear-gradient(165deg,#0E1A20,#0A0F14 68%); }
+
+@media (hover:hover){
+  .card__box:hover{ border-color:rgba(var(--brand-rgb),0.42); }
+}
+
+/* ==========================================================
+   TYPE
+   Every size is fluid against both axes. The stack is height
+   constrained, so the middle term is vh wherever it can be.
+   ========================================================== */
+.label{ color:var(--faint); margin:0; flex:0 0 auto; }
+.label b{ color:var(--green); font-weight:500; }
+.label span{ color:var(--faint-2); padding:0 .5em; }
+
+h1,h2{
+  margin:0; font-weight:700;
+  letter-spacing:-.042em; line-height:.94;
+  font-size:clamp(1.7rem,5.6vh,4.2rem);
+}
+h1{
+  font-size:clamp(2.2rem,11.5vh,7rem); letter-spacing:-.045em; line-height:.9;
+  /* Both references put the hero headline across 42% of the width (388px at
+     924, 835px at 2000), so the cap tracks the viewport rather than the font
+     size. An em cap drifts, because the type does not scale with width. */
+  max-width:42vw;
+}
+h1 i{ font-style:italic; color:var(--green); }
+h3{
+  margin:0; font-weight:600; letter-spacing:-.02em; line-height:1.06;
+  font-size:clamp(15px,2.1vh,19px);
+}
+p{ margin:0; }
+.lead{
+  color:var(--ink-2); max-width:52ch;
+  font-size:clamp(12px,2.3vh,23px); line-height:1.52;
+}
+.body{
+  color:var(--muted);
+  font-size:clamp(10.5px,1.72vh,17px); line-height:1.5;
+}
+.head{ display:flex; flex-direction:column; gap:clamp(9px,2.2vh,26px); }
+.grow{ margin-top:auto; }
+/* The phone prototype carries its own shorter strings. Both live in the
+   markup and the breakpoint picks one, rather than the phone inheriting
+   desktop wording and then being squeezed to fit it. */
+.only-m{ display:none; }
+.center{ margin-block:auto; }
+/* A headline carrying a full sentence needs a smaller ceiling than a
+   three-word one, or it eats the card at short viewport heights. */
+h2.h2--long{
+  font-size:clamp(1.45rem,5.4vh,3.5rem); line-height:1.05; letter-spacing:-.034em;
+  /* Keeps the reference wrap where the headline is not already inside a
+     constrained column. */
+  max-width:13em;
+}
+h2 .dim{ color:var(--faint-2); }
+
+/* Hero eyebrow: a bordered pill with an amber node */
+.eyebrow{
+  display:inline-flex; align-items:center; gap:9px; align-self:flex-start;
+  border:1px solid var(--hair); border-radius:999px;
+  padding:clamp(7px,1.1vh,12px) clamp(14px,2vh,22px);
+  font-family:var(--m); font-weight:500; font-size:clamp(9px,1.25vh,13px);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+}
+.eyebrow i{
+  width:6px; height:6px; border-radius:999px; background:var(--amber);
+  box-shadow:0 0 0 3px rgba(232,160,80,.16); flex:0 0 auto;
+}
+
+/* Hero scroll hint */
+.hint{
+  display:inline-flex; align-items:center; gap:.6em;
+  font-family:var(--m); font-weight:400; font-size:clamp(10px,1.6vh,15px);
+  letter-spacing:.16em; text-transform:uppercase; color:var(--faint-2);
+  margin-top:clamp(14px,2.6vh,30px);
+}
+@media (prefers-reduced-motion: no-preference){
+  .hint i{ font-style:normal; animation:bob 2.4s var(--ease) infinite; }
+}
+@keyframes bob{ 0%,100%{ transform:translateY(-2px) } 50%{ transform:translateY(3px) } }
+
+/* Step label row: STEP 0n plus a filled FREE pill */
+.step__top{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.free{
+  font-family:var(--m); font-weight:500; font-size:9px; letter-spacing:.14em;
+  text-transform:uppercase; background:var(--green); color:var(--brand-ink);
+  border-radius:999px; padding:3px 8px; line-height:1.4;
+}
+
+/* Risk reversal: a rule with the label sitting on it, then a two-tone lead */
+.rr{ margin-top:clamp(15px,2.6vh,32px); }
+.rr__rule{
+  position:relative; height:1px; background:var(--green); opacity:.4;
+  margin-bottom:clamp(13px,2vh,22px);
+}
+.rr__tag{
+  position:absolute; left:0; top:50%; transform:translateY(-50%);
+  background:var(--bg); padding-right:14px;
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--m); font-weight:500; font-size:9px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--green);
+}
+.card[data-i="2"] .rr__tag{ background:#0E1219; }
+.rr__node{
+  width:7px; height:7px; border-radius:2px; background:var(--green);
+}
+.rr__lead{
+  font-weight:600; letter-spacing:-.026em; line-height:1.18;
+  font-size:clamp(1.05rem,2.8vh,1.75rem); color:var(--ink);
+  max-width:34ch;
+}
+.rr__lead .yes{ color:var(--green); }
+.rr__sub{
+  margin-top:clamp(7px,1.2vh,12px); color:var(--faint);
+  font-size:clamp(11.5px,1.35vh,13px); line-height:1.5;
+}
+
+/* Pillars gain a kicker line above the body */
+.pillar__k{
+  color:var(--ink-2); font-size:clamp(11px,1.85vh,18px);
+  line-height:1.3; font-weight:500; letter-spacing:-.01em;
+}
+.pillar--edge .mono{ color:var(--amber); }
+.pillar--edge{ border-color:rgba(232,160,80,.28); }
+
+/* Headline left, supporting prose right, top aligned. */
+.two{
+  display:grid; grid-template-columns:minmax(0,1.02fr) minmax(0,0.98fr);
+  gap:clamp(26px,4.5vw,64px); align-items:start; min-height:0;
+}
+.two__body{ padding-top:clamp(6px,2.6vh,34px); }
+/* Screen 04 gives the chip cluster more room so the first row holds three,
+   as it does in the reference. */
+.card[data-i="4"] .two{ grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr); }
+
+/* ==========================================================
+   01 WHAT WE DO
+   ========================================================== */
+/* Flex, not grid: the connectors sit between the tiles, so as grid
+   children they would each consume a column and wrap the row. */
+.tiles{
+  display:flex; align-items:stretch; min-height:0;
+  margin-top:clamp(18px,3.4vh,42px);
+  gap:0;
+}
+.tile{
+  flex:1 1 0; min-width:0;
+  background:var(--panel); border:1px solid var(--hair); border-radius:14px;
+  padding:clamp(14px,2.4vh,24px);
+  display:flex; flex-direction:column; gap:clamp(7px,1.2vh,12px);
+  min-height:0;
+}
+.tile .mono{ color:var(--green); }
+
+/* The miniature of the same idea, between each pair of tiles. */
+.conn{
+  position:relative; align-self:center;
+  width:clamp(22px,3.4vw,54px); height:18px;
+  flex:0 0 auto;
+}
+.conn::before{
+  content:""; position:absolute; top:50%; left:0; right:0; height:1px;
+  transform:translateY(-50%);
+  background:repeating-linear-gradient(90deg,var(--amber) 0 3px,transparent 3px 7px);
+  opacity:.5;
+}
+.conn::after{
+  content:""; position:absolute; top:50%; left:0; height:1px; width:0;
+  transform:translateY(-50%); background:var(--green);
+  animation:mcSeal 4s var(--ease) infinite;
+}
+.conn i{
+  position:absolute; top:50%; left:50%; width:8px; height:8px;
+  margin:-4px 0 0 -4px; border-radius:2px;
+  border:1px solid var(--amber); background:transparent;
+  animation:mcNode 4s var(--ease) infinite;
+}
+.conn:nth-of-type(2)::after,.conn:nth-of-type(2) i{ animation-delay:.4s; }
+.conn:nth-of-type(3)::after,.conn:nth-of-type(3) i{ animation-delay:.8s; }
+@keyframes mcSeal{
+  0%,10%{ width:0 } 45%,72%{ width:100% } 88%,100%{ width:0 }
+}
+@keyframes mcNode{
+  0%,10%{ border-color:var(--amber); background:transparent }
+  45%,72%{ border-color:var(--mint); background:var(--mint) }
+  88%,100%{ border-color:var(--amber); background:transparent }
+}
+
+/* ==========================================================
+   02 HOW IT WORKS
+   ========================================================== */
+/* One bordered strip with internal rules, not four separate cards. */
+.steps{
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:0; min-height:0;
+  margin-top:clamp(18px,3.2vh,40px);
+  border:1px solid var(--hair); border-radius:14px; overflow:hidden;
+}
+.step{
+  display:flex; flex-direction:column; gap:clamp(6px,1.1vh,11px);
+  padding:clamp(13px,2.2vh,22px) clamp(12px,1.5vw,20px);
+  border-left:1px solid var(--hair);
+  min-height:0;
+}
+.step:first-child{ border-left:0; }
+.step .mono{ color:var(--faint); }
+.reversal{
+  margin-top:clamp(18px,3vh,36px);
+  border-left:1px solid var(--green);
+  background:var(--panel);
+  padding:clamp(13px,2.1vh,20px) clamp(16px,2.4vh,24px);
+  border-radius:0 14px 14px 0;
+  color:var(--ink-2);
+  font-size:clamp(12.5px,1.55vh,15px); line-height:1.5;
+  max-width:64ch;
+}
+
+/* ==========================================================
+   03 WHO WE ARE
+   ========================================================== */
+.pillars{
+  display:block; min-height:0;
+  border:1px solid var(--hair); border-radius:14px; overflow:hidden;
+  background:rgba(12,17,22,.5);
+}
+.pillar{
+  padding:clamp(9px,2vh,22px) clamp(12px,1.6vw,22px);
+  display:flex; flex-direction:column; gap:clamp(3px,0.8vh,9px);
+  border-top:1px solid var(--hair);
+}
+.pillar:first-child{ border-top:0; }
+.pillar .mono{ color:var(--green); }
+
+/* ==========================================================
+   04 OUR CLIENTS
+   ========================================================== */
+.chips{ display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; align-content:flex-start; }
+.chip{
+  border:1px solid var(--hair); border-radius:999px;
+  padding:7px 12px; color:var(--muted);
+}
+.clients{
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:1px; background:var(--hair);
+  border:1px solid var(--hair); border-radius:14px; overflow:hidden;
+  margin-top:clamp(16px,2.8vh,34px); min-height:0;
+}
+.client{
+  background:rgba(12,17,22,.55);
+  padding:clamp(13px,2.3vh,24px) clamp(10px,1.4vw,20px);
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  /* A client name must never wrap or break at its own hyphen. */
+  white-space:nowrap;
+  font-family:var(--m); font-weight:400;
+  font-size:clamp(10px,1.3vh,12.5px); color:var(--ink-2); letter-spacing:.02em;
+}
+
+/* ==========================================================
+   05 CONTACT
+   ========================================================== */
+.big{
+  display:inline-block; font-weight:600; letter-spacing:-.035em;
+  font-size:clamp(1.3rem,3.8vh,2.4rem); line-height:1.1;
+  border-bottom:1px solid var(--hair); padding-bottom:5px;
+  transition:color 200ms var(--ease), border-color 200ms var(--ease);
+}
+.big:hover{ color:var(--green); border-color:var(--green); }
+.contact-grid{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,0.78fr);
+  gap:clamp(22px,4vw,64px); align-items:start; min-height:0;
+  margin-top:clamp(18px,3vh,38px);
+}
+.foot{
+  padding-top:clamp(14px,2.2vh,26px);
+  border-top:1px solid var(--hair);
+  display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between;
+  align-items:baseline; color:var(--faint-2); flex:0 0 auto;
+}
+.foot-mark__a{ color:var(--faint); font-weight:500; }
+.foot-mark__b{ color:var(--green); font-weight:500; }
+
+/* ==========================================================
+   WORDMARK
+   One word, two tones, plus the mint node. Never flat text.
+   ========================================================== */
+.mark{
+  display:inline-flex; align-items:baseline; gap:0;
+  font-weight:700; letter-spacing:-.03em; line-height:1;
+  font-size:clamp(15px,2.2vh,21px);
+}
+.mark__a{ color:var(--ink); }
+.mark__b{ color:var(--green); }
+.mark__n{
+  width:.3em; height:.3em; border-radius:.1em;
+  background:var(--mint); align-self:flex-end;
+  margin:0 0 .07em .2em;
+  flex:0 0 auto;
+}
+/* Below about 13px the node stops reading and is dropped. */
+.mark--sm{ font-size:12px; }
+.mark--sm .mark__n{ display:none; }
+
+/* ==========================================================
+   FIXED CHROME
+   Solid backgrounds. A backdrop-filter over the animating canvas
+   re-runs the blur on every repaint and locks the main thread.
+   ========================================================== */
+.chrome{
+  position:fixed; z-index:20;
+  background:var(--chrome-bg);
+  border:1px solid var(--hair); border-radius:999px;
+}
+.pill{
+  top:calc(var(--gut) + 14px);
+  padding:clamp(10px,1.5vh,16px) clamp(18px,2.4vh,28px); min-height:40px;
+  display:flex; align-items:center; gap:.5em;
+  font-weight:500; font-size:clamp(13.5px,1.9vh,18px); letter-spacing:-.005em;
+  transition:background 200ms var(--ease), color 200ms var(--ease), border-color 200ms var(--ease), transform 200ms var(--ease);
+}
+/* Hero CTAs sit in the flow rather than as fixed chrome. */
+.cta{
+  display:inline-flex; align-items:center; gap:.55em;
+  border:1px solid var(--hair); border-radius:999px;
+  padding:clamp(12px,1.8vh,20px) clamp(20px,2.9vh,34px); font-weight:500;
+  font-size:clamp(13px,2.2vh,20px); letter-spacing:-.005em;
+  background:var(--chrome-bg); color:var(--ink);
+  transition:background 200ms var(--ease), border-color 200ms var(--ease), transform 200ms var(--ease);
+}
+.cta:hover{ transform:translateY(-1px); border-color:rgba(var(--brand-rgb),.42); }
+.cta--go{ background:var(--green); color:var(--brand-ink); border-color:var(--green); font-weight:600; }
+.cta--go:hover{ background:#4ade9f; border-color:#4ade9f; }
+/* Screen 05 stacks two of these full width in their column. */
+.cta--wide{ width:100%; justify-content:center; padding:15px 22px; font-size:clamp(13.5px,1.7vh,15.5px); }
+.pill--logo{ left:calc(var(--gut) + 14px); }
+.pill--cta{ right:calc(var(--gut) + 14px); color:var(--ink-2); }
+.pill--cta:hover{ background:var(--green); color:var(--brand-ink); border-color:var(--green); }
+.pill--logo:hover{ border-color:rgba(var(--brand-rgb),0.42); }
+
+.readout-wrap{
+  position:fixed; z-index:20;
+  left:calc(var(--gut) + 14px); bottom:calc(var(--gut) + 14px);
+  display:flex; align-items:center; gap:16px;
+}
+.readout{
+  position:static;
+  border-radius:14px; padding:clamp(9px,1.4vh,15px) clamp(15px,2vh,22px);
+  display:flex; gap:clamp(18px,2.8vh,32px); align-items:baseline;
+}
+.ro{ display:flex; align-items:baseline; gap:7px; }
+.ro-k{ color:var(--faint-2); font-family:var(--m); font-size:clamp(9px,1.25vh,12px); letter-spacing:.16em; text-transform:uppercase; }
+.ro-k i{ font-style:normal; }
+.ro-k .narrow{ display:none; }
+.ro-v{
+  font-family:var(--m); font-weight:500; font-size:clamp(13px,2.1vh,20px); color:var(--ink);
+  font-variant-numeric:tabular-nums;
+  /* Fixed width so a digit change never shifts the row. */
+  min-width:7ch;
+}
+.ro-v[data-k="uncaptured"]{ color:var(--amber); }
+.ro-v[data-k="captured"]{ color:var(--green); }
+.ro-v[data-k="chain"]{ color:var(--ink); min-width:4ch; }
+/* The status word sits outside the pill, on the page. */
+.ro-status{
+  color:var(--green); font-family:var(--m); font-size:clamp(9px,1.25vh,12px); font-weight:500;
+  letter-spacing:.16em; text-transform:uppercase; min-width:17ch;
+}
+
+.steps-nav{
+  right:calc(var(--gut) + 14px); bottom:calc(var(--gut) + 14px);
+  border:0; background:none;
+  display:flex; flex-direction:column; gap:7px;
+}
+.stepbtn{
+  width:36px; height:32px; border-radius:9px;
+  border:1px solid var(--hair); background:var(--chrome-bg);
+  display:grid; place-items:center; color:var(--muted);
+  transition:background 180ms var(--ease), color 180ms var(--ease), border-color 180ms var(--ease);
+}
+.stepbtn:hover:not(:disabled){ border-color:rgba(var(--brand-rgb),.42); }
+.stepbtn:hover:not(:disabled){ background:rgba(255,255,255,.06); color:var(--ink); }
+.stepbtn:disabled{ opacity:.25; cursor:default; }
+.stepbtn svg{ width:13px; height:13px; }
+
+/* Rail. Fades in only once the hero has been left behind. */
+.rail{
+  position:fixed; z-index:20; right:0; top:50%;
+  transform:translateY(-50%);
+  display:flex; flex-direction:column; align-items:flex-end;
+  padding-right:calc(var(--gut) + 8px);
+  opacity:0; visibility:hidden;
+  transition:opacity 400ms var(--ease), visibility 0s linear 400ms;
+}
+.rail.on{ opacity:1; visibility:visible; transition-delay:0s,0s; }
+.mk{
+  display:flex; align-items:center; justify-content:flex-end; gap:9px;
+  height:44px; padding-left:12px; color:var(--faint-2);
+}
+.mk-l{
+  font-family:var(--m); font-size:9px; letter-spacing:.16em; text-transform:uppercase;
+  opacity:0; transform:translateX(4px); white-space:nowrap;
+  transition:opacity 200ms var(--ease), transform 200ms var(--ease);
+  color:var(--muted);
+}
+.mk:hover .mk-l{ opacity:1; transform:none; }
+.mk-n{ font-family:var(--m); font-size:9px; letter-spacing:.1em; width:2ch; text-align:right; }
+.mk-d{ width:14px; height:1px; background:currentColor; transition:width 200ms var(--ease), background 200ms var(--ease); }
+.mk:hover .mk-d{ width:22px; }
+.mk.on{ color:var(--green); }
+.mk.on .mk-d{ width:26px; }
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+@media (max-width:760px){
+  /* A phone card is a bigger radius inside a tighter gutter than desktop. */
+  :root{ --r:34px; --gut:7px; }
+
+  html{ scroll-snap-type:y mandatory; overscroll-behavior-y:contain; }
+  html.no-snap{ scroll-snap-type:none; }
+  body{ overscroll-behavior-y:contain; }
+  /* scroll-snap-stop is the load-bearing one: without it a fast flick skips
+     two or three cards and the seal front jumps in a single frame.
+     position:static matters just as much: a sticky card reports its stuck
+     offset as its snap area, so every stuck card claims the same snap
+     position and the container snaps back to the wrong card. The canvas is
+     fixed regardless, so nothing needs to stick here. */
+  .card{ position:relative; top:auto; scroll-snap-align:start; scroll-snap-stop:always; }
+
+  /* Swipe is the navigation on a phone, so the rail and the step buttons go.
+     Only the logo and the Book pill navigate. */
+  .rail,.steps-nav{ display:none !important; }
+
+  /* One narrow row above the home indicator: abbreviated labels, no chain
+     percentage, and a fixed value width so digits cannot jitter the row. */
+  .ro-k .wide{ display:none; }
+  .ro-k .narrow{ display:inline; }
+  .ro--chain{ display:none; }
+  /* Declared again below the older mobile readout rules: same specificity, so
+     whichever comes last wins, and a jittering row is the failure. */
+
+  /* Two connectors, one per row of the 2x2 service grid. */
+  .conn i{ width:7px; height:7px; margin:-3.5px 0 0 -3.5px; }
+  .conn:nth-of-type(2){ display:none; }
+  .conn:nth-of-type(3)::after,.conn:nth-of-type(3) i{ animation-delay:.6s; }
+
+  /* The hero text column is capped so the headline never runs under the
+     chain, which is why the phone hero can stay at full opacity. */
+  .card[data-i="0"] h1,
+  .card[data-i="0"] .lead{ max-width:min(100%, 236px); }
+  /* The hint is a single mono line and must not be capped, or it wraps. */
+  .card[data-i="0"] .hint{ white-space:nowrap; }
+  .only-d{ display:none; }
+  .only-m{ display:block; }
+  span.only-m{ display:inline; }
+
+  .card__in{ padding:clamp(72px,11.4vh,96px) 22px clamp(56px,8.8vh,74px) 22px; }
+  /* A vh middle term is right for the short, wide desktop card, but on a tall
+     phone it inflates headlines (5.4vh of 844 is a 45px h2). Width is the
+     constraint here, so the middle term becomes vw. */
+  h1{ font-size:clamp(2rem,8.4vw,3rem); max-width:none; }
+  h2{ font-size:clamp(1.45rem,6.2vw,2.1rem); }
+  h2.h2--long{ font-size:clamp(1.2rem,5.3vw,1.8rem); max-width:none; }
+  .lead{ font-size:clamp(12.5px,3.4vw,14.5px); }
+
+  .two{ grid-template-columns:minmax(0,1fr); gap:clamp(12px,2vh,20px); }
+  .two__body{ padding-top:0; }
+  .contact-grid{ gap:clamp(16px,3vh,26px); }
+  .chips{ justify-content:flex-start; }
+  .steps{ grid-template-columns:minmax(0,1fr); }
+  .step{ border-left:0; border-top:1px solid var(--hair); }
+  .step:first-child{ border-top:0; }
+  .readout-wrap{ right:calc(var(--gut) + 14px); gap:10px; }
+  .tiles{ display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); gap:8px 0; }
+  .conn{ width:clamp(18px,5vw,30px); }
+  .clients{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .contact-grid{ grid-template-columns:minmax(0,1fr); }
+
+  /* Every tap target at least 44px. */
+  .pill{ min-height:44px; padding:12px 16px; }
+  .stepbtn{ width:44px; height:44px; }
+  .steps-nav{ padding:4px; }
+  .big{ padding-bottom:10px; }
+  /* Screen 03 carries two full paragraphs plus three pillars with kickers.
+     The copy is approved, so the recovery comes out of type and spacing on
+     this card alone rather than out of the wording. */
+  .card[data-i="3"] .lead{ font-size:12px; line-height:1.45; }
+  .card[data-i="3"] .head{ gap:8px; }
+  .card[data-i="3"] .content{ gap:10px; }
+  .card[data-i="3"] .two{ gap:10px; }
+  .card[data-i="3"] .pillar{ padding:9px 12px; gap:3px; }
+  .card[data-i="3"] .pillar__k{ font-size:11.5px; line-height:1.28; }
+  .card[data-i="3"] .body{ font-size:11px; line-height:1.42; }
+
+  .readout{ right:calc(var(--gut) + 14px); gap:12px; padding:9px 12px; }
+  .ro{ flex-direction:row; align-items:baseline; gap:6px; }
+  .ro-status{ display:none; }
+  .ro-v{ font-size:11.5px; min-width:54px; }
+  .ro-v[data-k="chain"]{ min-width:54px; }
+  .steps-nav{ bottom:calc(var(--gut) + 72px); }
+  .rail{ padding-right:6px; }
+  .mk-n{ display:none; }
+}
+@media (max-width:359px){
+  .ro:nth-child(2){ display:none; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .conn::after,.conn i{ animation:none; }
+  .conn::after{ width:100%; }
+  *{ transition-duration:1ms !important; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="chain" aria-hidden="true"></canvas>
+
+<a class="chrome pill pill--logo" href="#p-0" data-go="0" aria-label="Synecura, back to the top">
+  <span class="mark"><span class="mark__a">Syne</span><span class="mark__b">cura</span><span class="mark__n"></span></span>
+</a>
+<a class="chrome pill pill--cta" href="#p-5" data-go="5">Book discovery</a>
+
+<main class="stack" id="stack">
+
+  <!-- 0 HERO -->
+  <section class="card" data-card data-i="0" id="p-0" data-label="Hero">
+    <div class="card__box">
+      <div class="card__dim"></div>
+      <div class="card__in">
+        <div class="content" style="gap:clamp(14px,2.6vh,28px)">
+          <span class="eyebrow"><i></i>Operations systems <span style="opacity:.5">&#183;</span> Outcome-priced</span>
+          <h1>Systems that pay for<br><i>themselves.</i></h1>
+          <p class="lead">Every operation has headroom. We find where it sits, build the system that captures it, and take our fee out of the gain. Every system is built for your operation alone.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(4px,1.2vh,14px)">
+            <a class="cta cta--go" href="#p-5" data-go="5">Book the free discovery <span aria-hidden="true">&#8594;</span></a>
+            <a class="cta" href="#p-2" data-go="2">See how it works</a>
+          </div>
+          <span class="hint">Scroll <i>&#8595;</i> the chain follows</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 WHAT WE DO -->
+  <section class="card" data-card data-i="1" id="p-1" data-label="What we do">
+    <div class="card__box">
+      <div class="card__dim"></div>
+      <div class="card__in">
+        <p class="label mono"><b>01</b><span>/</span>WHAT WE DO</p>
+        <div class="hair"></div>
+        <div class="content">
+          <div class="two">
+            <h2 class="h2--long">We sit with the people who run the business, then build the system that takes over the work eating their week.</h2>
+            <p class="lead two__body only-d">It starts with a conversation. Where does the day really go? Which manual, repetitive tasks could run on their own? What is each one worth? We have founded and run successful companies ourselves, so this is business advice as much as software. And nothing is off a shelf: every system is built for that one operation.</p>
+            <p class="lead two__body only-m">It starts with a conversation. Where does the day really go? Which manual tasks could run on their own? What is each one worth? We have founded and run successful companies ourselves, so this is business advice as much as software. Nothing is off a shelf.</p>
+          </div>
+          <div class="tiles">
+            <article class="tile">
+              <h3>Automation</h3>
+              <p class="body">The manual work you repeat every week, handed to a system built for it.</p>
+            </article>
+            <span class="conn" aria-hidden="true"><i></i></span>
+            <article class="tile">
+              <h3>Applications</h3>
+              <p class="body">A tool made to fit the way your team already works.</p>
+            </article>
+            <span class="conn" aria-hidden="true"><i></i></span>
+            <article class="tile">
+              <h3>System design</h3>
+              <p class="body">Your process, redrawn so more of it turns into revenue.</p>
+            </article>
+            <span class="conn" aria-hidden="true"><i></i></span>
+            <article class="tile">
+              <h3>Strategy</h3>
+              <p class="body">Where to start, and what it is worth to you.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 HOW IT WORKS -->
+  <section class="card" data-card data-i="2" id="p-2" data-label="How it works">
+    <div class="card__box">
+      <div class="card__dim"></div>
+      <div class="card__in">
+        <p class="label mono"><b>02</b><span>/</span>HOW IT WORKS</p>
+        <div class="hair"></div>
+        <div class="content">
+          <h2>You pay a share of what we save you. <span class="dim">Not before.</span></h2>
+          <div class="steps">
+            <div class="step">
+              <span class="step__top"><span class="mono">STEP 01</span><span class="free">Free</span></span>
+              <h3>Discovery</h3>
+              <p class="body only-d">Two sessions. We walk the operation with you and map where the headroom sits.</p>
+              <p class="body only-m">Two sessions. We map where the headroom sits.</p>
+            </div>
+            <div class="step">
+              <span class="step__top"><span class="mono">STEP 02</span></span>
+              <h3>Quantify</h3>
+              <p class="body only-d">We put a number on the opportunity and scope the system around your operation.</p>
+              <p class="body only-m">A number on the opportunity, and the system scoped around your operation.</p>
+            </div>
+            <div class="step">
+              <span class="step__top"><span class="mono">STEP 03</span></span>
+              <h3>Price</h3>
+              <p class="body only-d">We agree a share of the verified saving. No saving, no share. That is the entire deal.</p>
+              <p class="body only-m">A share of the verified saving. No saving, no share.</p>
+            </div>
+            <div class="step">
+              <span class="step__top"><span class="mono">STEP 04</span></span>
+              <h3>Retainer</h3>
+              <p class="body only-d">Your system goes in, built from scratch. We stay on to keep the gain compounding.</p>
+              <p class="body only-m">Your system goes in, built from scratch. We keep the gain compounding.</p>
+            </div>
+          </div>
+          <div class="rr">
+            <div class="rr__rule"><span class="rr__tag"><i class="rr__node"></i>Risk reversal</span></div>
+            <p class="rr__lead">If the saving does not show up in your numbers, <span class="yes">you do not pay us.</span></p>
+            <p class="rr__sub">Written into the engagement, not into the marketing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 WHO WE ARE -->
+  <section class="card" data-card data-i="3" id="p-3" data-label="Who we are">
+    <div class="card__box">
+      <div class="card__dim"></div>
+      <div class="card__in">
+        <p class="label mono"><b>03</b><span>/</span>WHO WE ARE</p>
+        <div class="hair"></div>
+        <div class="content">
+          <div class="two">
+            <div class="head">
+              <h2 class="h2--long">We built the businesses. Then we built the systems that made them better.</h2>
+              <p class="lead only-d">We come from years of starting and running successful businesses, which means we have seen where the real headroom sits: the work that quietly absorbs hours, the process running at a fraction of what it could, the step everyone routes around.</p>
+              <p class="lead only-d">Alongside that we have spent years building systems, first for our own companies and then for others, designed around exactly those opportunities. The result each time was the same: large cost savings and meaningful revenue growth.</p>
+              <p class="lead only-m">Years of starting and running successful businesses, which means we have seen where the real headroom sits. Then years building systems around exactly those opportunities, first for our own companies and then for others.</p>
+            </div>
+            <div class="pillars">
+              <article class="pillar">
+                <span class="mono">01 <span style="opacity:.5">/</span> Operators</span>
+                <p class="pillar__k">Years of starting and running successful businesses</p>
+                <p class="body only-d">We know this world from the inside, so we know what to look for, where to look for it, and how to turn what we find into a better number.</p>
+                <p class="body only-m">We know this world from the inside, so we know what to look for and how to turn it into a better number.</p>
+              </article>
+              <article class="pillar">
+                <span class="mono">02 <span style="opacity:.5">/</span> Builders</span>
+                <p class="pillar__k only-d">A long, proven record in product and custom system development</p>
+                <p class="pillar__k only-m">A proven record in product and custom system development</p>
+                <p class="body only-d">Every system is built from scratch around the specific needs of the business in front of us. We do not resell a template.</p>
+                <p class="body only-m">Every system is built from scratch around the business in front of us. We do not resell a template.</p>
+              </article>
+              <article class="pillar pillar--edge">
+                <span class="mono">03 <span style="opacity:.5">/</span> The edge</span>
+                <p class="pillar__k">Current-generation automation, not the stack of a decade ago</p>
+                <p class="body">This is what makes it economic to capture gains that were previously too small to be worth anyone's time, and it is why our fee can come out of the upside.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 OUR CLIENTS -->
+  <section class="card" data-card data-i="4" id="p-4" data-label="Our clients">
+    <div class="card__box">
+      <div class="card__dim"></div>
+      <div class="card__in">
+        <p class="label mono"><b>04</b><span>/</span>OUR CLIENTS</p>
+        <div class="hair"></div>
+        <div class="content">
+          <div class="two">
+            <h2>Some of the operations we helped so far.</h2>
+            <div class="chips two__body">
+              <span class="chip mono">Tourism</span>
+              <span class="chip mono">Marine &amp; cruises</span>
+              <span class="chip mono">Sport &amp; leisure</span>
+              <span class="chip mono">Creative studios</span>
+              <span class="chip mono">Relocation</span>
+            </div>
+          </div>
+          <div class="clients">
+            <div class="client">dereh-haski.co.il</div>
+            <div class="client">tour-guide.co.il</div>
+            <div class="client">snowpro.co.il</div>
+            <div class="client">corfuprivatecruises.com</div>
+            <div class="client">Ponygrll Studios</div>
+            <div class="client">MikMak Relocations</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 CONTACT -->
+  <section class="card" data-card data-i="5" id="p-5" data-label="Start with the free part">
+    <div class="card__box">
+      <div class="card__dim"></div>
+      <div class="card__in">
+        <p class="label mono"><b>05</b><span>/</span>START WITH THE FREE PART</p>
+        <div class="hair"></div>
+        <div class="content">
+          <h2 class="h2--long">The discovery costs you two hours and nothing else.</h2>
+          <div class="contact-grid">
+            <p class="lead only-d">If we cannot point at a gain worth capturing, we will say so and you will have lost an afternoon. If we can, you will have a number, and a system scoped for your operation alone, before you have an invoice.</p>
+          <p class="lead only-m">If we cannot point at a gain worth capturing, we will say so. If we can, you will have a number, and a system scoped for your operation alone, before you have an invoice.</p>
+            <div style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
+              <a class="cta cta--go cta--wide" href="mailto:info@synecura.com">info@synecura.com</a>
+              <a class="cta cta--wide" href="#" data-pending="linkedin">LinkedIn</a>
+            </div>
+          </div>
+        </div>
+        <div class="foot mono">
+          <span><span class="foot-mark"><span class="foot-mark__a">SYNE</span><span class="foot-mark__b">CURA</span></span><span style="opacity:.45;padding:0 .7em">&#183;</span><span class="only-d">Systems that pay for themselves</span><span class="only-m">&#169; 2026</span></span>
+          <span class="only-d">&#169; 2026</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="readout-wrap">
+  <div class="chrome readout" id="readout">
+    <span class="ro"><span class="ro-k"><i class="wide">Uncaptured</i><i class="narrow">Uncap</i></span><span class="ro-v" data-k="uncaptured" id="ro-un">$0</span></span>
+    <span class="ro"><span class="ro-k"><i class="wide">Captured</i><i class="narrow">Cap</i></span><span class="ro-v" data-k="captured" id="ro-cap">$0</span></span>
+    <span class="ro ro--chain"><span class="ro-k">Chain</span><span class="ro-v" data-k="chain" id="ro-ch">0%</span></span>
+  </div>
+  <span class="ro-status" id="ro-st">Mapping baseline</span>
+</div>
+
+<div class="chrome steps-nav">
+  <button class="stepbtn" id="up" aria-label="Previous screen">
+    <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 7.5L6 3.5L10 7.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="stepbtn" id="down" aria-label="Next screen">
+    <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+<nav class="rail" id="rail" aria-label="Screens"></nav>
+
+<a class="variant" href="../" title="Switch to the green variant"><b>B</b> &#183; Blue</a>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"ProfessionalService",
+  "name":"Synecura",
+  "url":"https://synecura.com/",
+  "description":"Synecura builds custom operational systems for owner-run businesses (automation, internal tools, process redesign) and prices itself as a share of the verified saving.",
+  "slogan":"Systems that pay for themselves",
+  "serviceType":["Operations automation","Internal tools","Process redesign","Data and reporting"],
+  "areaServed":"Worldwide",
+  "email":"hello@synecura.co",
+  "offers":{
+    "@type":"Offer",
+    "name":"Discovery",
+    "price":"0",
+    "priceCurrency":"USD",
+    "description":"A free discovery engagement that maps where an operation's headroom sits and puts a number on the annual gain."
+  }
+}
+</script>
+
+<script>
+(function(){
+'use strict';
+
+/* ============================================================
+   Cached references and constants. Nothing here is re-queried
+   or re-measured inside the frame loop.
+   ============================================================ */
+var cv     = document.getElementById('chain');
+var ctx    = cv.getContext('2d', { alpha:true });
+var stack  = document.getElementById('stack');
+var cards  = Array.prototype.slice.call(stack.querySelectorAll('[data-card]'));
+var boxes  = cards.map(function(c){ return c.querySelector('.card__box'); });
+var dims   = cards.map(function(c){ return c.querySelector('.card__dim'); });
+var rail   = document.getElementById('rail');
+var upBtn  = document.getElementById('up');
+var dnBtn  = document.getElementById('down');
+var roUn   = document.getElementById('ro-un');
+var roCap  = document.getElementById('ro-cap');
+var roCh   = document.getElementById('ro-ch');
+var roSt   = document.getElementById('ro-st');
+var N      = cards.length;
+
+var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+var mqMob  = window.matchMedia('(max-width: 760px)');
+
+var NODES  = 13;
+var OPEN   = [3,7,10];
+var isOpen = [];
+for(var q=0;q<NODES;q++){ isOpen[q] = OPEN.indexOf(q) !== -1; }
+
+var LOOP = 8400, SWEEP = 5200, HOLD = 2000, REL = 700;
+var RETAIN = 0.30;
+var UNCAP_MAX = 48000;
+
+/* Palette comes from the CSS custom properties, read once at init and cached
+   in these four variables. Never read inside the frame loop. */
+function paletteTriple(name, fallback){
+  var raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  var parts = raw.split(',');
+  if(parts.length !== 3) return fallback;
+  var out = [];
+  for(var i = 0; i < 3; i++){
+    var n = parseInt(parts[i], 10);
+    if(isNaN(n)) return fallback;
+    out.push(n);
+  }
+  return out;
+}
+var GREEN = paletteTriple('--brand-rgb',  [60,168,210]),
+    MINT  = paletteTriple('--accent-rgb', [126,212,232]),
+    AMBER = paletteTriple('--amber-rgb',  [232,160,80]),
+    SLATE = paletteTriple('--slate-rgb',  [168,190,208]);
+
+function rgba(c,a){ return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+function clamp(v,a,b){ return v < a ? a : (v > b ? b : v); }
+function lerp(a,b,t){ return a + (b - a) * t; }
+function easeInOutCubic(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
+
+/* ============================================================
+   Layout. Measured on resize only.
+   ============================================================ */
+var W = 0, H = 0, DPR = 1, CARD_H = 0, MAX_SCROLL = 0, MOBILE = false;
+
+/* A page can be laid out at zero size: a tab opened in the background, a
+   print context, some embeds. Caching a zero height here would make every
+   later division produce NaN, and since NaN fails every comparison it would
+   never recover, silently blanking the chain for the whole session. So every
+   measurement has a non-zero floor, and the observer below re-measures the
+   moment a real viewport appears. */
+function measure(){
+  var de = document.documentElement;
+  W = window.innerWidth  || de.clientWidth  || 1280;
+  H = window.innerHeight || de.clientHeight || 800;
+  DPR = Math.min(1.5, window.devicePixelRatio || 1);
+  cv.width  = Math.round(W * DPR);
+  cv.height = Math.round(H * DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  CARD_H = Math.max(1, cards[0].getBoundingClientRect().height || H);
+  MAX_SCROLL = Math.max(1, de.scrollHeight - H);
+  MOBILE = mqMob.matches;
+}
+
+function remeasure(){
+  measure();
+  for(var i=0;i<N;i++){ lastScale[i] = -1; lastDim[i] = -1; }
+  lastOpacity = -1; lastActive = -1;
+  if(reduce.matches) staticFrame();
+}
+
+/* ============================================================
+   Chain state
+   ============================================================ */
+var particles = [];
+var rings = [];
+var sealedAt = [];
+for(var r=0;r<NODES;r++){ sealedAt[r] = -1; }
+
+var uncaptured = 0, captured = 0;
+var lastUn = '', lastCap = '', lastCh = '', lastSt = '';
+var spawnAcc = 0;
+var loopT = 0, prevAuto = 0;
+
+function roundRect(x,y,w,h,rad){
+  ctx.beginPath();
+  ctx.moveTo(x+rad,y);
+  ctx.lineTo(x+w-rad,y); ctx.quadraticCurveTo(x+w,y,x+w,y+rad);
+  ctx.lineTo(x+w,y+h-rad); ctx.quadraticCurveTo(x+w,y+h,x+w-rad,y+h);
+  ctx.lineTo(x+rad,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-rad);
+  ctx.lineTo(x,y+rad); ctx.quadraticCurveTo(x,y,x+rad,y);
+  ctx.closePath();
+}
+
+/* Glow is a two pass stroke of the same path, never shadowBlur, which was a
+   measured cost when it ran per node per frame. The widths are proportional
+   rather than fixed: the brief's 5px halo and 1.1px stroke are correct at the
+   reference's small node, but on a node twice that size the same absolute
+   values read as thin wire instead of a phosphor bloom. */
+function twoPass(color, glowA, size){
+  /* One wide faint pass for the halo, one thin opaque pass for the edge.
+     The widths stay small on purpose: stacking wide strokes draws a thick
+     square ring, which is the neon sign the brief rules out. */
+  ctx.lineWidth = Math.max(4, size * 0.17);
+  ctx.strokeStyle = rgba(color, glowA);
+  ctx.stroke();
+  ctx.lineWidth = Math.max(1.1, size * 0.05);
+  ctx.strokeStyle = rgba(color, 1);
+  ctx.stroke();
+}
+
+function draw(seal, dockP, dt){
+  ctx.clearRect(0,0,W,H);
+
+  /* The phone hero runs a short chain: a full height one crowded the 44px
+     headline and the two buttons. Docked, both platforms grow past the edges. */
+  var heroLen = MOBILE ? Math.max(200, Math.min(H * 0.52, 400))
+                       : Math.max(220, Math.min(H - 190, 940));
+  var dockLen = H * 1.02;
+  var len = lerp(heroLen, dockLen, dockP);
+  /* On a 390px card a centred chain sits straight through the headline, so
+     the phone hero holds it off to the right before it docks. */
+  /* Hero lane is not a flat percentage: the reference puts it at 86% of a
+     924px viewport and 76% of a 2000px one, which is the same line,
+     0.672W + 172. Docking then walks it out to the right edge, which is a
+     flat 90.7% in the reference. */
+  var heroX = Math.min(W * 0.90, W * 0.672 + 172);
+  /* A phone is one width, so the lane is a constant offset from the edge
+     rather than anything measured. Docked it sits right against the edge:
+     there is no rail on mobile, so nothing needs clearance. */
+  var cx  = MOBILE ? lerp(W - 52, W - 26, dockP) : lerp(heroX, W * 0.907, dockP);
+  var top = (H - len) / 2;
+  var gap = len / (NODES - 1);
+  var size = clamp(gap * 0.57, 9, MOBILE ? 44 : 70);
+  var half = size / 2;
+  var sealY = top + seal * len;
+
+  /* Spine: dim for its whole length, lit behind the seal front. */
+  ctx.beginPath();
+  ctx.moveTo(cx, top);
+  ctx.lineTo(cx, top + len);
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = rgba(SLATE, 0.18);
+  ctx.stroke();
+
+  if(seal > 0.001){
+    ctx.beginPath();
+    ctx.moveTo(cx, top);
+    ctx.lineTo(cx, sealY);
+    ctx.lineWidth = Math.max(2, size * 0.09);
+    ctx.strokeStyle = rgba(GREEN, 0.12);
+    ctx.stroke();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = rgba(GREEN, 0.7);
+    ctx.stroke();
+  }
+
+  /* Sealed band: a soft gradient centred on the spine, never a hard edge. */
+  if(seal > 0.001){
+    var bandW = Math.max(40, size * 3.2);
+    var bandH = sealY - top;
+    var SLICES = 12;
+    for(var b = 0; b < SLICES; b++){
+      var mid = (b + 0.5) / SLICES;
+      /* Fade in over the first fifth and out over the last eighth, so the
+         band has no hard top or bottom edge. */
+      var env = Math.min(1, mid / 0.2) * Math.min(1, (1 - mid) / 0.125);
+      if(env <= 0.001) continue;
+      var g = ctx.createLinearGradient(cx - bandW, 0, cx + bandW, 0);
+      g.addColorStop(0,   rgba(GREEN, 0));
+      g.addColorStop(0.5, rgba(GREEN, 0.055 * env));
+      g.addColorStop(1,   rgba(GREEN, 0));
+      ctx.fillStyle = g;
+      ctx.fillRect(cx - bandW, top + bandH * (b / SLICES), bandW * 2, bandH / SLICES + 1);
+    }
+  }
+
+  /* Nodes */
+  for(var i=0;i<NODES;i++){
+    var y = top + i * gap;
+    var sealedNow = (i / (NODES - 1)) <= seal + 0.0001;
+
+    if(sealedNow && sealedAt[i] < 0){
+      sealedAt[i] = 1;
+      rings.push({ x:cx, y:y, t:0, mint:isOpen[i] });
+    } else if(!sealedNow && sealedAt[i] > 0){
+      sealedAt[i] = -1;
+    }
+
+    if(!sealedNow && isOpen[i] && i < NODES - 1){
+      ctx.save();
+      ctx.setLineDash([Math.max(3, size*0.16), Math.max(4, size*0.2)]);
+      ctx.beginPath();
+      ctx.moveTo(cx, y + half);
+      ctx.lineTo(cx, y + gap - half);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = rgba(AMBER, 0.55);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    roundRect(cx - half, y - half, size, size, 2.5);
+
+    if(!sealedNow){
+      if(isOpen[i]){ twoPass(AMBER, 0.20, size); }
+      else{
+        ctx.lineWidth = Math.max(1.1, size * 0.05);
+        ctx.strokeStyle = rgba(SLATE, 0.26);
+        ctx.stroke();
+      }
+    } else if(isOpen[i]){
+      ctx.fillStyle = rgba(MINT, 0.16); ctx.fill();
+      twoPass(MINT, 0.22, size);
+      var inner = size * 0.34;
+      ctx.fillStyle = rgba(MINT, 0.95);
+      ctx.fillRect(cx - inner/2, y - inner/2, inner, inner);
+    } else {
+      ctx.fillStyle = rgba(GREEN, 0.08); ctx.fill();
+      twoPass(GREEN, 0.18, size);
+    }
+  }
+
+  /* The advancing front: a bright tick across the spine with a soft bloom
+     behind it, so the eye can see where the sealing has reached. */
+  if(seal > 0.002 && seal < 0.999){
+    var bloom = size * 1.9;
+    var rg2 = ctx.createRadialGradient(cx, sealY, 0, cx, sealY, bloom);
+    rg2.addColorStop(0, rgba(GREEN, 0.30));
+    rg2.addColorStop(0.55, rgba(GREEN, 0.08));
+    rg2.addColorStop(1, rgba(GREEN, 0));
+    ctx.fillStyle = rg2;
+    ctx.fillRect(cx - bloom, sealY - bloom, bloom * 2, bloom * 2);
+
+    var tick = size * 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - tick, sealY);
+    ctx.lineTo(cx + tick, sealY);
+    ctx.lineWidth = Math.max(2, size * 0.10);
+    ctx.strokeStyle = rgba(GREEN, 0.16);
+    ctx.stroke();
+    ctx.lineWidth = Math.max(1.2, size * 0.05);
+    ctx.strokeStyle = rgba(GREEN, 0.9);
+    ctx.stroke();
+  }
+
+  /* Seal rings */
+  for(var k=rings.length-1;k>=0;k--){
+    var rg = rings[k];
+    rg.t += dt;
+    var p = rg.t / 620;
+    if(p >= 1){ rings.splice(k,1); continue; }
+    ctx.beginPath();
+    ctx.arc(rg.x, rg.y, size * 0.7 + p * size * 2.4, 0, Math.PI * 2);
+    ctx.lineWidth = Math.max(1, size * 0.045);
+    ctx.strokeStyle = rgba(rg.mint ? MINT : GREEN, (1 - p) * 0.45);
+    ctx.stroke();
+  }
+
+  if(reduce.matches) return { len:len, gap:gap, size:size, top:top, cx:cx, sealY:sealY };
+
+  /* Particles travel down the spine and spill sideways at an open
+     node. A spill is bounded to about 3.2 node heights and fades
+     over exactly that distance, so nothing rains across the page. */
+  var travel = gap * 0.0022;
+  for(var pi=particles.length-1;pi>=0;pi--){
+    var pt = particles[pi];
+    if(pt.spill){
+      pt.x += pt.vx * dt;
+      pt.y += pt.vy * dt;
+      var dist = Math.abs(pt.x - pt.ox);
+      var maxD = size * 3.2;
+      if(dist >= maxD){ particles.splice(pi,1); continue; }
+      var a = (1 - dist / maxD) * 0.85;
+      var pr = Math.max(1.4, size * 0.085);
+      ctx.beginPath(); ctx.arc(pt.x, pt.y, pr * 2.6, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(AMBER, a * 0.16); ctx.fill();
+      ctx.beginPath(); ctx.arc(pt.x, pt.y, pr, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(AMBER, a); ctx.fill();
+      continue;
+    }
+    pt.y += travel * dt * pt.sp;
+    if(pt.y > top + len){ particles.splice(pi,1); continue; }
+    var ni = Math.round((pt.y - top) / gap);
+    if(ni !== pt.last && ni >= 0 && ni < NODES){
+      pt.last = ni;
+      var nodeSealed = (ni / (NODES - 1)) <= seal + 0.0001;
+      if(isOpen[ni] && !nodeSealed && Math.random() < 0.55){
+        pt.spill = true;
+        pt.ox = pt.x;
+        pt.vx = (Math.random() < 0.5 ? -1 : 1) * (0.018 + Math.random() * 0.012);
+        pt.vy = (Math.random() - 0.35) * 0.012;
+        continue;
+      }
+    }
+    var sr = Math.max(1.2, size * 0.07);
+    ctx.beginPath(); ctx.arc(pt.x, pt.y, sr, 0, Math.PI * 2);
+    ctx.fillStyle = rgba(SLATE, 0.5); ctx.fill();
+  }
+
+  spawnAcc += dt;
+  if(spawnAcc > (MOBILE ? 100 : 130) && particles.length < (MOBILE ? 34 : 55)){
+    spawnAcc = 0;
+    particles.push({ x:cx, y:top, sp:0.75 + Math.random()*0.6, last:-1, spill:false });
+  }
+
+  return { len:len, gap:gap, size:size, top:top, cx:cx, sealY:sealY };
+}
+
+/* ============================================================
+   Readouts
+   ============================================================ */
+function fmt(n){
+  var s = String(Math.round(n));
+  return s.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+function readouts(seal, dt, moving){
+  var openUnsealed = 0;
+  for(var i=0;i<NODES;i++){
+    if(isOpen[i] && (i / (NODES - 1)) > seal + 0.0001) openUnsealed++;
+  }
+  if(openUnsealed > 0 && uncaptured < UNCAP_MAX){
+    uncaptured = Math.min(UNCAP_MAX, uncaptured + openUnsealed * dt * 0.9);
+  }
+  if(moving && seal > 0.001){
+    captured = Math.min(UNCAP_MAX, captured + seal * dt * 1.6);
+  }
+
+  var un = '$' + fmt(uncaptured), cp = '$' + fmt(captured), ch = Math.round(seal * 100) + '%';
+  var st = MOBILE
+    ? (seal < 0.02 ? 'MAPPING' : (seal < 0.985 ? 'OPTIMISING' : 'OPTIMISED'))
+    : (seal < 0.02 ? 'MAPPING BASELINE' : (seal < 0.985 ? 'OPTIMISING' : 'RUNNING OPTIMISED'));
+
+  if(un !== lastUn){ roUn.textContent  = un; lastUn = un; }
+  if(cp !== lastCap){ roCap.textContent = cp; lastCap = cp; }
+  if(ch !== lastCh){ roCh.textContent  = ch; lastCh = ch; }
+  if(st !== lastSt){ roSt.textContent  = st; lastSt = st; }
+}
+
+/* ============================================================
+   Card coverage, derived from scrollY arithmetic. No rects.
+   ============================================================ */
+var lastScale = [], lastDim = [], lastOpacity = -1, lastRail = false, lastActive = -1;
+for(var z=0;z<N;z++){ lastScale[z] = -1; lastDim[z] = -1; }
+
+function paintCards(sy){
+  for(var i=0;i<N;i++){
+    var p = clamp((sy - i * CARD_H) / CARD_H, 0, 1);
+    var sc = Math.round((1 - p * 0.045) * 1000) / 1000;
+    var dm = Math.round(p * 0.55 * 100) / 100;
+    if(sc !== lastScale[i]){ boxes[i].style.transform = 'scale(' + sc + ')'; lastScale[i] = sc; }
+    if(dm !== lastDim[i]){ dims[i].style.opacity = dm; lastDim[i] = dm; }
+  }
+}
+
+/* ============================================================
+   Frame loop
+   ============================================================ */
+var scrollY = 0, ticking = false, lastT = 0, dock = 0;
+
+function dockTargetNow(){
+  return easeInOutCubic(clamp(scrollY / Math.max(1, CARD_H), 0, 1));
+}
+/* Seal progress is measured from the first card onward, not from the top of
+   the document. Measured from the top, screen 01 already reads far past the
+   retained baseline; from card 1 it lands on RETAIN exactly, which is what
+   the brief means by the chain being about 30 percent sealed there. */
+function sealTargetNow(){
+  return clamp((scrollY - CARD_H) / Math.max(1, MAX_SCROLL - CARD_H), 0, 1);
+}
+
+function frame(ts){
+  var dt = lastT ? Math.min(48, ts - lastT) : 16;
+  lastT = ts;
+
+  /* The dock value chases its target rather than tracking scroll directly, so
+     a snap lands the card instantly while the chain glides after it. */
+  dock += (dockTargetNow() - dock) * Math.min(1, (dt / 1000) * 9);
+  var dockP = dock;
+  var scrollProg = sealTargetNow();
+
+  loopT += dt;
+  if(loopT >= LOOP) loopT -= LOOP;
+  var auto;
+  if(loopT < SWEEP) auto = easeInOutCubic(loopT / SWEEP);
+  else if(loopT < SWEEP + HOLD) auto = 1;
+  else if(loopT < SWEEP + HOLD + REL) auto = 1 - (loopT - SWEEP - HOLD) / REL;
+  else auto = 0;
+
+  /* On the hero the tally resets at the end of each loop, so the
+     numbers stay legible instead of running away. */
+  if(dockP < 0.02 && auto === 0 && prevAuto > 0){ uncaptured = 0; captured = 0; }
+  prevAuto = auto;
+
+  /* Hand over from the self running loop to scroll, keeping a
+     baseline so it never resets to zero. */
+  var seal = lerp(auto, RETAIN + (1 - RETAIN) * scrollProg, dockP);
+
+  var op = MOBILE ? lerp(1, 0.10, dockP) : lerp(1, 0.44, dockP);
+  op = Math.round(op * 100) / 100;
+  if(op !== lastOpacity){ cv.style.opacity = op; lastOpacity = op; }
+
+  paintCards(scrollY);
+  draw(seal, dockP, dt);
+  readouts(seal, dt, dockP > 0.02 || auto > 0);
+
+  var railOn = dockP > 0.55;
+  if(railOn !== lastRail){ rail.classList.toggle('on', railOn); lastRail = railOn; }
+
+  var active = clamp(Math.round(scrollY / CARD_H), 0, N - 1);
+  if(active !== lastActive){
+    for(var i=0;i<N;i++){ marks[i].classList.toggle('on', i === active); }
+    upBtn.disabled = active === 0;
+    dnBtn.disabled = active === N - 1;
+    lastActive = active;
+  }
+
+  if(reduce.matches){ ticking = false; return; }
+  requestAnimationFrame(frame);
+}
+
+function staticFrame(){
+  var dockP = dockTargetNow();
+  dock = dockP;
+  var scrollProg = sealTargetNow();
+  var seal = lerp(0, RETAIN + (1 - RETAIN) * scrollProg, dockP);
+  var op = MOBILE ? lerp(1, 0.10, dockP) : lerp(1, 0.44, dockP);
+  cv.style.opacity = Math.round(op * 100) / 100;
+  paintCards(scrollY);
+  draw(seal, dockP, 16);
+  readouts(seal, 0, false);
+  var active = clamp(Math.round(scrollY / CARD_H), 0, N - 1);
+  for(var i=0;i<N;i++){ marks[i].classList.toggle('on', i === active); }
+  upBtn.disabled = active === 0;
+  dnBtn.disabled = active === N - 1;
+  rail.classList.toggle('on', dockP > 0.55);
+}
+
+/* ============================================================
+   Rail
+   ============================================================ */
+var marks = [];
+for(var m=0;m<N;m++){
+  (function(i){
+    var b = document.createElement('button');
+    b.className = 'mk';
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Go to ' + cards[i].dataset.label);
+    b.innerHTML = '<span class="mk-l">' + cards[i].dataset.label + '</span>' +
+                  '<span class="mk-n">' + String(i).padStart(2,'0') + '</span>' +
+                  '<span class="mk-d"></span>';
+    b.addEventListener('click', function(){ goTo(i); });
+    rail.appendChild(b);
+    marks.push(b);
+  })(m);
+}
+
+/* ============================================================
+   Navigation. One goTo for every affordance.
+   ============================================================ */
+var tweenId = 0;
+
+function goTo(index){
+  /* The cards are sticky, so a stuck card reports its stuck offset
+     rather than its layout position. Deriving the target from the
+     stack geometry is the only thing that survives a backward jump. */
+  var target = Math.min(index * CARD_H, document.documentElement.scrollHeight - H);
+  target = Math.max(0, target);
+  tweenTo(target);
+}
+
+function tweenTo(target){
+  var id = ++tweenId;
+  var start = window.pageYOffset;
+  var dist = Math.abs(target - start);
+  if(dist < 2) return;
+  var dur = Math.min(900, 260 + dist * 0.35);
+  var t0 = 0, fired = false;
+
+  /* Native smooth scrolling proved unreliable in embedded views.
+     The easing is a bonus, the landing is guaranteed by this guard. */
+  var guard = setTimeout(function(){
+    if(!fired && id === tweenId){ tweenId++; window.scrollTo(0, target); snapOn(); }
+  }, 110);
+
+  snapOff();
+  function step(ts){
+    if(id !== tweenId){ clearTimeout(guard); return; }
+    fired = true;
+    if(!t0) t0 = ts;
+    var p = Math.min(1, (ts - t0) / dur);
+    window.scrollTo(0, start + (target - start) * easeInOutCubic(p));
+    if(p < 1){ requestAnimationFrame(step); }
+    else { clearTimeout(guard); snapOn(); }
+  }
+  requestAnimationFrame(step);
+}
+
+/* Mandatory snap fights a programmatic tween, so it stands down
+   for the duration of one. */
+var snapT = 0;
+function snapOff(){ clearTimeout(snapT); document.documentElement.classList.add('no-snap'); }
+function snapOn(){ clearTimeout(snapT); snapT = setTimeout(function(){ document.documentElement.classList.remove('no-snap'); }, 60); }
+
+document.addEventListener('click', function(e){
+  var el = e.target.closest ? e.target.closest('[data-go]') : null;
+  if(!el) return;
+  e.preventDefault();
+  goTo(parseInt(el.getAttribute('data-go'), 10));
+});
+upBtn.addEventListener('click', function(){ goTo(clamp(Math.round(scrollY / CARD_H) - 1, 0, N - 1)); });
+dnBtn.addEventListener('click', function(){ goTo(clamp(Math.round(scrollY / CARD_H) + 1, 0, N - 1)); });
+
+window.addEventListener('keydown', function(e){
+  if(e.key === 'PageDown'){ e.preventDefault(); goTo(clamp(Math.round(scrollY / CARD_H) + 1, 0, N - 1)); }
+  else if(e.key === 'PageUp'){ e.preventDefault(); goTo(clamp(Math.round(scrollY / CARD_H) - 1, 0, N - 1)); }
+  else if(e.key === 'Home'){ e.preventDefault(); goTo(0); }
+  else if(e.key === 'End'){ e.preventDefault(); goTo(N - 1); }
+});
+
+/* ============================================================
+   Scroll and resize
+   ============================================================ */
+function onScroll(){
+  scrollY = window.pageYOffset;
+  if(reduce.matches && !ticking){
+    ticking = true;
+    requestAnimationFrame(function(){ ticking = false; staticFrame(); });
+  }
+}
+window.addEventListener('scroll', onScroll, { passive:true });
+
+var rzT = 0;
+function scheduleRemeasure(){
+  clearTimeout(rzT);
+  rzT = setTimeout(remeasure, 120);
+}
+window.addEventListener('resize', scheduleRemeasure);
+
+/* resize does not always fire when a background tab is first shown, so watch
+   the element itself rather than polling innerHeight inside the frame loop. */
+if(window.ResizeObserver){
+  var ro = new ResizeObserver(function(){
+    if(window.innerHeight !== H || window.innerWidth !== W) scheduleRemeasure();
+  });
+  ro.observe(document.documentElement);
+}
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'visible') scheduleRemeasure();
+});
+
+/* ============================================================
+   Start
+   ============================================================ */
+measure();
+scrollY = window.pageYOffset;
+if(reduce.matches){ staticFrame(); }
+else{ requestAnimationFrame(frame); }
+})();
+</script>
+</body>
+</html>

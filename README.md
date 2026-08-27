@@ -117,43 +117,46 @@ python3 -m http.server 8000 --directory .
 Then open <http://localhost:8000>. Check both sides of the 760px breakpoint:
 below it the rail and readout change shape and the tile row becomes a 2x2 grid.
 
-## The two variants
+## What is served where
 
-| Path | Variant | Served |
+| Path | Design | Served |
 | --- | --- | --- |
-| `/` | Green, brand `#3cd291` | Live |
-| `/v2/` | Blue, brand `#3ca8d2` | Parallel, for A/B comparison |
+| `/` | Walnut, brand `#9B4A32` | **Live at synecura.com** |
+| `/green/` | Green, brand `#3cd291` | Earlier design, kept for reference |
+| `/blue/` | Blue, brand `#3ca8d2` | Earlier design, kept for reference |
 
-A small pill at the bottom centre of each version links to the other, so they
-can be compared without editing the URL.
+The walnut design was built at `/v3/` and promoted to the root when the
+domain was connected. The two earlier designs moved down a level rather than
+being deleted, so their URLs changed: `/` became `/green/` and `/v2/` became
+`/blue/`.
 
-**`v2/` is fully self-contained and hand-maintained.** It has its own
-`v2/assets/`, and nothing in it reaches up into the root with `../`. That is
-deliberate: the whole point is to change one and not the other, so duplicated
-CSS is the correct trade.
+**Each directory is self-contained.** Every design has its own
+`assets/`, and nothing reaches up into the root with `../`. That is
+deliberate: the whole point is to change one and not the others, so
+duplicated CSS is the correct trade.
 
-> **Do not regenerate `v2/index.html` from the root.** Earlier in this repo's
-> life `v2/` was a staging mirror kept in step with a `sed` copy of the root on
-> every edit. That would now silently overwrite the blue variant. A change
-> meant for both versions has to be applied to both files.
+> **Do not regenerate one design from another.** Earlier in this repo's life
+> the blue copy was a staging mirror kept in step with a `sed` copy of the
+> root on every edit. That would now silently overwrite it. A change meant
+> for more than one design has to be applied to each file.
 
-Only the palette differs. In `v2/index.html` it lives in one block of nine
-custom properties at the top of `:root`, so a third variant is a change to
-those nine lines. The canvas reads the rgb triples through
-`getComputedStyle` once at init and caches them; it never reads them inside
-the frame loop.
-
-Amber is deliberately identical in both. It is the contrast that keeps the
-chain legible: without it every link reads as one colour.
+Amber is deliberately identical across all three. It is the contrast that
+keeps the network legible: without it every link reads as one colour.
 
 `.nojekyll` sits at the repo root so Pages publishes the tree as-is.
 
-## Staging
+## The domain
 
-`/v2/` is a sandbox for trying changes without touching production. It is
-tagged `noindex, nofollow` and disallowed in `robots.txt`, and it references
-shared assets at `../assets/`, so promoting it later is an HTML swap rather
-than an asset migration.
+`CNAME` at the repo root holds `synecura.com`, which is what tells Pages to
+answer on the custom domain. Deleting it reverts the site to the `github.io`
+URL, so leave it in place.
+
+Add it only once the DNS records resolve. Pages redirects the `github.io`
+URL to the custom domain as soon as the file exists, so committing it ahead
+of DNS takes the site down until the records catch up.
+
+The earlier designs are tagged `noindex, nofollow` and disallowed in
+`robots.txt`, so only the root is indexed.
 
 ## Environment variables
 

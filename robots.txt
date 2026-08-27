@@ -1,9 +1,10 @@
 User-agent: *
 Allow: /
 
-# Staging sandboxes. The noindex meta is on those pages too, but a crawler can
-# reach the path without ever parsing the meta, so disallow it here as well.
-Disallow: /v2/
-Disallow: /v3/
+# Earlier designs, kept for reference. The noindex meta is on those pages too,
+# but a crawler can reach the path without ever parsing the meta, so disallow
+# it here as well.
+Disallow: /green/
+Disallow: /blue/
 
-Sitemap: https://liav-chanoch.github.io/morechain/sitemap.xml
+Sitemap: https://synecura.com/sitemap.xml

@@ -3,1482 +3,1634 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Synecura, systems that pay for themselves</title>
-<meta name="description" content="Synecura builds custom operational systems for owner-run businesses and takes its fee out of the verified gain. Every system is built for one operation alone.">
-<link rel="canonical" href="https://liav-chanoch.github.io/morechain/">
+<title>Synecura, custom built systems for operations</title>
+<meta name="description" content="Synecura builds automated systems made specifically for your business. Start with a free strategy session and see where your business can save.">
+<link rel="canonical" href="https://synecura.com/">
 <meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#070B0E">
+<meta name="theme-color" content="#14100E">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Synecura">
-<meta property="og:title" content="Synecura, systems that pay for themselves">
-<meta property="og:description" content="Every operation has headroom. We find where it sits, build the system that captures it, and take our fee out of the gain.">
-<meta property="og:url" content="https://liav-chanoch.github.io/morechain/">
-<meta property="og:image" content="https://liav-chanoch.github.io/morechain/assets/og.png">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:title" content="Synecura, custom built systems that save you time and money">
+<meta property="og:url" content="https://synecura.com/">
+<meta property="og:image" content="https://synecura.com/assets/og.png">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
-<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ==========================================================
-   TOKENS. No hue outside this list.
-   ========================================================== */
 :root{
-  --bg:#070B0E;
-  --panel:#0C1116;
-  --ink:#E9EEF3;
-  --ink-2:#C6D1DB;
-  --muted:#8593A0;
-  --faint:#6F7D89;
-  --faint-2:#5C6873;
-  --green:#3cd291;
-  --mint:#7ee8c4;
-  --amber:#e8a050;
-  --slate:rgba(168,190,208,0.26);
-  --hair:rgba(255,255,255,0.09);
-  --chrome-bg:rgba(7,11,14,0.93);
-
+  --shell:#14100E;
+  --ink:#EFE7DA;
+  --body:#CBBFB0;
+  --muted:#9A8D80;
+  --dim:#786C61;
+  --dimmer:#6B6057;
+  --accent:#9B4A32;
+  --accent-hi:#B25940;
+  --amber:#CE8A52;
+  --amber-cta:#D0A05C;
+  --amber-cta-hi:#DDB273;
+  --sys1:#B4562F;
+  --sys2:#D0A05C;
+  --sys3:#C2703A;
+  --hair:rgba(239,231,218,0.10);
+  --hair-2:rgba(239,231,218,0.14);
+  --hair-3:rgba(239,231,218,0.18);
+  --slate:rgba(239,231,218,0.20);
+  --card-bg:rgba(239,231,218,0.022);
+  --card-bg-hi:rgba(239,231,218,0.05);
   --f:"Archivo",system-ui,-apple-system,sans-serif;
   --m:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-
-  --r:22px;
-  --gut:12px;
+  --pad-x:clamp(34px,5.6vw,92px);
   --ease:cubic-bezier(.4,0,.2,1);
+  --exp:cubic-bezier(.16,1,.3,1);
 }
-
 *,*::before,*::after{ box-sizing:border-box; }
-html{ background:var(--bg); scroll-behavior:auto; }
+html{
+  background:var(--shell);
+  scroll-snap-type:y proximity;
+}
+@media (min-height:640px){ html{ scroll-snap-type:y mandatory; } }
+@media (prefers-reduced-motion: reduce){ html{ scroll-snap-type:none; } }
 body{
-  margin:0; background:var(--bg); color:var(--ink);
+  margin:0;
+  background:radial-gradient(1100px 760px at 62% 40%, #201A16, #100C0A 74%) var(--shell) no-repeat fixed;
+  color:var(--body);
   font-family:var(--f); font-weight:400;
   -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
 }
+/* Off canvas layers would widen the document without this. */
+.wrap{ overflow-x:clip; position:relative; }
+::selection{ background:var(--accent); color:var(--shell); }
 img{ max-width:100%; display:block; }
 button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
-a{ color:inherit; text-decoration:none; }
-:focus-visible{ outline:2px solid var(--green); outline-offset:3px; border-radius:4px; }
+a{ color:inherit; text-decoration:none; transition:color .28s var(--ease); }
+a:hover{ color:var(--accent); }
+:focus-visible{ outline:2px solid var(--amber); outline-offset:3px; border-radius:2px; }
 
 .mono{
   font-family:var(--m); font-weight:500; text-transform:uppercase;
-  letter-spacing:.14em; font-size:clamp(9px,1.35vh,14px);
+  font-size:11px; letter-spacing:.14em; color:var(--dim);
 }
+.mono--micro{ font-size:11px; color:var(--dimmer); letter-spacing:.16em; }
 
-/* Variant switch, bottom centre, present in both versions. */
-.variant{
-  position:fixed; left:50%; bottom:calc(var(--gut) + 66px); transform:translateX(-50%);
-  z-index:60; display:inline-flex; align-items:center; gap:.55em;
-  font-family:var(--m); font-weight:500; font-size:9px;
-  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
-  background:var(--chrome-bg); border:1px solid var(--hair); border-radius:999px;
-  padding:8px 14px; text-decoration:none; white-space:nowrap;
-  transition:color 200ms var(--ease), border-color 200ms var(--ease);
-}
-.variant:hover{ color:var(--ink); border-color:var(--green); }
-.variant b{ color:var(--green); font-weight:500; }
-@media (max-width:760px){ .variant{ display:none; } }
+h1,h2,h3,h4{ margin:0; }
+h1,h2{ font-weight:600; color:var(--ink); text-wrap:balance; }
+h1{ font-size:clamp(33px,4.9vw,82px); line-height:1.02; letter-spacing:-.042em; }
+h2{ font-size:clamp(26px,min(3.8vw,7svh),62px); line-height:1.05; letter-spacing:-.038em; }
+#contact h2{ font-size:clamp(28px,min(4.4vw,8svh),72px); line-height:1.02; letter-spacing:-.042em; }
+em.acc{ font-style:italic; font-weight:400; color:var(--accent); }
+span.acc{ color:var(--accent); }
+p{ margin:0; text-wrap:pretty; }
+.lead{ color:var(--body); font-size:clamp(15px,min(1.45vw,2.9svh),25px); line-height:1.58; }
+.body{ color:var(--muted); font-size:clamp(14px,min(1.2vw,2.5svh),19px); line-height:1.62; }
 
-/* ==========================================================
-   CHAIN CANVAS
-   Sits over the card backgrounds and under the fixed chrome, so
-   the copy reads across it and it can be inset to clear the CTA
-   above and the step buttons below. pointer-events stay off.
-   ========================================================== */
-#chain{
-  position:fixed; inset:0; z-index:2;
-  /* A canvas is a replaced element, so inset:0 with width:auto resolves to
-     its intrinsic (backing store) size rather than stretching to the
-     viewport. Without these two the element renders at DPR times the
-     viewport and everything lands off screen to the right. */
-  width:100%; height:100%;
-  pointer-events:none;
-  transition:opacity 240ms linear;
+.screen{
+  min-height:100vh;
+  min-height:100dvh;
+  scroll-snap-align:start; scroll-snap-stop:always;
+  padding:clamp(74px,11svh,120px) var(--pad-x) clamp(34px,5.5svh,64px);
+  display:flex; flex-direction:column; gap:clamp(22px,4svh,44px);
+  justify-content:center; position:relative;
 }
+.eyebrow-row{ position:relative; display:flex; align-items:center; gap:16px; padding-bottom:14px; }
+/* A pseudo element rather than a border, so the rule can be drawn in. Same
+   box either way: the line sits on the padding edge. */
+.eyebrow-row::after{
+  content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:var(--hair); transform-origin:0 50%;
+}
+.two{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(38px,5.6vw,96px); align-items:start; }
 
-/* ==========================================================
-   CARD STACK
-   Each card pins to the top while the next slides over it.
-   ========================================================== */
-.stack{ position:relative; z-index:1; }
+/* ---------- hero ---------- */
+#hero{ height:100vh; height:100dvh; justify-content:flex-end; padding-bottom:clamp(34px,5.5svh,64px); }
+/* A canvas is a replaced element: inset:0 with width:auto resolves to its
+   intrinsic size, not the viewport, which drew the whole network small and
+   pinned to the top left corner. */
+#net-hero{ position:fixed; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; }
+.wordmark{
+  position:fixed; z-index:3;
+  left:var(--pad-x); top:clamp(32px,4.6vw,60px);
+  transform-origin:0 0; white-space:nowrap;
+  font-weight:600; letter-spacing:-.045em; line-height:1;
+  font-size:clamp(44px,9.8vw,172px); color:var(--ink);
+}
+.wordmark i{ font-style:normal; color:var(--accent); }
+.wordmark u{ text-decoration:none; display:inline-block; width:.27em; height:.27em; background:var(--accent); margin-left:.12em; }
+@keyframes wm-wipe{ from{ clip-path:inset(0 102% 0 0); } to{ clip-path:inset(0 -2% 0 0); } }
+@keyframes wm-sq{ from{ opacity:0; transform:scale(.24); } to{ opacity:1; transform:scale(1); } }
+.wordmark b, .wordmark i{ display:inline-block; font-weight:inherit; font-style:normal; }
+.wordmark b{ animation:wm-wipe .82s .12s both cubic-bezier(.16,1,.3,1); }
+.wordmark i{ animation:wm-wipe .82s .26s both cubic-bezier(.16,1,.3,1); }
+.wordmark u{ animation:wm-sq .52s .78s both cubic-bezier(.2,.85,.3,1); }
+@media (prefers-reduced-motion: reduce){
+  .wordmark b, .wordmark i, .wordmark u{ animation:none; }
+}
+/* Sized to the wordmark and scaled with it, rather than a full width bar. */
+.plate{
+  position:fixed; z-index:2; pointer-events:none;
+  left:var(--pad-x); top:clamp(32px,4.6vw,60px);
+  font-size:clamp(44px,9.8vw,172px);
+  /* box-sizing is border-box, so the padding buys no height. Without the
+     1.34em the negative margin only shifted the plate up off the wordmark. */
+  width:5.1em; height:1.34em;
+  margin:-0.17em -0.34em; padding:0.17em 0.34em;
+  border-radius:0.22em; background:rgba(20,16,14,0.95); opacity:0;
+  /* The plate scales with the wordmark, so it has to turn about the
+     wordmark's own corner, which sits 0.34em/0.17em inside its own box. */
+  transform-origin:0.34em 0.17em;
+}
+/* ch resolves against the element's own font size, so the cap belongs on the
+   heading. On the wrapper it would use the 16px body size and wrap to one
+   word per line. */
+.hero-h1{ position:relative; z-index:2; }
+/* The next screen peeks below an 82svh hero. It stays covered until the scroll
+   starts. Under the sticky bar in stacking order, so the bar stays visible. */
+.peekmask{ display:none; }
+@media (max-width:760px){
+  .peekmask{
+    display:block; position:fixed; left:0; right:0; top:82vh; top:82dvh;
+    bottom:auto; height:100vh; height:100dvh;
+    background:radial-gradient(1100px 760px at 62% 40%, #201A16, #100C0A 74%) var(--shell) no-repeat fixed;
+    z-index:15; pointer-events:none;
+    transition:opacity .28s var(--ease);
+  }
+  /* Full width band rather than a plate sized in em off a font size the
+     wordmark no longer uses. Content scrolls underneath it. The !important
+     overrides an inline scale left behind by a resize across the breakpoint. */
+  .plate{
+    left:0; right:0; top:0; width:auto; height:88px;
+    font-size:54px; margin:0; padding:0; border-radius:0;
+    background:radial-gradient(1100px 760px at 62% 40%, #201A16, #100C0A 74%) var(--shell) no-repeat fixed;
+    transform:none !important;
+  }
+}
+.hero-h1 h1{ max-width:min(720px,56vw); }
 
-.card{
-  position:sticky; top:0;
-  height:100vh; height:100svh;
-  /* Gutter as padding, not as a margin on the box: a margin collapses
-     through and makes the scroll pitch larger than the card height, which
-     puts every goTo target between two cards. */
-  padding:var(--gut);
+/* ---------- 01 rows ---------- */
+.rows{ display:flex; flex-direction:column; }
+.srow{
+  position:relative;
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(14px,2vw,30px);
+  width:100%; text-align:left; padding:clamp(14px,2.2svh,26px) 2px;
+  border-top:1px solid var(--hair); min-height:44px;
+  transition:padding-left .32s var(--ease), background-color .32s var(--ease);
 }
-.card__box{
-  position:relative; overflow:hidden;
-  height:100%;
-  margin:0;
-  border:1px solid var(--hair);
-  border-radius:var(--r);
-  display:flex; flex-direction:column;
-  transform-origin:50% 42%;
-  will-change:transform;
-  transition:border-color 260ms var(--ease);
+/* The amber edge the row lights on approach, the same device the cards carry
+   on their left border. Reads as heat without a bloom. */
+.srow::before{
+  content:''; position:absolute; left:0; top:8%; bottom:8%; width:2px;
+  background:var(--amber); transform:scaleY(0); transform-origin:50% 50%;
+  transition:transform .34s var(--exp);
 }
-/* Dark overlay that composites, rather than a filter on a full
-   viewport layer, which repaints every frame. */
-.card__dim{
-  position:absolute; inset:0; z-index:6;
-  background:#04070A; opacity:0; pointer-events:none;
-  will-change:opacity;
-}
-.card__in{
-  position:relative; z-index:3;
-  flex:1; min-height:0;
-  display:flex; flex-direction:column;
-  /* The right padding is large on purpose: the text column has to end
-     before the chain lane, which sits at about 86% of the viewport. */
-  padding:clamp(56px,10.5vh,96px) clamp(30px,17.5vw,250px) clamp(52px,10vh,92px) clamp(32px,6vw,88px);
-}
-/* Label and its rule stay pinned at the top; the content block is centred
-   in whatever space is left, and a footer (screen 05) falls to the bottom. */
-.content{ margin-block:auto; display:flex; flex-direction:column; min-height:0; width:100%; }
-.hair{ height:1px; background:var(--hair); margin-top:clamp(10px,1.8vh,18px); flex:0 0 auto; }
-
-.card[data-i="0"] .card__box{ background:linear-gradient(150deg,#111A22,#080D11 60%); }
-.card[data-i="1"] .card__box{ background:linear-gradient(165deg,#0E141A,#0A0F14 70%); }
-.card[data-i="2"] .card__box{ background:linear-gradient(165deg,#111820,#0A0F14 70%); }
-.card[data-i="3"] .card__box{ background:linear-gradient(165deg,#0E141A,#0A0F14 70%); }
-.card[data-i="4"] .card__box{ background:linear-gradient(165deg,#111820,#0A0F14 70%); }
-.card[data-i="5"] .card__box{ background:linear-gradient(165deg,#0F1A18,#0A0F14 68%); }
-
+.srow:last-child{ border-bottom:1px solid var(--hair); }
+.srow__t{ font-weight:600; color:var(--ink); font-size:clamp(19px,min(2.6vw,4.8svh),41px); letter-spacing:-.032em; transition:color .32s var(--ease); }
+.srow__go{ width:30px; height:30px; border-radius:999px; border:1px solid var(--hair-2); display:grid; place-items:center; color:var(--muted); transition:border-color .32s var(--ease), color .32s var(--ease); }
+.srow__go{ font-size:13px; line-height:1; }
+.srow__go{ transition:border-color .32s var(--ease), color .32s var(--ease), background-color .32s var(--ease), transform .32s var(--exp); }
 @media (hover:hover){
-  .card__box:hover{ border-color:rgba(60,210,145,0.42); }
+  .srow:hover{ padding-left:16px; background-color:rgba(206,138,82,0.07); }
+  .srow:hover::before{ transform:scaleY(1); }
+  .srow:hover .srow__t,.srow:hover .mono{ color:var(--amber); }
+  .srow:hover .srow__go{ border-color:var(--amber); color:var(--amber); background-color:rgba(206,138,82,0.14); transform:translateX(4px); }
+}
+/* A phone has no hover, so the press has to carry the feedback. */
+.srow:active{ padding-left:16px; background-color:rgba(206,138,82,0.11); }
+.srow:active::before{ transform:scaleY(1); }
+.srow:active .srow__t{ color:var(--amber); }
+.srow:active .srow__go{ border-color:var(--amber); color:var(--amber); transform:translateX(4px); }
+
+/* A phone has no hover to give, so the rows announce themselves: a soft amber
+   pass down the list, one at a time, on a long cycle with a rest between
+   passes. It rides a pseudo element rather than the row, so it never competes
+   with the background the press state sets. */
+@keyframes row-glow{
+  0%{   box-shadow:0 0 0 0 rgba(206,138,82,0);          background-color:rgba(206,138,82,0); }
+  11%{  box-shadow:0 0 18px 1px rgba(206,138,82,0.264); background-color:rgba(206,138,82,0.06); }
+  34%,
+  100%{ box-shadow:0 0 0 0 rgba(206,138,82,0);          background-color:rgba(206,138,82,0); }
 }
 
-/* ==========================================================
-   TYPE
-   Every size is fluid against both axes. The stack is height
-   constrained, so the middle term is vh wherever it can be.
-   ========================================================== */
-.label{ color:var(--faint); margin:0; flex:0 0 auto; }
-.label b{ color:var(--green); font-weight:500; }
-.label span{ color:var(--faint-2); padding:0 .5em; }
-
-h1,h2{
-  margin:0; font-weight:700;
-  letter-spacing:-.042em; line-height:.94;
-  font-size:clamp(1.7rem,5.6vh,4.2rem);
-}
-h1{
-  font-size:clamp(2.2rem,11.5vh,7rem); letter-spacing:-.045em; line-height:.9;
-  /* Both references put the hero headline across 42% of the width (388px at
-     924, 835px at 2000), so the cap tracks the viewport rather than the font
-     size. An em cap drifts, because the type does not scale with width. */
-  max-width:42vw;
-}
-h1 i{ font-style:italic; color:var(--green); }
-h3{
-  margin:0; font-weight:600; letter-spacing:-.02em; line-height:1.06;
-  font-size:clamp(15px,2.1vh,19px);
-}
-p{ margin:0; }
-.lead{
-  color:var(--ink-2); max-width:52ch;
-  font-size:clamp(12px,2.3vh,23px); line-height:1.52;
-}
-.body{
-  color:var(--muted);
-  font-size:clamp(10.5px,1.72vh,17px); line-height:1.5;
-}
-.head{ display:flex; flex-direction:column; gap:clamp(9px,2.2vh,26px); }
-.grow{ margin-top:auto; }
-/* The phone prototype carries its own shorter strings. Both live in the
-   markup and the breakpoint picks one, rather than the phone inheriting
-   desktop wording and then being squeezed to fit it. */
-.only-m{ display:none; }
-.center{ margin-block:auto; }
-/* A headline carrying a full sentence needs a smaller ceiling than a
-   three-word one, or it eats the card at short viewport heights. */
-h2.h2--long{
-  font-size:clamp(1.45rem,5.4vh,3.5rem); line-height:1.05; letter-spacing:-.034em;
-  /* Keeps the reference wrap where the headline is not already inside a
-     constrained column. */
-  max-width:13em;
-}
-h2 .dim{ color:var(--faint-2); }
-
-/* Hero eyebrow: a bordered pill with an amber node */
-.eyebrow{
-  display:inline-flex; align-items:center; gap:9px; align-self:flex-start;
-  border:1px solid var(--hair); border-radius:999px;
-  padding:clamp(7px,1.1vh,12px) clamp(14px,2vh,22px);
-  font-family:var(--m); font-weight:500; font-size:clamp(9px,1.25vh,13px);
-  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
-}
-.eyebrow i{
-  width:6px; height:6px; border-radius:999px; background:var(--amber);
-  box-shadow:0 0 0 3px rgba(232,160,80,.16); flex:0 0 auto;
+/* Once the rows have arrived the arrows nudge, one after another: the cue
+   that these go somewhere, on a phone where nothing hovers. No fill mode, so
+   it leaves nothing behind for the press and hover states to fight. */
+@keyframes go-wake{ 0%{ transform:none; } 45%{ transform:translateX(5px); } 100%{ transform:none; } }
+html.js-rv #p-1.in .srow__go{
+  animation:go-wake .72s var(--exp);
+  animation-delay:calc(var(--i,0) * 70ms + 620ms);
 }
 
-/* Hero scroll hint */
-.hint{
-  display:inline-flex; align-items:center; gap:.6em;
-  font-family:var(--m); font-weight:400; font-size:clamp(10px,1.6vh,15px);
-  letter-spacing:.16em; text-transform:uppercase; color:var(--faint-2);
-  margin-top:clamp(14px,2.6vh,30px);
+/* ---------- 02 steps ---------- */
+.steps{ display:flex; flex-direction:column; }
+.step{ border-top:1px solid var(--hair); padding:clamp(9px,1.5svh,16px) 0; }
+.step:first-child{ border-top:0; }
+/* The button owns the row grid. Making it display:contents dissolved it into
+   the parent and scattered the index, title and body across the tracks. */
+.step__btn{
+  display:grid; grid-template-columns:22px minmax(0,1fr) auto;
+  gap:clamp(10px,1.2vw,18px); align-items:start;
+  width:100%; text-align:left;
 }
-@media (prefers-reduced-motion: no-preference){
-  .hint i{ font-style:normal; animation:bob 2.4s var(--ease) infinite; }
-}
-@keyframes bob{ 0%,100%{ transform:translateY(-2px) } 50%{ transform:translateY(3px) } }
+.step__body{ padding-left:calc(22px + clamp(10px,1.2vw,18px)); margin-top:4px; }
+.step__body p{ font-size:clamp(12.5px,min(1.02vw,2.05svh),16px); line-height:1.5; }
+.step__h{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+/* Desktop renders all four steps open with no toggle: the plus and minus mark
+   is phone only. */
+.step__sign{ display:none; }
+.step__t{ font-weight:600; color:var(--ink); font-size:clamp(15.5px,min(1.4vw,2.8svh),22px); letter-spacing:-.02em; }
+.pill{ font-family:var(--m); font-weight:500; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); border:1px solid var(--accent); border-radius:999px; padding:3px 9px; }
+.risk{ display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; border-top:1px solid rgba(155,74,50,0.45); padding-top:clamp(14px,2.2svh,24px); }
+.risk__tail{ color:var(--muted); font-weight:400; }
+.risk__sq{ width:6px; height:6px; background:var(--accent); margin-top:.5em; }
+.risk p{ color:var(--ink); font-weight:600; font-size:clamp(16px,min(1.7vw,3.3svh),25px); line-height:1.4; letter-spacing:-.02em; }
 
-/* Step label row: STEP 0n plus a filled FREE pill */
-.step__top{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-.free{
-  font-family:var(--m); font-weight:500; font-size:9px; letter-spacing:.14em;
-  text-transform:uppercase; background:var(--green); color:#07120C;
-  border-radius:999px; padding:3px 8px; line-height:1.4;
+/* ---------- shared card ---------- */
+.card{
+  border:1px solid var(--hair); border-left:2px solid rgba(155,74,50,0.34); border-radius:2px;
+  background:var(--card-bg);
+  padding:clamp(15px,2svh,22px) clamp(18px,1.8vw,26px);
+  display:flex; flex-direction:column; gap:clamp(6px,1svh,10px);
+  transition:border-color .32s var(--ease), background .32s var(--ease), box-shadow .32s var(--ease);
 }
+@media (hover:hover){
+  .card:hover{ border-color:rgba(239,231,218,0.2); border-left-color:var(--accent); background:var(--card-bg-hi); box-shadow:0 10px 30px -22px rgba(0,0,0,0.9); }
+}
+.card__t{ font-weight:600; color:var(--ink); font-size:clamp(15px,min(1.3vw,2.6svh),20.5px); letter-spacing:-.02em; }
+.card__c{ color:var(--muted); font-size:clamp(13px,min(1.08vw,2.2svh),17px); line-height:1.5; }
+.cards{ display:flex; flex-direction:column; gap:clamp(9px,1.4svh,15px); }
+/* Screen 03 mirrors the step rows on 02: label and title always, body behind
+   a tap. Desktop has the room, so it shows everything and offers no toggle. */
+.card__btn{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:14px;
+  align-items:start; width:100%; text-align:left;
+}
+.card__head{ display:flex; flex-direction:column; gap:clamp(6px,1svh,10px); min-width:0; }
+.card__sign{ display:none; }
 
-/* Risk reversal: a rule with the label sitting on it, then a two-tone lead */
-.rr{ margin-top:clamp(15px,2.6vh,32px); }
-.rr__rule{
-  position:relative; height:1px; background:var(--green); opacity:.4;
-  margin-bottom:clamp(13px,2vh,22px);
-}
-.rr__tag{
-  position:absolute; left:0; top:50%; transform:translateY(-50%);
-  background:var(--bg); padding-right:14px;
-  display:inline-flex; align-items:center; gap:8px;
-  font-family:var(--m); font-weight:500; font-size:9px;
-  letter-spacing:.16em; text-transform:uppercase; color:var(--green);
-}
-.card[data-i="2"] .rr__tag{ background:#0E1219; }
-.rr__node{
-  width:7px; height:7px; border-radius:2px; background:var(--green);
-}
-.rr__lead{
-  font-weight:600; letter-spacing:-.026em; line-height:1.18;
-  font-size:clamp(1.05rem,2.8vh,1.75rem); color:var(--ink);
-  max-width:34ch;
-}
-.rr__lead .yes{ color:var(--green); }
-.rr__sub{
-  margin-top:clamp(7px,1.2vh,12px); color:var(--faint);
-  font-size:clamp(11.5px,1.35vh,13px); line-height:1.5;
-}
-
-/* Pillars gain a kicker line above the body */
-.pillar__k{
-  color:var(--ink-2); font-size:clamp(11px,1.85vh,18px);
-  line-height:1.3; font-weight:500; letter-spacing:-.01em;
-}
-.pillar--edge .mono{ color:var(--amber); }
-.pillar--edge{ border-color:rgba(232,160,80,.28); }
-
-/* Headline left, supporting prose right, top aligned. */
-.two{
-  display:grid; grid-template-columns:minmax(0,1.02fr) minmax(0,0.98fr);
-  gap:clamp(26px,4.5vw,64px); align-items:start; min-height:0;
-}
-.two__body{ padding-top:clamp(6px,2.6vh,34px); }
-/* Screen 04 gives the chip cluster more room so the first row holds three,
-   as it does in the reference. */
-.card[data-i="4"] .two{ grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr); }
-
-/* ==========================================================
-   01 WHAT WE DO
-   ========================================================== */
-/* Flex, not grid: the connectors sit between the tiles, so as grid
-   children they would each consume a column and wrap the row. */
-.tiles{
-  display:flex; align-items:stretch; min-height:0;
-  margin-top:clamp(18px,3.4vh,42px);
-  gap:0;
-}
-.tile{
-  flex:1 1 0; min-width:0;
-  background:var(--panel); border:1px solid var(--hair); border-radius:14px;
-  padding:clamp(14px,2.4vh,24px);
-  display:flex; flex-direction:column; gap:clamp(7px,1.2vh,12px);
-  min-height:0;
-}
-.tile .mono{ color:var(--green); }
-
-/* The miniature of the same idea, between each pair of tiles. */
-.conn{
-  position:relative; align-self:center;
-  width:clamp(22px,3.4vw,54px); height:18px;
-  flex:0 0 auto;
-}
-.conn::before{
-  content:""; position:absolute; top:50%; left:0; right:0; height:1px;
-  transform:translateY(-50%);
-  background:repeating-linear-gradient(90deg,var(--amber) 0 3px,transparent 3px 7px);
-  opacity:.5;
-}
-.conn::after{
-  content:""; position:absolute; top:50%; left:0; height:1px; width:0;
-  transform:translateY(-50%); background:var(--green);
-  animation:mcSeal 4s var(--ease) infinite;
-}
-.conn i{
-  position:absolute; top:50%; left:50%; width:8px; height:8px;
-  margin:-4px 0 0 -4px; border-radius:2px;
-  border:1px solid var(--amber); background:transparent;
-  animation:mcNode 4s var(--ease) infinite;
-}
-.conn:nth-of-type(2)::after,.conn:nth-of-type(2) i{ animation-delay:.4s; }
-.conn:nth-of-type(3)::after,.conn:nth-of-type(3) i{ animation-delay:.8s; }
-@keyframes mcSeal{
-  0%,10%{ width:0 } 45%,72%{ width:100% } 88%,100%{ width:0 }
-}
-@keyframes mcNode{
-  0%,10%{ border-color:var(--amber); background:transparent }
-  45%,72%{ border-color:var(--mint); background:var(--mint) }
-  88%,100%{ border-color:var(--amber); background:transparent }
-}
-
-/* ==========================================================
-   02 HOW IT WORKS
-   ========================================================== */
-/* One bordered strip with internal rules, not four separate cards. */
-.steps{
-  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:0; min-height:0;
-  margin-top:clamp(18px,3.2vh,40px);
-  border:1px solid var(--hair); border-radius:14px; overflow:hidden;
-}
-.step{
-  display:flex; flex-direction:column; gap:clamp(6px,1.1vh,11px);
-  padding:clamp(13px,2.2vh,22px) clamp(12px,1.5vw,20px);
-  border-left:1px solid var(--hair);
-  min-height:0;
-}
-.step:first-child{ border-left:0; }
-.step .mono{ color:var(--faint); }
-.reversal{
-  margin-top:clamp(18px,3vh,36px);
-  border-left:1px solid var(--green);
-  background:var(--panel);
-  padding:clamp(13px,2.1vh,20px) clamp(16px,2.4vh,24px);
-  border-radius:0 14px 14px 0;
-  color:var(--ink-2);
-  font-size:clamp(12.5px,1.55vh,15px); line-height:1.5;
-  max-width:64ch;
-}
-
-/* ==========================================================
-   03 WHO WE ARE
-   ========================================================== */
-.pillars{
-  display:block; min-height:0;
-  border:1px solid var(--hair); border-radius:14px; overflow:hidden;
-  background:rgba(12,17,22,.5);
-}
-.pillar{
-  padding:clamp(9px,2vh,22px) clamp(12px,1.6vw,22px);
-  display:flex; flex-direction:column; gap:clamp(3px,0.8vh,9px);
-  border-top:1px solid var(--hair);
-}
-.pillar:first-child{ border-top:0; }
-.pillar .mono{ color:var(--green); }
-
-/* ==========================================================
-   04 OUR CLIENTS
-   ========================================================== */
-.chips{ display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; align-content:flex-start; }
-.chip{
-  border:1px solid var(--hair); border-radius:999px;
-  padding:7px 12px; color:var(--muted);
-}
-.clients{
-  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:1px; background:var(--hair);
-  border:1px solid var(--hair); border-radius:14px; overflow:hidden;
-  margin-top:clamp(16px,2.8vh,34px); min-height:0;
-}
-.client{
-  background:rgba(12,17,22,.55);
-  padding:clamp(13px,2.3vh,24px) clamp(10px,1.4vw,20px);
-  display:flex; align-items:center; justify-content:center; text-align:center;
-  /* A client name must never wrap or break at its own hyphen. */
-  white-space:nowrap;
-  font-family:var(--m); font-weight:400;
-  font-size:clamp(10px,1.3vh,12.5px); color:var(--ink-2); letter-spacing:.02em;
-}
-
-/* ==========================================================
-   05 CONTACT
-   ========================================================== */
-.big{
-  display:inline-block; font-weight:600; letter-spacing:-.035em;
-  font-size:clamp(1.3rem,3.8vh,2.4rem); line-height:1.1;
-  border-bottom:1px solid var(--hair); padding-bottom:5px;
-  transition:color 200ms var(--ease), border-color 200ms var(--ease);
-}
-.big:hover{ color:var(--green); border-color:var(--green); }
-.contact-grid{
-  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,0.78fr);
-  gap:clamp(22px,4vw,64px); align-items:start; min-height:0;
-  margin-top:clamp(18px,3vh,38px);
-}
-.foot{
-  padding-top:clamp(14px,2.2vh,26px);
-  border-top:1px solid var(--hair);
-  display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between;
-  align-items:baseline; color:var(--faint-2); flex:0 0 auto;
-}
-.foot-mark__a{ color:var(--faint); font-weight:500; }
-.foot-mark__b{ color:var(--green); font-weight:500; }
-
-/* ==========================================================
-   WORDMARK
-   One word, two tones, plus the mint node. Never flat text.
-   ========================================================== */
-.mark{
-  display:inline-flex; align-items:baseline; gap:0;
-  font-weight:700; letter-spacing:-.03em; line-height:1;
-  font-size:clamp(15px,2.2vh,21px);
-}
-.mark__a{ color:var(--ink); }
-.mark__b{ color:var(--green); }
-.mark__n{
-  width:.3em; height:.3em; border-radius:.1em;
-  background:var(--mint); align-self:flex-end;
-  margin:0 0 .07em .2em;
-  flex:0 0 auto;
-}
-/* Below about 13px the node stops reading and is dropped. */
-.mark--sm{ font-size:12px; }
-.mark--sm .mark__n{ display:none; }
-
-/* ==========================================================
-   FIXED CHROME
-   Solid backgrounds. A backdrop-filter over the animating canvas
-   re-runs the blur on every repaint and locks the main thread.
-   ========================================================== */
-.chrome{
-  position:fixed; z-index:20;
-  background:var(--chrome-bg);
-  border:1px solid var(--hair); border-radius:999px;
-}
-.pill{
-  top:calc(var(--gut) + 14px);
-  padding:clamp(10px,1.5vh,16px) clamp(18px,2.4vh,28px); min-height:40px;
-  display:flex; align-items:center; gap:.5em;
-  font-weight:500; font-size:clamp(13.5px,1.9vh,18px); letter-spacing:-.005em;
-  transition:background 200ms var(--ease), color 200ms var(--ease), border-color 200ms var(--ease), transform 200ms var(--ease);
-}
-/* Hero CTAs sit in the flow rather than as fixed chrome. */
+/* ---------- cta ---------- */
 .cta{
-  display:inline-flex; align-items:center; gap:.55em;
-  border:1px solid var(--hair); border-radius:999px;
-  padding:clamp(12px,1.8vh,20px) clamp(20px,2.9vh,34px); font-weight:500;
-  font-size:clamp(13px,2.2vh,20px); letter-spacing:-.005em;
-  background:var(--chrome-bg); color:var(--ink);
-  transition:background 200ms var(--ease), border-color 200ms var(--ease), transform 200ms var(--ease);
+  transition:background .3s var(--ease), transform .3s var(--ease);
+  display:inline-flex; align-items:center; gap:.7em; align-self:flex-start;
+  background:var(--accent); color:var(--shell); border-radius:2px;
+  padding:14px 22px; min-height:44px; font-weight:500; font-size:15px;
+  transition:background .3s var(--ease);
 }
-.cta:hover{ transform:translateY(-1px); border-color:rgba(60,210,145,.42); }
-.cta--go{ background:var(--green); color:#07120C; border-color:var(--green); font-weight:600; }
-.cta--go:hover{ background:#4ade9f; border-color:#4ade9f; }
-/* Screen 05 stacks two of these full width in their column. */
-.cta--wide{ width:100%; justify-content:center; padding:15px 22px; font-size:clamp(13.5px,1.7vh,15.5px); }
-.pill--logo{ left:calc(var(--gut) + 14px); }
-.pill--cta{ right:calc(var(--gut) + 14px); color:var(--ink-2); }
-.pill--cta:hover{ background:var(--green); color:#07120C; border-color:var(--green); }
-.pill--logo:hover{ border-color:rgba(60,210,145,0.42); }
+.cta:hover{ background:var(--accent-hi); color:var(--shell); transform:translateY(-2px); }
+.cta--out{ background:transparent; border:1px solid var(--hair-3); color:var(--ink); }
+.cta--out:hover{ background:var(--card-bg-hi); color:var(--ink); }
+.cta__sq{ width:8px; height:8px; background:var(--shell); }
+.cta--out .cta__sq{ background:var(--accent); }
 
-.readout-wrap{
-  position:fixed; z-index:20;
-  left:calc(var(--gut) + 14px); bottom:calc(var(--gut) + 14px);
-  display:flex; align-items:center; gap:16px;
-}
-.readout{
-  position:static;
-  border-radius:14px; padding:clamp(9px,1.4vh,15px) clamp(15px,2vh,22px);
-  display:flex; gap:clamp(18px,2.8vh,32px); align-items:baseline;
-}
-.ro{ display:flex; align-items:baseline; gap:7px; }
-.ro-k{ color:var(--faint-2); font-family:var(--m); font-size:clamp(9px,1.25vh,12px); letter-spacing:.16em; text-transform:uppercase; }
-.ro-k i{ font-style:normal; }
-.ro-k .narrow{ display:none; }
-.ro-v{
-  font-family:var(--m); font-weight:500; font-size:clamp(13px,2.1vh,20px); color:var(--ink);
-  font-variant-numeric:tabular-nums;
-  /* Fixed width so a digit change never shifts the row. */
-  min-width:7ch;
-}
-.ro-v[data-k="uncaptured"]{ color:var(--amber); }
-.ro-v[data-k="captured"]{ color:var(--green); }
-.ro-v[data-k="chain"]{ color:var(--ink); min-width:4ch; }
-/* The status word sits outside the pill, on the page. */
-.ro-status{
-  color:var(--green); font-family:var(--m); font-size:clamp(9px,1.25vh,12px); font-weight:500;
-  letter-spacing:.16em; text-transform:uppercase; min-width:17ch;
-}
+/* ---------- 04 clients ---------- */
+.pills{ display:flex; flex-wrap:wrap; gap:8px; }
+.two--clients .pills{ justify-content:flex-end; align-content:flex-start; }
+.sector{ font-family:var(--m); font-weight:500; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); border:1px solid var(--hair); border-radius:999px; padding:7px 13px; }
+.clients{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(8px,1vw,12px); }
+.clients .card{ font-weight:500; color:var(--ink); font-size:clamp(13px,1.05vw,16.5px); }
 
-.steps-nav{
-  right:calc(var(--gut) + 14px); bottom:calc(var(--gut) + 14px);
-  border:0; background:none;
-  display:flex; flex-direction:column; gap:7px;
-}
-.stepbtn{
-  width:36px; height:32px; border-radius:9px;
-  border:1px solid var(--hair); background:var(--chrome-bg);
-  display:grid; place-items:center; color:var(--muted);
-  transition:background 180ms var(--ease), color 180ms var(--ease), border-color 180ms var(--ease);
-}
-.stepbtn:hover:not(:disabled){ border-color:rgba(60,210,145,.42); }
-.stepbtn:hover:not(:disabled){ background:rgba(255,255,255,.06); color:var(--ink); }
-.stepbtn:disabled{ opacity:.25; cursor:default; }
-.stepbtn svg{ width:13px; height:13px; }
+/* ---------- 05 ---------- */
+#contact{ }
+.ctas{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
+.foot{ margin-top:auto; padding-top:clamp(14px,2.2svh,26px); border-top:1px solid var(--hair); display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; }
+.foot i{ font-style:normal; color:var(--accent); }
 
-/* Rail. Fades in only once the hero has been left behind. */
-.rail{
-  position:fixed; z-index:20; right:0; top:50%;
-  transform:translateY(-50%);
-  display:flex; flex-direction:column; align-items:flex-end;
-  padding-right:calc(var(--gut) + 8px);
-  opacity:0; visibility:hidden;
-  transition:opacity 400ms var(--ease), visibility 0s linear 400ms;
+/* ---------- sticky ---------- */
+.sticky{
+  position:fixed; right:clamp(14px,2vw,26px); bottom:clamp(14px,2svh,26px); z-index:16;
+  display:inline-flex; align-items:center; gap:.7em;
+  background:var(--accent); color:var(--shell); border-radius:2px;
+  padding:13px 20px; min-height:44px; font-weight:500; font-size:14px;
+  opacity:0; transform:translateY(6px);
+  transition:opacity .5s var(--ease), transform .5s var(--ease), background .3s var(--ease);
 }
-.rail.on{ opacity:1; visibility:visible; transition-delay:0s,0s; }
-.mk{
-  display:flex; align-items:center; justify-content:flex-end; gap:9px;
-  height:44px; padding-left:12px; color:var(--faint-2);
+.sticky.on{ opacity:1; transform:none; }
+.sticky:hover{ background:var(--accent-hi); color:var(--shell); transform:translateY(-2px); }
+.sticky__sq{ width:8px; height:8px; background:var(--shell); }
+
+/* ---------- service overlay ---------- */
+.ov{
+  position:fixed; inset:0; z-index:40;
+  background:radial-gradient(900px 620px at 30% 18%, #201A16, #14100E 72%);
+  opacity:0; pointer-events:none; transition:opacity .4s var(--ease);
+  display:flex; flex-direction:column;
+  padding:clamp(34px,6.5svh,84px) var(--pad-x) clamp(24px,4svh,52px);
+  overflow:hidden;
 }
-.mk-l{
-  font-family:var(--m); font-size:9px; letter-spacing:.16em; text-transform:uppercase;
-  opacity:0; transform:translateX(4px); white-space:nowrap;
-  transition:opacity 200ms var(--ease), transform 200ms var(--ease);
-  color:var(--muted);
+.ov.on{ opacity:1; pointer-events:auto; }
+.ov__bar{ display:flex; align-items:center; gap:clamp(12px,1.6vw,22px); flex-wrap:nowrap; }
+.exit{
+  display:inline-flex; align-items:center; gap:11px;
+  background:var(--amber-cta); color:var(--shell);
+  border-radius:2px; padding:11px 18px; min-height:50px;
+  font-weight:600; font-size:16px; flex:0 0 auto;
+  transition:background .28s var(--ease), transform .28s var(--ease);
 }
-.mk:hover .mk-l{ opacity:1; transform:none; }
-.mk-n{ font-family:var(--m); font-size:9px; letter-spacing:.1em; width:2ch; text-align:right; }
-.mk-d{ width:14px; height:1px; background:currentColor; transition:width 200ms var(--ease), background 200ms var(--ease); }
-.mk:hover .mk-d{ width:22px; }
-.mk.on{ color:var(--green); }
-.mk.on .mk-d{ width:26px; }
+.exit:hover{ background:var(--amber-cta-hi); color:var(--shell); transform:translateX(-3px); }
+.exit__c{ width:26px; height:26px; border-radius:999px; background:var(--shell); color:var(--amber-cta); display:grid; place-items:center; font-size:13px; flex:0 0 auto; }
+.ov__div{ width:1px; align-self:stretch; background:var(--hair-2); flex:0 0 auto; }
+.chips{ display:flex; gap:8px; align-items:center; overflow-x:auto; scrollbar-width:none; }
+.chips::-webkit-scrollbar{ display:none; }
+.chip:hover{ color:var(--ink); border-color:rgba(239,231,218,0.34); }
+.chip{
+  font-family:var(--m); font-weight:500; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); border:1px solid var(--hair); border-radius:2px;
+  padding:0 14px; min-height:44px; display:inline-flex; align-items:center; white-space:nowrap;
+  transition:color .28s var(--ease), border-color .28s var(--ease), background .28s var(--ease);
+}
+.chip.on{ color:var(--ink); background:rgba(155,74,50,0.14); border-color:var(--accent); }
+.ov__eyebrow{ margin-top:clamp(20px,3.4svh,44px); }
+.ov h3{ margin:10px 0 0; font-weight:600; color:var(--ink); font-size:clamp(26px,3vw,44px); letter-spacing:-.035em; line-height:1.06; }
+/* The overlay is a flex column, so the stage needs flex:none or it is
+   shrunk below its stated height and the canvas loses its geometry. */
+.stage{ position:relative; width:100%; height:clamp(260px,52svh,620px); flex:0 0 auto; margin-top:clamp(20px,4.2svh,54px); }
+.stage canvas{ position:absolute; inset:0; width:100%; height:100%; }
+.oplabel{
+  position:absolute; font-family:var(--m); font-weight:400; font-size:10px;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--ink);
+  white-space:nowrap; pointer-events:none;
+}
+.syscard{
+  position:absolute; width:clamp(200px,19vw,300px);
+  border:1px solid; border-left:2px solid; border-radius:2px;
+  /* Opaque: the shared 0.022 fill composited on #14100E. A translucent card
+     here lets the network edges read through it. */
+  background:#191513;
+  padding:clamp(13px,1.7svh,17px) clamp(15px,1.3vw,19px);
+  display:flex; flex-direction:column; gap:5px; cursor:pointer;
+  transition:border-color .32s var(--ease), background .32s var(--ease);
+}
+.syscard:hover{ background:#2C211A; }
+.syscard__row{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+.syscard__i{ font-family:var(--m); font-weight:500; font-size:10px; letter-spacing:.14em; color:currentColor; flex:0 0 auto; }
+.syscard__t{ font-weight:600; color:var(--ink); font-size:clamp(13.5px,1.1vw,16.5px); letter-spacing:-.02em; line-height:1.2; }
+.popup{
+  position:absolute; display:none; z-index:6;
+  width:clamp(292px,27vw,430px);
+  padding:clamp(18px,2.2svh,25px) clamp(19px,1.8vw,27px);
+  border:1px solid; border-radius:2px;
+  background:#191513;
+  color:var(--body); font-size:clamp(14.5px,1.15vw,17.5px); line-height:1.6;
+}
+.popup.on{ display:block; }
+.needs-copy{ color:var(--dim); font-style:italic; }
 
 /* ==========================================================
-   MOBILE
+   SCROLL REVEAL. One device, used everywhere: content rises as its
+   screen arrives, staggered in reading order, and the eyebrow rule
+   draws across. The easing is the wordmark wipe's, so the opening
+   and the scroll read as the same gesture.
+   The hidden state is applied by script, so with no script or no
+   IntersectionObserver every screen simply renders as it always did.
+   ========================================================== */
+@keyframes rv-rise{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+/* Headings clear a mask on the way up, the vertical cousin of the wordmark's
+   wipe. The negative bottom inset keeps descenders out of the clip. */
+@keyframes rv-mask{
+  from{ opacity:0; clip-path:inset(0 0 100% 0); transform:translateY(18px); }
+  to{ opacity:1; clip-path:inset(0 0 -14% 0); transform:none; }
+}
+@keyframes rv-line{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+@keyframes pop-rise{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+html.js-rv .rv{ opacity:0; }
+html.js-rv .screen.in .rv{
+  animation:rv-rise .66s var(--exp) both;
+  animation-delay:calc(var(--i,0) * 70ms);
+}
+html.js-rv .screen.in h1.rv, html.js-rv .screen.in h2.rv{
+  animation:rv-mask .82s var(--exp) both;
+  animation-delay:calc(var(--i,0) * 70ms);
+}
+
+/* The hero headline is not observed, since the scroll owns .hero-h1's own
+   transform. It masks in on load instead, just behind the wordmark. */
+@media (prefers-reduced-motion: no-preference){
+  .hero-h1 h1{ animation:rv-mask .9s .42s var(--exp) both; }
+}
+html.js-rv .screen .eyebrow-row::after{ transform:scaleX(0); }
+html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp) both; }
+
+/* ==========================================================
+   PHONE. Fixed type scale, single column, safe areas.
    ========================================================== */
 @media (max-width:760px){
-  /* A phone card is a bigger radius inside a tighter gutter than desktop. */
-  :root{ --r:34px; --gut:7px; }
+  .screen{ padding:88px 20px 58px; gap:9px; }
+  .srow{ padding:clamp(8px,1.15svh,18px) 2px; }
+  /* Reduced motion is handled by the query, not by the global 1ms override:
+     that would turn an infinite animation into a strobe. */
+  @media (prefers-reduced-motion: no-preference){
+    html.js-rv #p-1.in .srow::after{
+      content:''; position:absolute; inset:-1px; border-radius:2px;
+      pointer-events:none; animation:row-glow 10.98s var(--ease) infinite;
+    }
+    /* Held past the entrance and the arrow nudge, then 0.9s apart down the
+       list. Each row stays lit about 3.7s, longer than the whole stagger, so
+       all four carry some light at once and the pass reads as one slow swell
+       rather than a row lighting at a time. */
+    html.js-rv #p-1.in .srow:nth-child(1)::after{ animation-delay:2.24s; }
+    html.js-rv #p-1.in .srow:nth-child(2)::after{ animation-delay:3.14s; }
+    html.js-rv #p-1.in .srow:nth-child(3)::after{ animation-delay:4.04s; }
+    html.js-rv #p-1.in .srow:nth-child(4)::after{ animation-delay:4.94s; }
+  }
+  .lead{ line-height:1.45; }
+  #p-1 .two{ gap:8px; }
+  /* Screen 02 has to seat four rows and the risk statement clear of the
+     fixed bottom bar, so it runs tighter than the rest. The 44px floor on
+     .step__btn already carries the tap target, so row padding is what gets
+     traded away rather than row height. */
+  #p-2 .step{ padding:2px 0; }
+  #p-2 .risk{ padding-top:12px; margin-top:2px; }
+  #p-2 .lead{ line-height:1.5; }
+  #contact{ padding:88px 20px 110px; }
+  .two{ grid-template-columns:minmax(0,1fr); gap:24px; }
+  h1{ font-size:34px; }
+  .hero-h1 h1{ max-width:none; }
+  h2{ font-size:27px; }
+  #contact h2{ font-size:29px; }
+  .lead{ font-size:16.5px; }
+  #p-2 .lead{ font-size:17px; }
+  .body{ font-size:15px; }
+  .card__c{ font-size:14px; }
+  .card__t{ font-size:16px; }
+  .step__t{ font-size:17px; }
+  .srow__t{ font-size:21px; }
+  .ov h3{ font-size:24px; }
+  .syscard__t{ font-size:15px; }
+  .popup{ font-size:14.5px; }
+  .wordmark{ font-size:54px; top:46px; }
 
-  html{ scroll-snap-type:y mandatory; overscroll-behavior-y:contain; }
-  html.no-snap{ scroll-snap-type:none; }
-  body{ overscroll-behavior-y:contain; }
-  /* scroll-snap-stop is the load-bearing one: without it a fast flick skips
-     two or three cards and the seal front jumps in a single frame.
-     position:static matters just as much: a sticky card reports its stuck
-     offset as its snap area, so every stuck card claims the same snap
-     position and the container snaps back to the wrong card. The canvas is
-     fixed regardless, so nothing needs to stick here. */
-  .card{ position:relative; top:auto; scroll-snap-align:start; scroll-snap-stop:always; }
 
-  /* Swipe is the navigation on a phone, so the rail and the step buttons go.
-     Only the logo and the Book pill navigate. */
-  .rail,.steps-nav{ display:none !important; }
+  /* Wordmark, network and headline share one screen, next screen peeks. */
+  #hero{ height:82vh; min-height:82vh; height:82dvh; min-height:82dvh; }
 
-  /* One narrow row above the home indicator: abbreviated labels, no chain
-     percentage, and a fixed value width so digits cannot jitter the row. */
-  .ro-k .wide{ display:none; }
-  .ro-k .narrow{ display:inline; }
-  .ro--chain{ display:none; }
-  /* Declared again below the older mobile readout rules: same specificity, so
-     whichever comes last wins, and a jittering row is the failure. */
-
-  /* Two connectors, one per row of the 2x2 service grid. */
-  .conn i{ width:7px; height:7px; margin:-3.5px 0 0 -3.5px; }
-  .conn:nth-of-type(2){ display:none; }
-  .conn:nth-of-type(3)::after,.conn:nth-of-type(3) i{ animation-delay:.6s; }
-
-  /* The hero text column is capped so the headline never runs under the
-     chain, which is why the phone hero can stay at full opacity. */
-  .card[data-i="0"] h1,
-  .card[data-i="0"] .lead{ max-width:min(100%, 236px); }
-  /* The hint is a single mono line and must not be capped, or it wraps. */
-  .card[data-i="0"] .hint{ white-space:nowrap; }
-  .only-d{ display:none; }
-  .only-m{ display:block; }
-  span.only-m{ display:inline; }
-
-  .card__in{ padding:clamp(72px,11.4vh,96px) 22px clamp(56px,8.8vh,74px) 22px; }
-  /* A vh middle term is right for the short, wide desktop card, but on a tall
-     phone it inflates headlines (5.4vh of 844 is a 45px h2). Width is the
-     constraint here, so the middle term becomes vw. */
-  h1{ font-size:clamp(2rem,8.4vw,3rem); max-width:none; }
-  h2{ font-size:clamp(1.45rem,6.2vw,2.1rem); }
-  h2.h2--long{ font-size:clamp(1.2rem,5.3vw,1.8rem); max-width:none; }
-  .lead{ font-size:clamp(12.5px,3.4vw,14.5px); }
-
-  .two{ grid-template-columns:minmax(0,1fr); gap:clamp(12px,2vh,20px); }
-  .two__body{ padding-top:0; }
-  .contact-grid{ gap:clamp(16px,3vh,26px); }
-  .chips{ justify-content:flex-start; }
-  .steps{ grid-template-columns:minmax(0,1fr); }
-  .step{ border-left:0; border-top:1px solid var(--hair); }
-  .step:first-child{ border-top:0; }
-  .readout-wrap{ right:calc(var(--gut) + 14px); gap:10px; }
-  .tiles{ display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); gap:8px 0; }
-  .conn{ width:clamp(18px,5vw,30px); }
   .clients{ grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .contact-grid{ grid-template-columns:minmax(0,1fr); }
+  .pills{ justify-content:flex-start; }
 
-  /* Every tap target at least 44px. */
-  .pill{ min-height:44px; padding:12px 16px; }
-  .stepbtn{ width:44px; height:44px; }
-  .steps-nav{ padding:4px; }
-  .big{ padding-bottom:10px; }
-  /* Screen 03 carries two full paragraphs plus three pillars with kickers.
-     The copy is approved, so the recovery comes out of type and spacing on
-     this card alone rather than out of the wording. */
-  .card[data-i="3"] .lead{ font-size:12px; line-height:1.45; }
-  .card[data-i="3"] .head{ gap:8px; }
-  .card[data-i="3"] .content{ gap:10px; }
-  .card[data-i="3"] .two{ gap:10px; }
-  .card[data-i="3"] .pillar{ padding:9px 12px; gap:3px; }
-  .card[data-i="3"] .pillar__k{ font-size:11.5px; line-height:1.28; }
-  .card[data-i="3"] .body{ font-size:11px; line-height:1.42; }
+  /* Full width bottom bar replaces the corner button. */
+  .sticky{ left:14px; right:14px; bottom:14px; justify-content:center; z-index:16; }
+  /* The inline CTA on 03 duplicated the bar, so it is desktop only. */
+  .cta--inline{ display:none; }
 
-  .readout{ right:calc(var(--gut) + 14px); gap:12px; padding:9px 12px; }
-  .ro{ flex-direction:row; align-items:baseline; gap:6px; }
-  .ro-status{ display:none; }
-  .ro-v{ font-size:11.5px; min-width:54px; }
-  .ro-v[data-k="chain"]{ min-width:54px; }
-  .steps-nav{ bottom:calc(var(--gut) + 72px); }
-  .rail{ padding-right:6px; }
-  .mk-n{ display:none; }
+  /* Screen 03 used to run at the floor of every type clamp to force three
+     full cards above the fold. Collapsed cards give that height back, so the
+     copy returns to the size the rest of the site uses. */
+  #p-3 h2{ line-height:1.08; }
+  #p-3 .body{ line-height:1.42; }
+  #p-3 .two{ gap:11px; }
+  #p-3 .two > div:first-child{ gap:7px; }
+  /* Collapsed, a card is a header row, so it is spaced like one. The 44px
+     floor on .card__btn carries the tap target either way. */
+  #p-3 .cards{ gap:6px; }
+  #p-3 .card{ padding:8px 15px; gap:6px; }
+  #p-3 .card__head{ gap:3px; }
+  #p-3 .card__t{ font-size:15.5px; }
+
+
+  /* Screen 02 still carries a lot of copy. Anything keyed to a height media
+     query here would flip as the browser chrome retracts and jump the layout
+     mid scroll, so this stays limited to heights no phone crosses. */
+  @media (max-height:750px){
+    #p-2 h2{ font-size:25px; }
+    #p-2 .lead{ font-size:15px; line-height:1.42; }
+    #p-2 .risk{ padding-top:8px; }
+  }
+
+
+  /* 02 steps become accordions so the screen fits the fold. */
+  .step__btn{ min-height:46px; align-items:center; }
+  .step__sign{ display:block; font-size:20px; color:var(--muted); line-height:1; }
+  .step__body{ display:none; padding-top:6px; }
+  .step.open .step__body{ display:block; }
+
+  /* Service sheet. */
+  .ov{ padding:56px 18px 120px; overflow-y:auto; }
+  .ov__bar{ gap:12px; }
+  .exit{ min-height:46px; font-size:15px; padding:10px 15px; }
+  .ov__div{ display:none; }
+  /* The chip row scrolls inside its own band so nothing slides under exit. */
+  .chips{ flex:1 1 auto; min-width:0; padding:2px 0; }
+  .stage{ height:290px; flex:0 0 auto; }
+  /* Compact closed card: one row of title and index, nothing else. */
+  .syscard{
+    position:static !important; width:100% !important;
+    padding:12px 15px; gap:0;
+  }
+  /* Whole card is the tap target, so it stays over the 44px floor. */
+  .syscard__row{ min-height:26px; align-items:center; }
+  .syslist{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
+  /* The description sits under the title it belongs to. The foot of the list
+     is held still as it opens, so the list grows upward: that headline and
+     the ones above it move up, and nothing below moves at all. */
+  .popup{
+    position:static !important; display:none; width:auto !important;
+    margin:12px 0 0; padding:14px 15px;
+    border:1px solid var(--hair-2); border-radius:2px;
+    /* Translucent, so the network still reads through wherever it overlaps. */
+    background:rgba(25,21,19,0.86);
+    color:var(--body); font-size:14.5px; line-height:1.6;
+  }
+  .popup.on{ display:block; animation:pop-rise .34s var(--exp) both; }
+  .syscard.open{ background:#241C17; }
+
+  /* Screen 03: label and title, body behind a tap. */
+  .card--d .card__btn{ min-height:44px; align-items:center; }
+  .card--d .card__sign{
+    display:block; font-family:var(--m); font-size:18px; line-height:1;
+    color:var(--accent);
+  }
+  .card--d .card__body{ display:none; }
+  .card--d.open .card__body{ display:block; }
 }
-@media (max-width:359px){
-  .ro:nth-child(2){ display:none; }
+@media (max-width:400px){
+  .clients{ grid-template-columns:minmax(0,1fr); }
 }
-
 @media (prefers-reduced-motion: reduce){
-  .conn::after,.conn i{ animation:none; }
-  .conn::after{ width:100%; }
-  *{ transition-duration:1ms !important; }
+  *{ transition-duration:1ms !important; animation-duration:1ms !important; animation-delay:0ms !important; }
 }
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<canvas id="chain" aria-hidden="true"></canvas>
+<canvas id="net-hero" aria-hidden="true"></canvas>
+<div class="plate" id="plate" aria-hidden="true"></div>
+<div class="peekmask" id="peekmask" aria-hidden="true"></div>
+<a class="wordmark" id="wordmark" href="#hero" aria-label="Synecura, back to the top"><b>Syne</b><i>cura</i><u></u></a>
 
-<a class="chrome pill pill--logo" href="#p-0" data-go="0" aria-label="Synecura, back to the top">
-  <span class="mark"><span class="mark__a">Syne</span><span class="mark__b">cura</span><span class="mark__n"></span></span>
-</a>
-<a class="chrome pill pill--cta" href="#p-5" data-go="5">Book discovery</a>
-
-<main class="stack" id="stack">
-
-  <!-- 0 HERO -->
-  <section class="card" data-card data-i="0" id="p-0" data-label="Hero">
-    <div class="card__box">
-      <div class="card__dim"></div>
-      <div class="card__in">
-        <div class="content" style="gap:clamp(14px,2.6vh,28px)">
-          <span class="eyebrow"><i></i>Operations systems <span style="opacity:.5">&#183;</span> Outcome-priced</span>
-          <h1>Systems that pay for<br><i>themselves.</i></h1>
-          <p class="lead">Every operation has headroom. We find where it sits, build the system that captures it, and take our fee out of the gain. Every system is built for your operation alone.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(4px,1.2vh,14px)">
-            <a class="cta cta--go" href="#p-5" data-go="5">Book the free discovery <span aria-hidden="true">&#8594;</span></a>
-            <a class="cta" href="#p-2" data-go="2">See how it works</a>
-          </div>
-          <span class="hint">Scroll <i>&#8595;</i> the chain follows</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 1 WHAT WE DO -->
-  <section class="card" data-card data-i="1" id="p-1" data-label="What we do">
-    <div class="card__box">
-      <div class="card__dim"></div>
-      <div class="card__in">
-        <p class="label mono"><b>01</b><span>/</span>WHAT WE DO</p>
-        <div class="hair"></div>
-        <div class="content">
-          <div class="two">
-            <h2 class="h2--long">We sit with the people who run the business, then build the system that takes over the work eating their week.</h2>
-            <p class="lead two__body only-d">It starts with a conversation. Where does the day really go? Which manual, repetitive tasks could run on their own? What is each one worth? We have founded and run successful companies ourselves, so this is business advice as much as software. And nothing is off a shelf: every system is built for that one operation.</p>
-            <p class="lead two__body only-m">It starts with a conversation. Where does the day really go? Which manual tasks could run on their own? What is each one worth? We have founded and run successful companies ourselves, so this is business advice as much as software. Nothing is off a shelf.</p>
-          </div>
-          <div class="tiles">
-            <article class="tile">
-              <h3>Automation</h3>
-              <p class="body">The manual work you repeat every week, handed to a system built for it.</p>
-            </article>
-            <span class="conn" aria-hidden="true"><i></i></span>
-            <article class="tile">
-              <h3>Applications</h3>
-              <p class="body">A tool made to fit the way your team already works.</p>
-            </article>
-            <span class="conn" aria-hidden="true"><i></i></span>
-            <article class="tile">
-              <h3>System design</h3>
-              <p class="body">Your process, redrawn so more of it turns into revenue.</p>
-            </article>
-            <span class="conn" aria-hidden="true"><i></i></span>
-            <article class="tile">
-              <h3>Strategy</h3>
-              <p class="body">Where to start, and what it is worth to you.</p>
-            </article>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2 HOW IT WORKS -->
-  <section class="card" data-card data-i="2" id="p-2" data-label="How it works">
-    <div class="card__box">
-      <div class="card__dim"></div>
-      <div class="card__in">
-        <p class="label mono"><b>02</b><span>/</span>HOW IT WORKS</p>
-        <div class="hair"></div>
-        <div class="content">
-          <h2>You pay a share of what we save you. <span class="dim">Not before.</span></h2>
-          <div class="steps">
-            <div class="step">
-              <span class="step__top"><span class="mono">STEP 01</span><span class="free">Free</span></span>
-              <h3>Discovery</h3>
-              <p class="body only-d">Two sessions. We walk the operation with you and map where the headroom sits.</p>
-              <p class="body only-m">Two sessions. We map where the headroom sits.</p>
-            </div>
-            <div class="step">
-              <span class="step__top"><span class="mono">STEP 02</span></span>
-              <h3>Quantify</h3>
-              <p class="body only-d">We put a number on the opportunity and scope the system around your operation.</p>
-              <p class="body only-m">A number on the opportunity, and the system scoped around your operation.</p>
-            </div>
-            <div class="step">
-              <span class="step__top"><span class="mono">STEP 03</span></span>
-              <h3>Price</h3>
-              <p class="body only-d">We agree a share of the verified saving. No saving, no share. That is the entire deal.</p>
-              <p class="body only-m">A share of the verified saving. No saving, no share.</p>
-            </div>
-            <div class="step">
-              <span class="step__top"><span class="mono">STEP 04</span></span>
-              <h3>Retainer</h3>
-              <p class="body only-d">Your system goes in, built from scratch. We stay on to keep the gain compounding.</p>
-              <p class="body only-m">Your system goes in, built from scratch. We keep the gain compounding.</p>
-            </div>
-          </div>
-          <div class="rr">
-            <div class="rr__rule"><span class="rr__tag"><i class="rr__node"></i>Risk reversal</span></div>
-            <p class="rr__lead">If the saving does not show up in your numbers, <span class="yes">you do not pay us.</span></p>
-            <p class="rr__sub">Written into the engagement, not into the marketing.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3 WHO WE ARE -->
-  <section class="card" data-card data-i="3" id="p-3" data-label="Who we are">
-    <div class="card__box">
-      <div class="card__dim"></div>
-      <div class="card__in">
-        <p class="label mono"><b>03</b><span>/</span>WHO WE ARE</p>
-        <div class="hair"></div>
-        <div class="content">
-          <div class="two">
-            <div class="head">
-              <h2 class="h2--long">We built the businesses. Then we built the systems that made them better.</h2>
-              <p class="lead only-d">We come from years of starting and running successful businesses, which means we have seen where the real headroom sits: the work that quietly absorbs hours, the process running at a fraction of what it could, the step everyone routes around.</p>
-              <p class="lead only-d">Alongside that we have spent years building systems, first for our own companies and then for others, designed around exactly those opportunities. The result each time was the same: large cost savings and meaningful revenue growth.</p>
-              <p class="lead only-m">Years of starting and running successful businesses, which means we have seen where the real headroom sits. Then years building systems around exactly those opportunities, first for our own companies and then for others.</p>
-            </div>
-            <div class="pillars">
-              <article class="pillar">
-                <span class="mono">01 <span style="opacity:.5">/</span> Operators</span>
-                <p class="pillar__k">Years of starting and running successful businesses</p>
-                <p class="body only-d">We know this world from the inside, so we know what to look for, where to look for it, and how to turn what we find into a better number.</p>
-                <p class="body only-m">We know this world from the inside, so we know what to look for and how to turn it into a better number.</p>
-              </article>
-              <article class="pillar">
-                <span class="mono">02 <span style="opacity:.5">/</span> Builders</span>
-                <p class="pillar__k only-d">A long, proven record in product and custom system development</p>
-                <p class="pillar__k only-m">A proven record in product and custom system development</p>
-                <p class="body only-d">Every system is built from scratch around the specific needs of the business in front of us. We do not resell a template.</p>
-                <p class="body only-m">Every system is built from scratch around the business in front of us. We do not resell a template.</p>
-              </article>
-              <article class="pillar pillar--edge">
-                <span class="mono">03 <span style="opacity:.5">/</span> The edge</span>
-                <p class="pillar__k">Current-generation automation, not the stack of a decade ago</p>
-                <p class="body">This is what makes it economic to capture gains that were previously too small to be worth anyone's time, and it is why our fee can come out of the upside.</p>
-              </article>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4 OUR CLIENTS -->
-  <section class="card" data-card data-i="4" id="p-4" data-label="Our clients">
-    <div class="card__box">
-      <div class="card__dim"></div>
-      <div class="card__in">
-        <p class="label mono"><b>04</b><span>/</span>OUR CLIENTS</p>
-        <div class="hair"></div>
-        <div class="content">
-          <div class="two">
-            <h2>Some of the operations we helped so far.</h2>
-            <div class="chips two__body">
-              <span class="chip mono">Tourism</span>
-              <span class="chip mono">Marine &amp; cruises</span>
-              <span class="chip mono">Sport &amp; leisure</span>
-              <span class="chip mono">Creative studios</span>
-              <span class="chip mono">Relocation</span>
-            </div>
-          </div>
-          <div class="clients">
-            <div class="client">dereh-haski.co.il</div>
-            <div class="client">tour-guide.co.il</div>
-            <div class="client">snowpro.co.il</div>
-            <div class="client">corfuprivatecruises.com</div>
-            <div class="client">Ponygrll Studios</div>
-            <div class="client">MikMak Relocations</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5 CONTACT -->
-  <section class="card" data-card data-i="5" id="p-5" data-label="Start with the free part">
-    <div class="card__box">
-      <div class="card__dim"></div>
-      <div class="card__in">
-        <p class="label mono"><b>05</b><span>/</span>START WITH THE FREE PART</p>
-        <div class="hair"></div>
-        <div class="content">
-          <h2 class="h2--long">The discovery costs you two hours and nothing else.</h2>
-          <div class="contact-grid">
-            <p class="lead only-d">If we cannot point at a gain worth capturing, we will say so and you will have lost an afternoon. If we can, you will have a number, and a system scoped for your operation alone, before you have an invoice.</p>
-          <p class="lead only-m">If we cannot point at a gain worth capturing, we will say so. If we can, you will have a number, and a system scoped for your operation alone, before you have an invoice.</p>
-            <div style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
-              <a class="cta cta--go cta--wide" href="mailto:hello@synecura.co">hello@synecura.co</a>
-              <a class="cta cta--wide" href="#" data-pending="linkedin">LinkedIn</a>
-            </div>
-          </div>
-        </div>
-        <div class="foot mono">
-          <span><span class="foot-mark"><span class="foot-mark__a">SYNE</span><span class="foot-mark__b">CURA</span></span><span style="opacity:.45;padding:0 .7em">&#183;</span><span class="only-d">Systems that pay for themselves</span><span class="only-m">&#169; 2026</span></span>
-          <span class="only-d">&#169; 2026</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<div class="readout-wrap">
-  <div class="chrome readout" id="readout">
-    <span class="ro"><span class="ro-k"><i class="wide">Uncaptured</i><i class="narrow">Uncap</i></span><span class="ro-v" data-k="uncaptured" id="ro-un">$0</span></span>
-    <span class="ro"><span class="ro-k"><i class="wide">Captured</i><i class="narrow">Cap</i></span><span class="ro-v" data-k="captured" id="ro-cap">$0</span></span>
-    <span class="ro ro--chain"><span class="ro-k">Chain</span><span class="ro-v" data-k="chain" id="ro-ch">0%</span></span>
+<!-- HERO -->
+<section class="screen" id="hero">
+  <div class="hero-h1">
+    <h1>Custom built systems that save you <em class="acc">time and money</em></h1>
   </div>
-  <span class="ro-status" id="ro-st">Mapping baseline</span>
+</section>
+
+<!-- 01 -->
+<section class="screen" id="p-1">
+  <div class="eyebrow-row"><span class="mono">01 / What we do</span></div>
+  <div class="two">
+    <h2>We build automated systems that are custom made <span class="acc">specifically for your business.</span></h2>
+    <p class="lead">We specialize in identifying business inefficiencies that cost you valuable time and money, building tailored systems that deliver precise solutions for every operational challenge. Our expertise lies in transforming repetitive, manual tasks into smart, automated workflows that work for you.</p>
+  </div>
+  <span class="mono">Some of what we do</span>
+  <div class="rows" id="rows"></div>
+</section>
+
+<!-- 02 -->
+<section class="screen" id="p-2">
+  <div class="eyebrow-row"><span class="mono">02 / How it works</span></div>
+  <div class="two">
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4svh,26px)">
+      <h2>Turn repetitive manual work into <span class="acc">fast, automated business growth.</span></h2>
+      <p class="lead">We specialize in optimizing business operations by replacing repetitive manual tasks with custom systems and smart automations. We save you substantial time and money, with fees tied directly to real, measurable results.</p>
+    </div>
+    <div class="steps" id="steps"></div>
+  </div>
+  <div class="risk">
+    <span class="risk__sq" aria-hidden="true"></span>
+    <p>If the gain does not appear in your numbers against the baseline you approved, there is nothing to share. <span class="risk__tail">Written into the engagement.</span></p>
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="screen" id="p-3">
+  <div class="eyebrow-row"><span class="mono">03 / Who we are</span></div>
+  <div class="two">
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4svh,26px);align-items:flex-start">
+      <h2>We know where you lose time and money because we've already <span class="acc">solved it in our own operations</span></h2>
+      <p class="body">Having spent years launching and managing businesses ourselves, we understand operations from the inside. We know where companies waste valuable time: the repetitive manual tasks that eat up hours, the slow workflows, and the everyday operational bottlenecks.</p>
+      <p class="body">We design and build custom tech systems tailored specifically to eliminate those inefficiencies. The outcome is always straightforward: significant cost reduction, higher productivity, and real business growth.</p>
+      <a class="cta cta--inline" href="#contact"><span class="cta__sq" aria-hidden="true"></span>Book your free characterization session</a>
+    </div>
+    <div class="cards">
+      <article class="card card--d"><button class="card__btn" type="button" aria-expanded="false"><span class="card__head"><span class="mono">Operators</span><h3 class="card__t">Years of hands-on business management</h3></span><span class="card__sign" aria-hidden="true">+</span></button><div class="card__body"><p class="card__c">We know how real businesses operate day to day. This background lets us identify operational friction quickly and turn lost time into measurable financial savings.</p></div></article>
+      <article class="card card--d"><button class="card__btn" type="button" aria-expanded="false"><span class="card__head"><span class="mono">Builders</span><h3 class="card__t">Proven track record in custom software development</h3></span><span class="card__sign" aria-hidden="true">+</span></button><div class="card__body"><p class="card__c">Every system is built completely from scratch around your company’s unique workflow. We do not sell generic templates or one-size-fits-all fixes.</p></div></article>
+      <article class="card card--d"><button class="card__btn" type="button" aria-expanded="false"><span class="card__head"><span class="mono">The edge</span><h3 class="card__t">Modern, smart automation tools</h3></span><span class="card__sign" aria-hidden="true">+</span></button><div class="card__body"><p class="card__c">We use current, advanced automation technology instead of outdated legacy software. That lets us solve operational challenges fast, cost-effectively, and with zero unnecessary complexity.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="screen" id="p-4">
+  <div class="eyebrow-row"><span class="mono">04 / Our clients</span></div>
+  <div class="two two--clients">
+    <h2>Some of the operations we have <span class="acc">optimised so far.</span></h2>
+    <div class="pills">
+      <span class="sector">TOURISM</span><span class="sector">MARINE &amp; CRUISES</span><span class="sector">SPORT &amp; LEISURE</span><span class="sector">CREATIVE STUDIOS</span><span class="sector">RELOCATION</span>
+    </div>
+  </div>
+  <div class="clients">
+    <article class="card">dereh-haski.co.il</article>
+    <article class="card">tour-guide.co.il</article>
+    <article class="card">snowpro.co.il</article>
+    <article class="card">corfuprivatecruises.com</article>
+    <article class="card">Ponygrll Studios</article>
+    <article class="card">MikMak Relocations</article>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="screen" id="contact">
+  <div class="eyebrow-row"><span class="mono">05 / Get started</span></div>
+  <div class="two">
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2.4svh,26px)">
+      <h2>Start with a free strategy session. <span class="acc">See where your business can save.</span></h2>
+      <p class="lead">We sit down with you to review your operations, map out your workflows, and identify where custom automation can eliminate wasted time and cut costs. You get a clear operational roadmap with zero commitment required.</p>
+    </div>
+    <div class="ctas">
+      <a class="cta" href="mailto:info@synecura.com"><span class="cta__sq" aria-hidden="true"></span>info@synecura.com</a>
+      <a class="cta cta--out" href="#" data-pending="booking"><span class="cta__sq" aria-hidden="true"></span>Book a session</a>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="mono mono--micro">Syne<i>cura</i> &#183; Custom systems for operations</span>
+    <span class="mono mono--micro">&#169; 2026</span>
+  </div>
+</section>
+
 </div>
 
-<div class="chrome steps-nav">
-  <button class="stepbtn" id="up" aria-label="Previous screen">
-    <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 7.5L6 3.5L10 7.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
-  <button class="stepbtn" id="down" aria-label="Next screen">
-    <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
+<a class="sticky" id="sticky" href="#contact"><span class="sticky__sq" aria-hidden="true"></span>Book the free session</a>
+
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="ov__bar">
+    <button class="exit" id="ov-exit"><span class="exit__c" aria-hidden="true">&#8592;</span>Services</button>
+    <span class="ov__div" aria-hidden="true"></span>
+    <div class="chips" id="ov-chips"></div>
+  </div>
+  <span class="mono ov__eyebrow" id="ov-eyebrow"></span>
+  <h3 id="ov-title"></h3>
+  <div class="stage" id="stage"><canvas id="net" aria-hidden="true"></canvas></div>
+  <div class="syslist" id="syslist"></div>
 </div>
-
-<nav class="rail" id="rail" aria-label="Screens"></nav>
-
-<a class="variant" href="v2/" rel="nofollow" title="Switch to the blue variant"><b>A</b> &#183; Green</a>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"ProfessionalService",
-  "name":"Synecura",
-  "url":"https://liav-chanoch.github.io/morechain/",
-  "description":"Synecura builds custom operational systems for owner-run businesses (automation, internal tools, process redesign) and prices itself as a share of the verified saving.",
-  "slogan":"Systems that pay for themselves",
-  "serviceType":["Operations automation","Internal tools","Process redesign","Data and reporting"],
-  "areaServed":"Worldwide",
-  "email":"hello@synecura.co",
-  "offers":{
-    "@type":"Offer",
-    "name":"Discovery",
-    "price":"0",
-    "priceCurrency":"USD",
-    "description":"A free discovery engagement that maps where an operation's headroom sits and puts a number on the annual gain."
-  }
-}
-</script>
 
 <script>
 (function(){
 'use strict';
+var reduce = matchMedia('(prefers-reduced-motion: reduce)');
+var isPhone = function(){ return innerWidth <= 760; };
 
 /* ============================================================
-   Cached references and constants. Nothing here is re-queried
-   or re-measured inside the frame loop.
+   CONTENT. Operation labels and system names are from the brief.
+   The nine system descriptions live in the prototype, which is not
+   in this repo, so they are marked rather than invented.
    ============================================================ */
-var cv     = document.getElementById('chain');
-var ctx    = cv.getContext('2d', { alpha:true });
-var stack  = document.getElementById('stack');
-var cards  = Array.prototype.slice.call(stack.querySelectorAll('[data-card]'));
-var boxes  = cards.map(function(c){ return c.querySelector('.card__box'); });
-var dims   = cards.map(function(c){ return c.querySelector('.card__dim'); });
-var rail   = document.getElementById('rail');
-var upBtn  = document.getElementById('up');
-var dnBtn  = document.getElementById('down');
-var roUn   = document.getElementById('ro-un');
-var roCap  = document.getElementById('ro-cap');
-var roCh   = document.getElementById('ro-ch');
-var roSt   = document.getElementById('ro-st');
-var N      = cards.length;
-
-var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-var mqMob  = window.matchMedia('(max-width: 760px)');
-
-var NODES  = 13;
-var OPEN   = [3,7,10];
-var isOpen = [];
-for(var q=0;q<NODES;q++){ isOpen[q] = OPEN.indexOf(q) !== -1; }
-
-var LOOP = 8400, SWEEP = 5200, HOLD = 2000, REL = 700;
-var RETAIN = 0.30;
-var UNCAP_MAX = 48000;
-
-var GREEN = [60,210,145], MINT = [126,232,196], AMBER = [232,160,80], SLATE = [168,190,208];
-
-function rgba(c,a){ return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
-function clamp(v,a,b){ return v < a ? a : (v > b ? b : v); }
-function lerp(a,b,t){ return a + (b - a) * t; }
-function easeInOutCubic(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
+var SERVICES = [
+  { chip:'01 / Revenue', name:'Revenue and sales systems',
+    ops:['Inbound lead','Qualification','Sales call','Proposal','Close','Lead scoring','CRM sync','Follow-up','Forecast','Commission','Renewal','Handover'],
+    sys:[
+      { t:'AI Sales Copilot', d:'A context-rich assistant trained on the full sales knowledge base, giving reps instant answers and taking the operational load off high-volume pipelines.' },
+      { t:'Conversation Intelligence Agent', d:'Reviews sales calls end to end, surfaces coaching notes, flags missed objections, and recommends the next move to close.' },
+      { t:'Autonomous Pipeline Agent', d:'Operates across every pipeline to execute routine work automatically: follow-ups, reminders, and stage progression against defined business rules.' }
+    ] },
+  { chip:'02 / Orders', name:'Order and supplier platforms',
+    ops:['Order intake','Confirmation','Supplier dispatch','Fulfilment','Payment','Stock check','Purchase order','Delivery notes','Returns','Invoicing','Lead times','Archive'],
+    sys:[ { t:'Proprietary Order Management CRM', d:'An in-house CRM for centralised order intake, with automated payment request generation triggered directly from order data.' }, { t:'Supplier Portal', d:'A supplier-facing interface for order receipt, confirmation and live status tracking, replacing email coordination with a single source of truth.' } ] },
+  { chip:'03 / Pricing', name:'Pricing and quoting engines',
+    ops:['Client request','Inventory pull','Package build','Quote issued','Booking','Rate cards','Availability','Margin rules','Ancillaries','Approvals','Cancellation','Supplier feed'],
+    sys:[ { t:'Dynamic Packaging & Pricing Engine', d:'Builds complex multi-component quotes across hotels, flights and ancillaries, powered by live API integrations with external inventory aggregators.' }, { t:'Agent CPQ Platform', d:'A configure, price and quote layer for travel agents, handling dynamic pricing logic, automated commission calculation and client-ready proposals.' } ] },
+  { chip:'04 / Finance', name:'Finance automation',
+    ops:['Expense capture','Classification','Reconciliation','VAT filing','Reporting','Receipts','Entities','Recurring costs','Bank feed','Receivables','Audit trail','Year end'],
+    sys:[ { t:'Multi-Entity Expense Agent', d:'Captures and classifies expenses across multiple entities in parallel, with recurring-cost monitoring and anomaly detection.' }, { t:'Automated VAT & Revenue Reporting Agent', d:'Generates monthly and bi-monthly VAT filings with revenue, period-over-period deltas and tax liability, reconciling receivables to surface unbilled revenue.' } ] }
+];
+var SYS_COLOURS = ['#B4562F','#D0A05C','#C2703A'];
+function hexAlpha(hex, a){
+  var n = parseInt(hex.slice(1), 16);
+  return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + a + ')';
+}
+var STEPS = [
+  { t:'Discovery',
+    d:'A free strategy session with business owners and senior management. We analyze your core operations, map out where time and money are going to repetitive work, and give you a full analysis you keep, whatever you decide next.' },
+  { t:'Action Plan',
+    d:'A clear, data-backed plan detailing exactly which manual processes we will automate, the expected time and cost savings, and the exact metrics we will track together.' },
+  { t:'Custom Build',
+    d:'A tailor-made system engineered around your exact operational needs: fully integrated with your existing software, highly secure, and easy for your team to run independently.' },
+  { t:'Growth & Optimization',
+    d:'A flexible ongoing partnership where our fee reflects the real money and hours saved. As your business scales, we continue to streamline and automate new areas of your operations.' }
+];
 
 /* ============================================================
-   Layout. Measured on resize only.
+   01 rows and 02 steps
    ============================================================ */
-var W = 0, H = 0, DPR = 1, CARD_H = 0, MAX_SCROLL = 0, MOBILE = false;
+var rowsHost = document.getElementById('rows');
+SERVICES.forEach(function(s, i){
+  var b = document.createElement('button');
+  b.className = 'srow'; b.type = 'button';
+  b.innerHTML = '<span class="mono">' + ('0' + (i+1)) + '</span>' +
+                '<span class="srow__t"></span>' +
+                '<span class="srow__go" aria-hidden="true">&#8594;</span>';
+  b.querySelector('.srow__t').textContent = s.name;
+  b.addEventListener('click', function(){ openOverlay(i); });
+  rowsHost.appendChild(b);
+});
 
-/* A page can be laid out at zero size: a tab opened in the background, a
-   print context, some embeds. Caching a zero height here would make every
-   later division produce NaN, and since NaN fails every comparison it would
-   never recover, silently blanking the chain for the whole session. So every
-   measurement has a non-zero floor, and the observer below re-measures the
-   moment a real viewport appears. */
-function measure(){
-  var de = document.documentElement;
-  W = window.innerWidth  || de.clientWidth  || 1280;
-  H = window.innerHeight || de.clientHeight || 800;
-  DPR = Math.min(1.5, window.devicePixelRatio || 1);
-  cv.width  = Math.round(W * DPR);
-  cv.height = Math.round(H * DPR);
-  ctx.setTransform(DPR,0,0,DPR,0,0);
-  CARD_H = Math.max(1, cards[0].getBoundingClientRect().height || H);
-  MAX_SCROLL = Math.max(1, de.scrollHeight - H);
-  MOBILE = mqMob.matches;
-}
-
-function remeasure(){
-  measure();
-  for(var i=0;i<N;i++){ lastScale[i] = -1; lastDim[i] = -1; }
-  lastOpacity = -1; lastActive = -1;
-  if(reduce.matches) staticFrame();
-}
+var stepsHost = document.getElementById('steps');
+STEPS.forEach(function(st, i){
+  var wrap = document.createElement('div');
+  wrap.className = 'step';
+  var idx = ('0' + (i+1));
+  wrap.innerHTML =
+    '<button class="step__btn" type="button" aria-expanded="false">' +
+      '<span class="mono step__n">' + idx + '</span>' +
+      '<span class="step__h"><span class="step__t"></span>' + (i === 0 ? '<span class="pill">No charge</span>' : '') + '</span>' +
+      '<span class="step__sign" aria-hidden="true">+</span>' +
+    '</button>' +
+    '<div class="step__body"><p class="body"></p></div>';
+  wrap.querySelector('.step__t').textContent = st.t;
+  wrap.querySelector('.step__body p').textContent = st.d;
+  var btn = wrap.querySelector('.step__btn');
+  btn.addEventListener('click', function(){
+    if(!isPhone()) return;                       /* accordion is a phone behaviour */
+    var open = wrap.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    wrap.querySelector('.step__sign').textContent = open ? '−' : '+';
+  });
+  stepsHost.appendChild(wrap);
+});
 
 /* ============================================================
-   Chain state
+   SCREEN 03 DISCLOSURE
+   Same contract as the step rows: a phone behaviour only, one open
+   at a time, desktop renders every body with no toggle.
    ============================================================ */
-var particles = [];
-var rings = [];
-var sealedAt = [];
-for(var r=0;r<NODES;r++){ sealedAt[r] = -1; }
+Array.prototype.forEach.call(document.querySelectorAll('#p-3 .card--d'), function(card){
+  var btn = card.querySelector('.card__btn');
+  var sign = card.querySelector('.card__sign');
+  btn.addEventListener('click', function(){
+    if(!isPhone()) return;
+    var willOpen = !card.classList.contains('open');
+    Array.prototype.forEach.call(document.querySelectorAll('#p-3 .card--d'), function(o){
+      o.classList.remove('open');
+      o.querySelector('.card__sign').textContent = '+';
+      o.querySelector('.card__btn').setAttribute('aria-expanded', 'false');
+    });
+    if(willOpen){
+      card.classList.add('open');
+      sign.textContent = '\u2212';
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
 
-var uncaptured = 0, captured = 0;
-var lastUn = '', lastCap = '', lastCh = '', lastSt = '';
-var spawnAcc = 0;
-var loopT = 0, prevAuto = 0;
+/* ============================================================
+   SCROLL REVEAL
+   Targets are a screen's own children, except that a list hands its
+   items over so they stagger individually rather than as one block.
+   The class comes off once the animation ends, so nothing is left
+   holding a transform that a hover state would need to override.
+   ============================================================ */
+(function(){
+  var LISTS = '.rows, .steps, .cards, .clients';
+  var screens = Array.prototype.slice.call(document.querySelectorAll('.screen'))
+    .filter(function(sc){ return sc.id !== 'hero'; });   /* the hero opens on the wordmark and the network */
 
-function roundRect(x,y,w,h,rad){
-  ctx.beginPath();
-  ctx.moveTo(x+rad,y);
-  ctx.lineTo(x+w-rad,y); ctx.quadraticCurveTo(x+w,y,x+w,y+rad);
-  ctx.lineTo(x+w,y+h-rad); ctx.quadraticCurveTo(x+w,y+h,x+w-rad,y+h);
-  ctx.lineTo(x+rad,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-rad);
-  ctx.lineTo(x,y+rad); ctx.quadraticCurveTo(x,y,x+rad,y);
-  ctx.closePath();
-}
+  /* Never split these: each is one idea and reads as one move. */
+  var ATOMIC = '.eyebrow-row, .risk, .foot, .pills, .ctas, .cta, .srow, .step, .card, .clients';
 
-/* Glow is a two pass stroke of the same path, never shadowBlur, which was a
-   measured cost when it ran per node per frame. The widths are proportional
-   rather than fixed: the brief's 5px halo and 1.1px stroke are correct at the
-   reference's small node, but on a node twice that size the same absolute
-   values read as thin wire instead of a phosphor bloom. */
-function twoPass(color, glowA, size){
-  /* One wide faint pass for the halo, one thin opaque pass for the edge.
-     The widths stay small on purpose: stacking wide strokes draws a thick
-     square ring, which is the neon sign the brief rules out. */
-  ctx.lineWidth = Math.max(4, size * 0.17);
-  ctx.strokeStyle = rgba(color, glowA);
-  ctx.stroke();
-  ctx.lineWidth = Math.max(1.1, size * 0.05);
-  ctx.strokeStyle = rgba(color, 1);
-  ctx.stroke();
-}
-
-function draw(seal, dockP, dt){
-  ctx.clearRect(0,0,W,H);
-
-  /* The phone hero runs a short chain: a full height one crowded the 44px
-     headline and the two buttons. Docked, both platforms grow past the edges. */
-  var heroLen = MOBILE ? Math.max(200, Math.min(H * 0.52, 400))
-                       : Math.max(220, Math.min(H - 190, 940));
-  var dockLen = H * 1.02;
-  var len = lerp(heroLen, dockLen, dockP);
-  /* On a 390px card a centred chain sits straight through the headline, so
-     the phone hero holds it off to the right before it docks. */
-  /* Hero lane is not a flat percentage: the reference puts it at 86% of a
-     924px viewport and 76% of a 2000px one, which is the same line,
-     0.672W + 172. Docking then walks it out to the right edge, which is a
-     flat 90.7% in the reference. */
-  var heroX = Math.min(W * 0.90, W * 0.672 + 172);
-  /* A phone is one width, so the lane is a constant offset from the edge
-     rather than anything measured. Docked it sits right against the edge:
-     there is no rail on mobile, so nothing needs clearance. */
-  var cx  = MOBILE ? lerp(W - 52, W - 26, dockP) : lerp(heroX, W * 0.907, dockP);
-  var top = (H - len) / 2;
-  var gap = len / (NODES - 1);
-  var size = clamp(gap * 0.57, 9, MOBILE ? 44 : 70);
-  var half = size / 2;
-  var sealY = top + seal * len;
-
-  /* Spine: dim for its whole length, lit behind the seal front. */
-  ctx.beginPath();
-  ctx.moveTo(cx, top);
-  ctx.lineTo(cx, top + len);
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = rgba(SLATE, 0.18);
-  ctx.stroke();
-
-  if(seal > 0.001){
-    ctx.beginPath();
-    ctx.moveTo(cx, top);
-    ctx.lineTo(cx, sealY);
-    ctx.lineWidth = Math.max(2, size * 0.09);
-    ctx.strokeStyle = rgba(GREEN, 0.12);
-    ctx.stroke();
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = rgba(GREEN, 0.7);
-    ctx.stroke();
+  function collect(el, out){
+    Array.prototype.forEach.call(el.children, function(k){
+      if(k.matches(LISTS)) Array.prototype.push.apply(out, Array.prototype.slice.call(k.children));
+      else if(k.matches(ATOMIC)) out.push(k);
+      else if(k.tagName === 'DIV' && k.children.length) collect(k, out);   /* a wrapper hands over its copy */
+      else out.push(k);
+    });
+    return out;
   }
 
-  /* Sealed band: a soft gradient centred on the spine, never a hard edge. */
-  if(seal > 0.001){
-    var bandW = Math.max(40, size * 3.2);
-    var bandH = sealY - top;
-    var SLICES = 12;
-    for(var b = 0; b < SLICES; b++){
-      var mid = (b + 0.5) / SLICES;
-      /* Fade in over the first fifth and out over the last eighth, so the
-         band has no hard top or bottom edge. */
-      var env = Math.min(1, mid / 0.2) * Math.min(1, (1 - mid) / 0.125);
-      if(env <= 0.001) continue;
-      var g = ctx.createLinearGradient(cx - bandW, 0, cx + bandW, 0);
-      g.addColorStop(0,   rgba(GREEN, 0));
-      g.addColorStop(0.5, rgba(GREEN, 0.055 * env));
-      g.addColorStop(1,   rgba(GREEN, 0));
-      ctx.fillStyle = g;
-      ctx.fillRect(cx - bandW, top + bandH * (b / SLICES), bandW * 2, bandH / SLICES + 1);
-    }
+  function reveal(sc){
+    if(sc.classList.contains('in')) return;
+    sc.classList.add('in');
   }
 
-  /* Nodes */
-  for(var i=0;i<NODES;i++){
-    var y = top + i * gap;
-    var sealedNow = (i / (NODES - 1)) <= seal + 0.0001;
+  if(!('IntersectionObserver' in window)) return;
 
-    if(sealedNow && sealedAt[i] < 0){
-      sealedAt[i] = 1;
-      rings.push({ x:cx, y:y, t:0, mint:isOpen[i] });
-    } else if(!sealedNow && sealedAt[i] > 0){
-      sealedAt[i] = -1;
+  screens.forEach(function(sc){
+    collect(sc, []).forEach(function(el, i){
+      el.classList.add('rv');
+      el.style.setProperty('--i', String(Math.min(i, 10)));
+    });
+    sc.addEventListener('animationend', function(e){
+      if(e.target.classList && e.target.classList.contains('rv')) e.target.classList.remove('rv');
+    });
+  });
+  document.documentElement.classList.add('js-rv');
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ reveal(en.target); io.unobserve(en.target); }
+    });
+    /* Root shrunk to the top third of the viewport. A screen reaches it only
+       as it settles, so the reveal plays where it can be seen. Judged on the
+       ratio instead, screen 01 fired 136px into the 656px scroll that lands
+       it, and a flick was over before the screen arrived. Shrinking the root
+       also keeps this working for screen 03, which is taller than the
+       viewport and never reaches a high ratio at all. */
+  }, { rootMargin:'0px 0px -68% 0px', threshold:0 });
+  screens.forEach(function(sc){ io.observe(sc); });
+
+  /* Backstop for a callback that never arrives. Same rule as the observer,
+     and driven by scrolling, so it can only fire once a screen is arriving. */
+  function sweep(){
+    screens.forEach(function(sc){
+      var r = sc.getBoundingClientRect();
+      if(r.top < innerHeight * 0.32 && r.bottom > 0) reveal(sc);
+    });
+  }
+  addEventListener('scroll', sweep, { passive:true });
+  addEventListener('resize', sweep);
+  var guard = setInterval(function(){
+    sweep();
+    if(!document.querySelector('.screen:not(.in) .rv')) clearInterval(guard);
+  }, 400);
+})();
+
+/* ============================================================
+   HERO DOCK
+   ============================================================ */
+var wordmark = document.getElementById('wordmark');
+var plate = document.getElementById('plate');
+var peekmask = document.getElementById('peekmask');
+var heroH1 = document.querySelector('.hero-h1');
+var heroCanvas = document.getElementById('net-hero');
+var bigK = 1, range = 1;
+
+function measureDock(){
+  wordmark.style.transform = '';
+  var fs = parseFloat(getComputedStyle(wordmark).fontSize) || 100;
+  bigK = 22 / fs;
+  range = Math.max(1, innerHeight * 0.8);
+}
+function easeIO(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
+
+var lastP = -1;
+function applyScroll(){
+  var p = Math.min(1, Math.max(0, pageYOffset / range));
+  if(peekmask) peekmask.style.opacity = pageYOffset > 2 ? '0' : '1';
+  if(p === lastP) return;
+  lastP = p;
+  var e = easeIO(p);
+  var k = 1 + (bigK - 1) * e;
+  wordmark.style.transform = 'scale(' + k.toFixed(4) + ')';
+  if(innerWidth > 760) plate.style.transform = 'scale(' + k.toFixed(4) + ')';
+  plate.style.opacity = p.toFixed(3);
+  var h = Math.max(0, 1 - p * 2);
+  heroH1.style.opacity = h.toFixed(3);
+  heroH1.style.transform = 'translateY(' + (-34 * e).toFixed(1) + 'px)';
+  heroCanvas.style.opacity = (1 - 0.7 * p).toFixed(3);
+}
+
+/* ============================================================
+   NETWORK ENGINE
+   ============================================================ */
+/* ============================================================
+   SHARED DRAWING LANGUAGE
+   ============================================================ */
+var ACC = '#9B4A32', HOT = '#CE8A52', AMB = '#8A6A3E';
+var SLATE = 'rgba(239,231,218,0.20)';
+function hexA(hex, a){
+  var n = parseInt(hex.slice(1), 16);
+  return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + Math.max(0,a).toFixed(3) + ')';
+}
+function outC(t){ return 1 - Math.pow(1 - t, 3); }
+function angDist(a, b){ var d = Math.abs(a-b) % 6.28318; return d > 3.14159 ? 6.28318 - d : d; }
+function rr(ctx, x, y, s){
+  var h = s/2, rad = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(x-h+rad,y-h); ctx.lineTo(x+h-rad,y-h); ctx.quadraticCurveTo(x+h,y-h,x+h,y-h+rad);
+  ctx.lineTo(x+h,y+h-rad); ctx.quadraticCurveTo(x+h,y+h,x+h-rad,y+h);
+  ctx.lineTo(x-h+rad,y+h); ctx.quadraticCurveTo(x-h,y+h,x-h,y+h-rad);
+  ctx.lineTo(x-h,y-h+rad); ctx.quadraticCurveTo(x-h,y-h,x-h+rad,y-h); ctx.closePath();
+}
+function fitCanvas(canvas, ctx){
+  var dpr = Math.min(devicePixelRatio || 1, 1.5);
+  var w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return { w:w, h:h };
+}
+
+/* ============================================================
+   HERO NETWORK
+   Its own constants: they are not the service ones.
+   ============================================================ */
+function makeHero(canvas, opts){
+  opts = opts || {};
+  var density = opts.density == null ? 2 : opts.density;
+  var speed = opts.speed == null ? 1 : opts.speed;
+  var ctx = canvas.getContext('2d');
+  var W=0,H=0,cx=0,cy=0,R=0,mobile=false;
+  var nodes=[], edges=[], pulses=[], clock=0, seeded=false;
+  var CYCLE = 13;
+
+  function size(){
+    var d = fitCanvas(canvas, ctx); W = d.w; H = d.h;
+    mobile = W < 760;
+    cx = mobile ? W*0.5 : W*0.60;
+    cy = mobile ? H*0.40 : H*0.47;
+    R  = mobile ? Math.min(W*0.46, H*0.30) : Math.min(W*0.40, H*0.46);
+  }
+
+  function build(){
+    nodes=[]; edges=[]; pulses=[]; seeded=false;
+    var rings = (density === 1 ? 2 : density === 3 ? 4 : 3) + (Math.random() < 0.4 ? 1 : 0);
+    nodes.push({ r:0, a:0, hub:true });
+    var starts=[0];
+    for(var k=1;k<=rings;k++){
+      var count = 5 + k*2 + Math.floor(Math.random()*4);
+      var off = Math.random()*6.28318;
+      starts.push(nodes.length);
+      for(var i=0;i<count;i++){
+        nodes.push({ r: k/rings + (Math.random()-0.5)*0.075,
+                     a: off + (i/count)*6.28318 + (Math.random()-0.5)*0.20,
+                     ring:k });
+      }
+      var st = starts[k], n = count;
+      for(var j=0;j<n;j++){
+        if(Math.random() < 0.16) continue;
+        edges.push({ a:st+j, b:st+((j+1)%n) });
+      }
+      var skip = (k === 1 ? 0.52 : 0.26);
+      for(var m=0;m<n;m++){
+        if(Math.random() < skip) continue;
+        var ps = starts[k-1], pe = st, best = ps, bd = 9;
+        for(var q=ps;q<pe;q++){
+          var d2 = angDist(nodes[q].a, nodes[st+m].a);
+          if(d2 < bd){ bd = d2; best = q; }
+        }
+        edges.push({ a:best, b:st+m });
+      }
     }
+    nodes.forEach(function(nd){
+      nd.adj = []; nd.lit = 0; nd.drift = Math.random()*6.28318;
+      var far = 1.5 + Math.random()*0.8, ang = Math.random()*6.28318;
+      nd.ox = Math.cos(ang)*far; nd.oy = Math.sin(ang)*far;
+      nd.delay = 0.12 + nd.r*1.0 + Math.random()*0.4;
+    });
+    edges.forEach(function(e,i){
+      e.lit = 0; e.delay = 1.7 + i*0.013 + Math.random()*0.25;
+      nodes[e.a].adj.push(i); nodes[e.b].adj.push(i);
+    });
+    clock = 0;
+  }
 
-    if(!sealedNow && isOpen[i] && i < NODES - 1){
-      ctx.save();
-      ctx.setLineDash([Math.max(3, size*0.16), Math.max(4, size*0.2)]);
-      ctx.beginPath();
-      ctx.moveTo(cx, y + half);
-      ctx.lineTo(cx, y + gap - half);
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = rgba(AMBER, 0.55);
+  function entered(nd, t){ return outC(Math.min(1, Math.max(0, (t - nd.delay)/1.5))); }
+  function posOf(nd, t, spin){
+    var e = entered(nd, t);
+    var a = nd.a + spin;
+    var rad = nd.r * R;
+    var x = Math.cos(a)*rad, y = Math.sin(a)*rad;
+    /* fly in from outside */
+    x += nd.ox * R * (1-e); y += nd.oy * R * (1-e);
+    y += Math.sin(clock*0.9 + nd.drift) * (mobile ? 1.1 : 1.8) * e;
+    return { x:x, y:y, e:e };
+  }
+
+  function step(dt){
+    clock += dt * speed;
+    if(clock > CYCLE){ build(); return; }
+    var t = clock;
+    if(!seeded && t > 4.6){
+      seeded = true;
+      nodes[0].adj.forEach(function(ei){ pulses.push({ e:ei, from:0, t:0 }); });
+    }
+    if(t > 4.6 && t < CYCLE - 2.2){
+      for(var i=pulses.length-1;i>=0;i--){
+        var q = pulses[i]; q.t += dt * 1.5;
+        edges[q.e].lit = 1;
+        if(q.t >= 1){
+          var ed = edges[q.e], other = ed.a === q.from ? ed.b : ed.a;
+          nodes[other].lit = 1;
+          nodes[other].adj.forEach(function(ei){
+            if(ei === q.e || pulses.length >= 90) return;
+            if(Math.random() < 0.62) pulses.push({ e:ei, from:other, t:0 });
+          });
+          pulses.splice(i,1);
+        }
+      }
+    }
+    edges.forEach(function(e){ if(e.lit>0) e.lit = Math.max(0, e.lit - dt*0.55); });
+    nodes.forEach(function(n){ if(n.lit>0) n.lit = Math.max(0, n.lit - dt*0.30); });
+  }
+
+  function draw(){
+    var t = reduce.matches ? 6.5 : clock;
+    var spin = reduce.matches ? 0 : clock * 0.021;
+    var diss = Math.min(1, Math.max(0, (t - (CYCLE - 1.9))/1.7));
+    var fa = reduce.matches ? 1 : 1 - diss;
+    ctx.setTransform(Math.min(devicePixelRatio||1,1.5),0,0,Math.min(devicePixelRatio||1,1.5),0,0);
+    ctx.clearRect(0,0,W,H);
+    ctx.save(); ctx.translate(cx, cy);
+
+    var P = nodes.map(function(nd){ return posOf(nd, t, spin); });
+
+    edges.forEach(function(e){
+      var ep = Math.min(1, Math.max(0, (t - e.delay)/0.85));
+      if(ep <= 0) return;
+      if(P[e.a].e < 0.35 || P[e.b].e < 0.35) return;
+      ep = outC(ep);
+      var A=P[e.a], B=P[e.b];
+      ctx.globalAlpha = fa;
+      ctx.beginPath(); ctx.moveTo(A.x,A.y);
+      ctx.lineTo(A.x+(B.x-A.x)*ep, A.y+(B.y-A.y)*ep);
+      if(e.lit > 0.02){ ctx.strokeStyle = hexA(HOT, 0.45 + 0.45*e.lit); ctx.lineWidth = 1.4; }
+      else if(ep < 1){ ctx.strokeStyle = hexA(ACC, mobile ? 0.82 : 0.6); ctx.lineWidth = 1; }
+      else { ctx.strokeStyle = SLATE; ctx.lineWidth = 1; }
       ctx.stroke();
-      ctx.restore();
-    }
+    });
 
-    roundRect(cx - half, y - half, size, size, 2.5);
+    if(!reduce.matches) pulses.forEach(function(q){
+      var ed = edges[q.e], A = P[ed.a === q.from ? ed.a : ed.b], B = P[ed.a === q.from ? ed.b : ed.a];
+      var x = A.x + (B.x-A.x)*Math.min(1,q.t), y = A.y + (B.y-A.y)*Math.min(1,q.t);
+      ctx.globalAlpha = fa * 0.9;
+      ctx.beginPath(); ctx.arc(x,y,2,0,6.28318); ctx.fillStyle = HOT; ctx.fill();
+    });
 
-    if(!sealedNow){
-      if(isOpen[i]){ twoPass(AMBER, 0.20, size); }
-      else{
-        ctx.lineWidth = Math.max(1.1, size * 0.05);
-        ctx.strokeStyle = rgba(SLATE, 0.26);
-        ctx.stroke();
+    nodes.forEach(function(nd,i){
+      var p = P[i], e = p.e;
+      if(e <= 0) return;
+      var sz = (nd.hub ? 13 : 7) * (mobile ? 0.82 : 1);
+      ctx.globalAlpha = fa * (0.25 + 0.75*e);
+      rr(ctx, p.x, p.y, sz);
+      if(nd.lit > 0.02){ ctx.fillStyle = hexA(HOT, 0.26*nd.lit); ctx.fill(); }
+      else if(nd.hub){ ctx.fillStyle = hexA(ACC, 0.16); ctx.fill(); }
+      if(e < 1){ ctx.lineWidth = 1.1; ctx.strokeStyle = hexA(AMB, (mobile ? 0.95 : 0.7)*(1-e)); ctx.stroke(); }
+      if(nd.lit > 0.02){ ctx.strokeStyle = HOT; ctx.lineWidth = 1.4; }
+      else if(nd.hub){ ctx.strokeStyle = hexA(ACC, 0.7); ctx.lineWidth = 1.1; }
+      else { ctx.strokeStyle = SLATE; ctx.lineWidth = 1.1; }
+      ctx.stroke();
+      if(nd.hub && nd.lit > 0.02){
+        var inn = sz*0.44;
+        ctx.fillStyle = hexA(HOT, nd.lit);
+        ctx.fillRect(p.x-inn/2, p.y-inn/2, inn, inn);
       }
-    } else if(isOpen[i]){
-      ctx.fillStyle = rgba(MINT, 0.16); ctx.fill();
-      twoPass(MINT, 0.22, size);
-      var inner = size * 0.34;
-      ctx.fillStyle = rgba(MINT, 0.95);
-      ctx.fillRect(cx - inner/2, y - inner/2, inner, inner);
+    });
+    ctx.globalAlpha = 1; ctx.restore();
+  }
+
+  return { size:size, build:build, step:step, draw:draw };
+}
+
+/* ============================================================
+   SERVICE NETWORK
+   Geometry from the stage box. No rebuild while a panel is open.
+   ============================================================ */
+function makeService(canvas, opts){
+  opts = opts || {};
+  var ctx = canvas.getContext('2d');
+  var W=0,H=0,cx=0,cy=0,RX=0,RY=0,mobile=false;
+  var nodes=[], edges=[], pulses=[], srcIdx=[], labelIdx=[];
+  var clock=0, spin=0, breathe=0, wave=-1, fade=0, dissolving=false, hoverCard=-1;
+
+  function size(){
+    var d = fitCanvas(canvas, ctx); W = d.w; H = d.h;
+    mobile = W < 760;
+    cx = W*0.5; cy = H*0.5; RX = W*0.44; RY = H*0.42;
+  }
+
+  function build(cardCount, labelCount){
+    nodes=[]; edges=[]; pulses=[]; srcIdx=[]; labelIdx=[];
+    clock=0; spin=0; breathe=0; wave=-1; fade=0; dissolving=false; hoverCard=-1;
+    var rings = 3 + (Math.random() < 0.45 ? 1 : 0);
+    nodes.push({ r:0, a:0, hub:true, ring:0 });
+    var starts=[0];
+    for(var k=1;k<=rings;k++){
+      var count = 6 + k*2 + Math.floor(Math.random()*4);
+      var off = Math.random()*6.28318;
+      starts.push(nodes.length);
+      for(var i=0;i<count;i++){
+        nodes.push({ r: k/rings + (Math.random()-0.5)*0.07,
+                     a: off + (i/count)*6.28318 + (Math.random()-0.5)*0.2, ring:k });
+      }
+      var st=starts[k], n=count;
+      for(var j=0;j<n;j++){
+        if(Math.random() < 0.18) continue;
+        edges.push({ a:st+j, b:st+((j+1)%n) });
+      }
+      var skip = (k === 1 ? 0.45 : 0.28);
+      for(var m=0;m<n;m++){
+        if(Math.random() < skip) continue;
+        var ps=starts[k-1], pe=st, best=ps, bd=9;
+        for(var q=ps;q<pe;q++){
+          var dd = angDist(nodes[q].a, nodes[st+m].a);
+          if(dd < bd){ bd = dd; best = q; }
+        }
+        edges.push({ a:best, b:st+m });
+      }
+    }
+    nodes.forEach(function(nd){
+      nd.adj=[]; nd.lit=0; nd.gw=0; nd.drift=Math.random()*6.28318;
+      nd.delay = 0.1 + nd.r*0.9 + Math.random()*0.3;
+      var far = 1.4 + Math.random()*0.8, ang = Math.random()*6.28318;
+      nd.ox = Math.cos(ang)*far; nd.oy = Math.sin(ang)*far;
+    });
+    edges.forEach(function(e,i){
+      e.lit=0; e.delay = 1.1 + i*0.011 + Math.random()*0.2;
+      nodes[e.a].adj.push(i); nodes[e.b].adj.push(i);
+    });
+
+    /* sources: one ring-2 node per card, spread around the circle */
+    var srcRing = rings < 3 ? 1 : 2;
+    var used = {};
+    for(var c=0;c<cardCount;c++){
+      var want = -1.9 + c * (5.0 / cardCount), pick=-1, bestd=99;
+      for(var i2=0;i2<nodes.length;i2++){
+        if(used[i2] || nodes[i2].ring !== srcRing) continue;
+        var dd2 = angDist(nodes[i2].a, want);
+        if(dd2 < bestd){ bestd = dd2; pick = i2; }
+      }
+      if(pick < 0) continue;
+      used[pick]=1; nodes[pick].src = true; nodes[pick].sysK = c; srcIdx.push(pick);
+    }
+    /* labels: outer, unused, nearest a target angle and the outer radius */
+    for(var l=0;l<labelCount;l++){
+      var wantA = -3.1 + l * (6.28318 / labelCount), lp=-1, lb=99;
+      for(var i3=0;i3<nodes.length;i3++){
+        if(used[i3] || nodes[i3].ring < 2 || nodes[i3].src) continue;
+        var sc = angDist(nodes[i3].a, wantA) + Math.abs(1 - nodes[i3].r);
+        if(sc < lb){ lb = sc; lp = i3; }
+      }
+      if(lp < 0) continue;
+      used[lp]=1; labelIdx.push(lp);
+    }
+  }
+
+  function entered(nd, t){ return outC(Math.min(1, Math.max(0, (t - nd.delay)/0.9))); }
+  function posOf(nd, t){
+    var e = entered(nd, t);
+    var a = nd.a + spin;
+    var r2 = nd.r * (1 + 0.02*Math.sin(breathe + nd.drift));
+    var x = cx + Math.cos(a)*r2*RX, y = cy + Math.sin(a)*r2*RY;
+    x += nd.ox * RX * (1-e); y += nd.oy * RY * (1-e);
+    y += Math.sin(clock*0.8 + nd.drift) * (mobile ? 0.9 : 1.4) * e;
+    return { x:x, y:y, e:e };
+  }
+
+  function step(dt){
+    clock += dt;
+    if(!reduce.matches){ spin += dt*0.014; breathe += dt*0.055; }
+    var grow = Math.min(1, Math.max(0, clock/0.7));
+    fade = dissolving ? Math.max(0, fade - dt*2.6) : grow;
+    if(reduce.matches) return;
+    var t = clock;
+    var w = Math.floor((t - 2.6) / 6.2);
+    if(t > 2.6 && w !== wave){
+      wave = w;
+      srcIdx.forEach(function(sn, k){
+        setTimeout(function(){
+          if(!nodes[sn]) return;
+          nodes[sn].lit = 1;
+          nodes[sn].adj.forEach(function(ei){ if(pulses.length < 60) pulses.push({ e:ei, from:sn, t:0 }); });
+        }, k*260);
+      });
+    }
+    for(var i=pulses.length-1;i>=0;i--){
+      var q = pulses[i]; q.t += dt*1.35;
+      edges[q.e].lit = 1;
+      if(q.t >= 1){
+        var ed = edges[q.e], other = ed.a === q.from ? ed.b : ed.a;
+        nodes[other].lit = 1;
+        nodes[other].adj.forEach(function(ei){
+          if(ei === q.e || pulses.length >= 60) return;
+          if(Math.random() < 0.42) pulses.push({ e:ei, from:other, t:0 });
+        });
+        pulses.splice(i,1);
+      }
+    }
+    edges.forEach(function(e){ if(e.lit>0) e.lit = Math.max(0, e.lit - dt*0.85); });
+    nodes.forEach(function(n){
+      if(n.lit>0) n.lit = Math.max(0, n.lit - dt*0.55);
+      var target = (n.src && srcIdx[hoverCard] === nodes.indexOf(n)) ? 1 : 0;
+      n.gw += (target - n.gw) * Math.min(1, dt*7);
+    });
+  }
+
+  var P = [];
+  /* Where a node ends up, ignoring the fly in offset. The DOM is placed from
+     these so cards and labels never sit at the origin during the entrance. */
+  function posSettled(nd){
+    var a = nd.a + spin;
+    var r2 = nd.r * (1 + 0.02*Math.sin(breathe + nd.drift));
+    return { x: cx + Math.cos(a)*r2*RX,
+             y: cy + Math.sin(a)*r2*RY + Math.sin(clock*0.8 + nd.drift) * (mobile ? 0.9 : 1.4),
+             e: entered(nd, clock) };
+  }
+  function draw(){
+    var t = reduce.matches ? 5 : clock;
+    ctx.setTransform(Math.min(devicePixelRatio||1,1.5),0,0,Math.min(devicePixelRatio||1,1.5),0,0);
+    ctx.clearRect(0,0,W,H);
+    P = nodes.map(function(nd){ return posOf(nd, t); });
+
+    edges.forEach(function(e){
+      var ep = Math.min(1, Math.max(0, (t - e.delay)/0.6));
+      if(ep <= 0) return;
+      if(P[e.a].e < 0.35 || P[e.b].e < 0.35) return;
+      ep = outC(ep);
+      var A=P[e.a], B=P[e.b];
+      ctx.beginPath(); ctx.moveTo(A.x,A.y);
+      ctx.lineTo(A.x+(B.x-A.x)*ep, A.y+(B.y-A.y)*ep);
+      if(e.lit > 0.02){ ctx.strokeStyle = hexA(HOT, 0.26 + 0.46*e.lit); ctx.lineWidth = 1.3; }
+      else { ctx.strokeStyle = SLATE; ctx.lineWidth = 1; }
+      ctx.stroke();
+    });
+
+    if(!reduce.matches) pulses.forEach(function(q){
+      var ed = edges[q.e];
+      var A = P[q.from], B = P[ed.a === q.from ? ed.b : ed.a];
+      if(!A || !B) return;
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.arc(A.x+(B.x-A.x)*Math.min(1,q.t), A.y+(B.y-A.y)*Math.min(1,q.t), 2, 0, 6.28318);
+      ctx.fillStyle = HOT; ctx.fill(); ctx.globalAlpha = 1;
+    });
+
+    nodes.forEach(function(nd,i){
+      var p = P[i]; if(p.e <= 0) return;
+      var col = nd.src ? SYS_COLOURS[nd.sysK % 3] : null;
+      var sz = (nd.src ? 14 + 12*nd.gw : nd.hub ? 11 : 7) * (mobile ? 0.85 : 1);
+      ctx.globalAlpha = 0.25 + 0.75*p.e;
+      rr(ctx, p.x, p.y, sz);
+      if(nd.src){ ctx.fillStyle = hexA(col, 0.22); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.4; }
+      else if(nd.lit > 0.02){ ctx.fillStyle = hexA(HOT, 0.24*nd.lit); ctx.fill(); ctx.strokeStyle = HOT; ctx.lineWidth = 1.3; }
+      else if(nd.hub){ ctx.fillStyle = hexA(ACC, 0.12); ctx.fill(); ctx.strokeStyle = hexA(ACC, 0.7); ctx.lineWidth = 1.1; }
+      else { ctx.strokeStyle = SLATE; ctx.lineWidth = 1.1; }
+      ctx.stroke();
+      if(nd.src){
+        var inn = sz*0.40;
+        ctx.fillStyle = col; ctx.fillRect(p.x-inn/2, p.y-inn/2, inn, inn);
+        if(nd.lit > 0.02){
+          ctx.beginPath(); ctx.arc(p.x,p.y, sz*(0.8 + (1-nd.lit)*1.6), 0, 6.28318);
+          ctx.strokeStyle = hexA(col, 0.45*nd.lit); ctx.lineWidth = 1; ctx.stroke();
+        }
+        if(nd.gw > 0.01){
+          ctx.beginPath(); ctx.arc(p.x,p.y, sz*0.95 + 8, 0, 6.28318);
+          ctx.strokeStyle = hexA(col, 0.6*nd.gw); ctx.lineWidth = 1.1; ctx.stroke();
+        }
+        if(opts.badges){
+          ctx.font = "600 10px 'IBM Plex Mono', monospace";
+          ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+          ctx.fillStyle = hexA(col, 0.95);
+          ctx.fillText('S0' + (nd.sysK+1), p.x + sz*0.72, p.y);
+        }
+      }
+      ctx.globalAlpha = 1;
+    });
+  }
+
+  function tie(x1,y1,x2,y2,k){
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+    ctx.lineWidth = 1.2; ctx.strokeStyle = hexA(SYS_COLOURS[k%3], 0.6); ctx.stroke();
+  }
+
+  return {
+    size:size, build:build, step:step, draw:draw, tie:tie,
+    pos:function(i){ return P[i]; }, allPos:function(){ return P; },
+    allPosSettled:function(){ return nodes.map(posSettled); },
+    nodes:function(){ return nodes; }, sources:function(){ return srcIdx; },
+    labels:function(){ return labelIdx; },
+    setHover:function(k){ hoverCard = k; },
+    fadeValue:function(){ return fade; },
+    dissolve:function(v){ dissolving = v; },
+    centre:function(){ return { cx:cx, cy:cy, W:W, H:H }; }
+  };
+}
+
+/* ============================================================
+   OVERLAY: chips, labels, system cards, popups
+   ============================================================ */
+var ov = document.getElementById('ov');
+var ovExit = document.getElementById('ov-exit');
+var ovChips = document.getElementById('ov-chips');
+var ovEyebrow = document.getElementById('ov-eyebrow');
+var ovTitle = document.getElementById('ov-title');
+var stage = document.getElementById('stage');
+var syslist = document.getElementById('syslist');
+var net = makeService(document.getElementById('net'), { badges:isPhone() });
+var current = -1, ovOpen = false, lastFocus = null, scrollLock = 0;
+
+SERVICES.forEach(function(s,i){
+  var c = document.createElement('button');
+  c.className = 'chip'; c.type = 'button'; c.textContent = s.chip;
+  c.addEventListener('click', function(){ showPanel(i); });
+  ovChips.appendChild(c);
+});
+
+function clearStage(){
+  Array.prototype.slice.call(stage.querySelectorAll('.oplabel,.syscard,.popup')).forEach(function(el){ el.remove(); });
+  syslist.innerHTML = '';
+}
+
+function showPanel(i){
+  if(i === current) return;
+  var svc = SERVICES[i];
+  current = i;
+  Array.prototype.forEach.call(ovChips.children, function(c,n){ c.classList.toggle('on', n === i); });
+  ovEyebrow.textContent = ('0' + (i+1)) + ' / ' + svc.name;
+  ovTitle.textContent = svc.name;
+  clearStage();
+  net.size();
+  net.build(svc.sys.length, isPhone() ? 6 : 12);
+  buildDom(svc);
+  /* Placed immediately: settled coordinates do not wait on the entrance. */
+  layout(); follow();
+  nextLayout = performance.now()/1000 + 7;
+}
+
+function buildDom(svc){
+  var phone = isPhone();
+  var opCount = phone ? 6 : 12;
+  svc.ops.slice(0, opCount).forEach(function(txt, n){
+    var el = document.createElement('span');
+    el.className = 'oplabel';
+    el.textContent = txt;
+    /* first five are the core stages, the rest are peripheral */
+    el.dataset.core = n < 5 ? '1' : '0';
+    el.dataset.base = n < 5 ? '0.42' : '0.26';
+    el.style.opacity = el.dataset.base;
+    stage.appendChild(el);
+  });
+  svc.sys.forEach(function(name, n){
+    var col = SYS_COLOURS[n % 3];
+    var card = document.createElement('article');
+    card.className = 'syscard';
+    card.style.color = col;
+    card.style.borderColor = hexAlpha(col, 0.55);
+    card.style.borderLeftColor = col;
+    card.innerHTML = '<span class="syscard__row"><h4 class="syscard__t"></h4><span class="syscard__i"></span></span>';
+    card.querySelector('.syscard__i').textContent = 'S' + ('0' + (n+1));
+    card.querySelector('.syscard__t').textContent = name.t;
+    var pop = document.createElement('div');
+    pop.className = 'popup';
+    pop.style.borderColor = hexAlpha(col, 0.5);
+    pop.textContent = name.d;
+    card.dataset.sys = String(n);
+    if(phone){
+      /* Inside its own card, under the title it belongs to. */
+      card.appendChild(pop);
+      syslist.appendChild(card);
+      card.addEventListener('click', function(){
+        var before = syslist.getBoundingClientRect().bottom;
+        var wasOpen = pop.classList.contains('on');
+        /* One open at a time: opening a card closes any other. */
+        Array.prototype.forEach.call(syslist.querySelectorAll('.popup'), function(o){ o.classList.remove('on'); });
+        Array.prototype.forEach.call(syslist.querySelectorAll('.syscard'), function(o){ o.classList.remove('open'); });
+        if(!wasOpen){ pop.classList.add('on'); card.classList.add('open'); }
+        /* Hold the foot of the list still, so the description takes its space
+           from above: its own headline and the ones over it move up, and
+           nothing below is driven off the bottom. */
+        ov.scrollTop += syslist.getBoundingClientRect().bottom - before;
+      });
     } else {
-      ctx.fillStyle = rgba(GREEN, 0.08); ctx.fill();
-      twoPass(GREEN, 0.18, size);
+      stage.appendChild(card); stage.appendChild(pop);
+      card._pop = pop;
+      card.addEventListener('mouseenter', function(){ hoverSys(n, true); });
+      card.addEventListener('mouseleave', function(){ hoverSys(n, false); });
+      card.addEventListener('focus', function(){ hoverSys(n, true); });
+      card.addEventListener('blur', function(){ hoverSys(n, false); });
+      card.tabIndex = 0;
     }
-  }
+  });
+}
 
-  /* The advancing front: a bright tick across the spine with a soft bloom
-     behind it, so the eye can see where the sealing has reached. */
-  if(seal > 0.002 && seal < 0.999){
-    var bloom = size * 1.9;
-    var rg2 = ctx.createRadialGradient(cx, sealY, 0, cx, sealY, bloom);
-    rg2.addColorStop(0, rgba(GREEN, 0.30));
-    rg2.addColorStop(0.55, rgba(GREEN, 0.08));
-    rg2.addColorStop(1, rgba(GREEN, 0));
-    ctx.fillStyle = rg2;
-    ctx.fillRect(cx - bloom, sealY - bloom, bloom * 2, bloom * 2);
+function hoverSys(n, on){
+  net.setHover(on ? n : -1);
+  var card = stage.querySelector('.syscard[data-sys="' + n + '"]');
+  if(card && card._pop) placePopup(card, card._pop, on);
+}
 
-    var tick = size * 1.5;
-    ctx.beginPath();
-    ctx.moveTo(cx - tick, sealY);
-    ctx.lineTo(cx + tick, sealY);
-    ctx.lineWidth = Math.max(2, size * 0.10);
-    ctx.strokeStyle = rgba(GREEN, 0.16);
-    ctx.stroke();
-    ctx.lineWidth = Math.max(1.2, size * 0.05);
-    ctx.strokeStyle = rgba(GREEN, 0.9);
-    ctx.stroke();
-  }
+/* Popup is display:none when closed so it cannot widen the layout.
+   Measured, then flipped both ways to stay inside the overlay. */
+function placePopup(card, pop, on){
+  if(!on){ pop.classList.remove('on'); return; }
+  pop.classList.add('on');
+  var sr = stage.getBoundingClientRect();
+  var cr = card.getBoundingClientRect();
+  var pr = pop.getBoundingClientRect();
+  var x = cr.right - sr.left + 14;
+  if(x + pr.width > sr.width) x = cr.left - sr.left - pr.width - 14;
+  if(x < 0) x = 4;
+  var y = cr.top - sr.top;
+  if(y + pr.height > sr.height) y = sr.height - pr.height - 4;
+  if(y < 0) y = 4;
+  pop.style.left = x + 'px'; pop.style.top = y + 'px';
+}
 
-  /* Seal rings */
-  for(var k=rings.length-1;k>=0;k--){
-    var rg = rings[k];
-    rg.t += dt;
-    var p = rg.t / 620;
-    if(p >= 1){ rings.splice(k,1); continue; }
-    ctx.beginPath();
-    ctx.arc(rg.x, rg.y, size * 0.7 + p * size * 2.4, 0, Math.PI * 2);
-    ctx.lineWidth = Math.max(1, size * 0.045);
-    ctx.strokeStyle = rgba(rg.mint ? MINT : GREEN, (1 - p) * 0.45);
-    ctx.stroke();
-  }
+/* Label and card placement. Labels never overlap a card and are never
+   hidden; cards never overlap each other. */
+var boxes = [];
+function rectOf(el){ var r = el.getBoundingClientRect(), s = stage.getBoundingClientRect();
+  return { x:r.left-s.left, y:r.top-s.top, w:r.width, h:r.height }; }
+function hit(a,b){ return !(a.x+a.w < b.x || b.x+b.w < a.x || a.y+a.h < b.y || b.y+b.h < a.y); }
 
-  if(reduce.matches) return { len:len, gap:gap, size:size, top:top, cx:cx, sealY:sealY };
+function layout(){
+  if(current < 0) return;
+  var P = net.allPosSettled(), srcs = net.sources(), labs = net.labels();
+  var sr = stage.getBoundingClientRect();
+  var stacked = isPhone();
+  boxes = [];
 
-  /* Particles travel down the spine and spill sideways at an open
-     node. A spill is bounded to about 3.2 node heights and fades
-     over exactly that distance, so nothing rains across the page. */
-  var travel = gap * 0.0022;
-  for(var pi=particles.length-1;pi>=0;pi--){
-    var pt = particles[pi];
-    if(pt.spill){
-      pt.x += pt.vx * dt;
-      pt.y += pt.vy * dt;
-      var dist = Math.abs(pt.x - pt.ox);
-      var maxD = size * 3.2;
-      if(dist >= maxD){ particles.splice(pi,1); continue; }
-      var a = (1 - dist / maxD) * 0.85;
-      var pr = Math.max(1.4, size * 0.085);
-      ctx.beginPath(); ctx.arc(pt.x, pt.y, pr * 2.6, 0, Math.PI * 2);
-      ctx.fillStyle = rgba(AMBER, a * 0.16); ctx.fill();
-      ctx.beginPath(); ctx.arc(pt.x, pt.y, pr, 0, Math.PI * 2);
-      ctx.fillStyle = rgba(AMBER, a); ctx.fill();
-      continue;
+  var cards = stage.querySelectorAll('.syscard');
+  if(!stacked) Array.prototype.forEach.call(cards, function(card, n){
+    var np = P[srcs[n]]; if(!np) return;
+    var w = card.offsetWidth, h = card.offsetHeight;
+    var vx = np.x - sr.width/2, vy = np.y - sr.height/2;
+    var len = Math.hypot(vx, vy) || 1;
+    var x = np.x + (vx/len)*(w*0.42 + 34) - w/2;
+    var y = np.y + (vy/len)*(h*0.5 + 40) - h/2;
+    x = Math.max(2, Math.min(sr.width - w - 2, x));
+    y = Math.max(2, Math.min(sr.height - h - 2, y));
+    var box = { x:x, y:y, w:w, h:h };
+    for(var pass=0; pass<26; pass++){
+      var clash = false;
+      for(var b=0;b<boxes.length;b++){ if(hit(box, boxes[b])){ clash = true; break; } }
+      if(!clash) break;
+      box.y += 12;
+      if(box.y + h > sr.height - 2){ box.y = 2; box.x += 12; }
+      box.x = Math.max(2, Math.min(sr.width - w - 2, box.x));
     }
-    pt.y += travel * dt * pt.sp;
-    if(pt.y > top + len){ particles.splice(pi,1); continue; }
-    var ni = Math.round((pt.y - top) / gap);
-    if(ni !== pt.last && ni >= 0 && ni < NODES){
-      pt.last = ni;
-      var nodeSealed = (ni / (NODES - 1)) <= seal + 0.0001;
-      if(isOpen[ni] && !nodeSealed && Math.random() < 0.55){
-        pt.spill = true;
-        pt.ox = pt.x;
-        pt.vx = (Math.random() < 0.5 ? -1 : 1) * (0.018 + Math.random() * 0.012);
-        pt.vy = (Math.random() - 0.35) * 0.012;
-        continue;
+    card._off = { dx: box.x - np.x, dy: box.y - np.y };
+    card.style.left = box.x + 'px'; card.style.top = box.y + 'px';
+    boxes.push(box);
+  });
+  var cardBoxes = boxes.slice();
+
+  /* On the phone a 68 by 52 box is reserved around each source so a label
+     never lands on the S0n badge. */
+  if(stacked) srcs.forEach(function(si){
+    var np = P[si]; if(!np) return;
+    cardBoxes.push({ x:np.x-10, y:np.y-26, w:68, h:52 });
+    boxes.push({ x:np.x-10, y:np.y-26, w:68, h:52 });
+  });
+
+  var labels = stage.querySelectorAll('.oplabel');
+  Array.prototype.forEach.call(labels, function(lab, n){
+    var np = P[labs[n]];
+    if(!np){ lab.style.display='none'; return; }
+    lab.style.display = '';
+    var w = lab.offsetWidth, h = lab.offsetHeight;
+    var right = np.x < sr.width*0.55;
+    var placed = null;
+    for(var pass=0; pass<2 && !placed; pass++){
+      for(var s2=0; s2<2 && !placed; s2++){
+        var side = s2 === 0 ? right : !right;
+        for(var dy=0; dy<=60 && !placed; dy+=12){
+          for(var sg=1; sg>=-1 && !placed; sg-=2){
+            var x = side ? np.x + 13 : np.x - 13 - w;
+            var y = np.y + sg*dy - h/2;
+            if(x < 0 || x + w > sr.width || y < 0 || y + h > sr.height) continue;
+            var box = { x:x, y:y, w:w, h:h };
+            var bad = false, list = pass === 0 ? boxes : cardBoxes;
+            for(var b=0;b<list.length;b++){ if(hit(box, list[b])){ bad = true; break; } }
+            if(!bad) placed = box;
+          }
+        }
       }
     }
-    var sr = Math.max(1.2, size * 0.07);
-    ctx.beginPath(); ctx.arc(pt.x, pt.y, sr, 0, Math.PI * 2);
-    ctx.fillStyle = rgba(SLATE, 0.5); ctx.fill();
-  }
+    if(!placed){
+      var bx = Math.max(2, Math.min(sr.width - w - 2, np.x + 13));
+      var by = Math.max(2, Math.min(sr.height - h - 2, np.y - h/2));
+      placed = { x:bx, y:by, w:w, h:h };
+      for(var c=0;c<cardBoxes.length;c++){
+        if(hit(placed, cardBoxes[c])) placed.y = cardBoxes[c].y + cardBoxes[c].h + 6;
+      }
+      if(placed.y + h > sr.height - 2) placed.y = Math.max(2, placed.y - h - 12);
+    }
+    lab.style.left = placed.x + 'px'; lab.style.top = placed.y + 'px';
+    lab._off = { dx: placed.x - np.x, dy: placed.y - np.y };
+    /* first five are the core stages, the rest fade by distance from centre */
+    var mid = sr.height/2;
+    lab.style.opacity = lab.dataset.core === '1'
+      ? '0.42'
+      : (0.2 + 0.12*(1 - Math.abs(placed.y - mid)/mid)).toFixed(3);
+    boxes.push(placed);
+  });
+}
 
-  spawnAcc += dt;
-  if(spawnAcc > (MOBILE ? 100 : 130) && particles.length < (MOBILE ? 34 : 55)){
-    spawnAcc = 0;
-    particles.push({ x:cx, y:top, sp:0.75 + Math.random()*0.6, last:-1, spill:false });
-  }
-
-  return { len:len, gap:gap, size:size, top:top, cx:cx, sealY:sealY };
+/* Cheap per frame pass: the DOM rides the graph by its stored offset. */
+function follow(){
+  if(current < 0) return;
+  var P = net.allPosSettled(), srcs = net.sources(), labs = net.labels();
+  var stacked = isPhone();
+  if(!stacked) Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(card, n){
+    var np = P[srcs[n]]; if(!np || !card._off) return;
+    card.style.left = (np.x + card._off.dx) + 'px';
+    card.style.top  = (np.y + card._off.dy) + 'px';
+  });
+  Array.prototype.forEach.call(stage.querySelectorAll('.oplabel'), function(lab, n){
+    var np = P[labs[n]]; if(!np || !lab._off) return;
+    lab.style.left = (np.x + lab._off.dx) + 'px';
+    lab.style.top  = (np.y + lab._off.dy) + 'px';
+  });
 }
 
 /* ============================================================
-   Readouts
+   OVERLAY OPEN / CLOSE
    ============================================================ */
-function fmt(n){
-  var s = String(Math.round(n));
-  return s.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+function openOverlay(i){
+  lastFocus = document.activeElement;
+  scrollLock = pageYOffset;
+  document.body.style.position = 'fixed';
+  document.body.style.top = (-scrollLock) + 'px';
+  document.body.style.width = '100%';
+  ov.classList.add('on');
+  ov.setAttribute('aria-hidden','false');
+  ovOpen = true;
+  current = -1;
+  showPanel(i);
+  ovExit.focus();
 }
-function readouts(seal, dt, moving){
-  var openUnsealed = 0;
-  for(var i=0;i<NODES;i++){
-    if(isOpen[i] && (i / (NODES - 1)) > seal + 0.0001) openUnsealed++;
-  }
-  if(openUnsealed > 0 && uncaptured < UNCAP_MAX){
-    uncaptured = Math.min(UNCAP_MAX, uncaptured + openUnsealed * dt * 0.9);
-  }
-  if(moving && seal > 0.001){
-    captured = Math.min(UNCAP_MAX, captured + seal * dt * 1.6);
-  }
-
-  var un = '$' + fmt(uncaptured), cp = '$' + fmt(captured), ch = Math.round(seal * 100) + '%';
-  var st = MOBILE
-    ? (seal < 0.02 ? 'MAPPING' : (seal < 0.985 ? 'OPTIMISING' : 'OPTIMISED'))
-    : (seal < 0.02 ? 'MAPPING BASELINE' : (seal < 0.985 ? 'OPTIMISING' : 'RUNNING OPTIMISED'));
-
-  if(un !== lastUn){ roUn.textContent  = un; lastUn = un; }
-  if(cp !== lastCap){ roCap.textContent = cp; lastCap = cp; }
-  if(ch !== lastCh){ roCh.textContent  = ch; lastCh = ch; }
-  if(st !== lastSt){ roSt.textContent  = st; lastSt = st; }
+function closeOverlay(){
+  ov.classList.remove('on');
+  ov.setAttribute('aria-hidden','true');
+  ovOpen = false;
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo(0, scrollLock);
+  if(lastFocus && lastFocus.focus) lastFocus.focus();
+}
+ovExit.addEventListener('click', closeOverlay);
+ov.addEventListener('click', function(e){ if(e.target === ov) closeOverlay(); });
+window.addEventListener('keydown', function(e){
+  if(!ovOpen) return;
+  if(e.key === 'Escape'){ closeOverlay(); return; }
+  if(e.key === 'ArrowRight'){ e.preventDefault(); page(1); }
+  if(e.key === 'ArrowLeft'){ e.preventDefault(); page(-1); }
+});
+function page(d){
+  var n = (current + d + SERVICES.length) % SERVICES.length;
+  net.dissolve(true);
+  setTimeout(function(){ net.dissolve(false); lastFade = -1; showPanel(n); }, 420);
 }
 
 /* ============================================================
-   Card coverage, derived from scrollY arithmetic. No rects.
+   FRAME LOOP
    ============================================================ */
-var lastScale = [], lastDim = [], lastOpacity = -1, lastRail = false, lastActive = -1;
-for(var z=0;z<N;z++){ lastScale[z] = -1; lastDim[z] = -1; }
+var last = performance.now()/1000, nextLayout = 0, lastFade = -1;
 
-function paintCards(sy){
-  for(var i=0;i<N;i++){
-    var p = clamp((sy - i * CARD_H) / CARD_H, 0, 1);
-    var sc = Math.round((1 - p * 0.045) * 1000) / 1000;
-    var dm = Math.round(p * 0.55 * 100) / 100;
-    if(sc !== lastScale[i]){ boxes[i].style.transform = 'scale(' + sc + ')'; lastScale[i] = sc; }
-    if(dm !== lastDim[i]){ dims[i].style.opacity = dm; lastDim[i] = dm; }
+function applyFade(){
+  var f = net.fadeValue();
+  if(Math.abs(f - lastFade) <= 0.008) return;
+  lastFade = f;
+  document.getElementById('net').style.opacity = f;
+  Array.prototype.forEach.call(stage.querySelectorAll('.oplabel'), function(l){
+    l.style.opacity = (parseFloat(l.dataset.base || l.style.opacity || 0.3) * f).toFixed(3);
+  });
+  Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(c){ c.style.opacity = f; });
+}
+
+function drawTies(){
+  if(isPhone()) return;                       /* stacked list: no tie lines */
+  var P = net.allPos(), srcs = net.sources();
+  Array.prototype.forEach.call(stage.querySelectorAll('.syscard'), function(card, n){
+    var np = P[srcs[n]];
+    /* While the node is still flying in, a tie would stretch across the stage. */
+    if(!np || np.e < 0.95) return;
+    var x = parseFloat(card.style.left) || 0, y = parseFloat(card.style.top) || 0;
+    var w = card.offsetWidth, h = card.offsetHeight;
+    /* nearest point on the card edge to the node */
+    var ax = Math.max(x, Math.min(x + w, np.x));
+    var ay = Math.max(y, Math.min(y + h, np.y));
+    net.tie(np.x, np.y, ax, ay, n);
+  });
+}
+
+function frame(now){
+  var t = now/1000, dt = Math.min(0.05, t - last); last = t;
+  applyScroll();
+  if(!reduce.matches){ heroNet.step(dt); }
+  heroNet.draw();
+  if(ovOpen){
+    if(!reduce.matches) net.step(dt);
+    net.draw();
+    drawTies();
+    if(t > nextLayout){ layout(); nextLayout = t + 7; }
+    follow();
+    applyFade();
   }
-}
-
-/* ============================================================
-   Frame loop
-   ============================================================ */
-var scrollY = 0, ticking = false, lastT = 0, dock = 0;
-
-function dockTargetNow(){
-  return easeInOutCubic(clamp(scrollY / Math.max(1, CARD_H), 0, 1));
-}
-/* Seal progress is measured from the first card onward, not from the top of
-   the document. Measured from the top, screen 01 already reads far past the
-   retained baseline; from card 1 it lands on RETAIN exactly, which is what
-   the brief means by the chain being about 30 percent sealed there. */
-function sealTargetNow(){
-  return clamp((scrollY - CARD_H) / Math.max(1, MAX_SCROLL - CARD_H), 0, 1);
-}
-
-function frame(ts){
-  var dt = lastT ? Math.min(48, ts - lastT) : 16;
-  lastT = ts;
-
-  /* The dock value chases its target rather than tracking scroll directly, so
-     a snap lands the card instantly while the chain glides after it. */
-  dock += (dockTargetNow() - dock) * Math.min(1, (dt / 1000) * 9);
-  var dockP = dock;
-  var scrollProg = sealTargetNow();
-
-  loopT += dt;
-  if(loopT >= LOOP) loopT -= LOOP;
-  var auto;
-  if(loopT < SWEEP) auto = easeInOutCubic(loopT / SWEEP);
-  else if(loopT < SWEEP + HOLD) auto = 1;
-  else if(loopT < SWEEP + HOLD + REL) auto = 1 - (loopT - SWEEP - HOLD) / REL;
-  else auto = 0;
-
-  /* On the hero the tally resets at the end of each loop, so the
-     numbers stay legible instead of running away. */
-  if(dockP < 0.02 && auto === 0 && prevAuto > 0){ uncaptured = 0; captured = 0; }
-  prevAuto = auto;
-
-  /* Hand over from the self running loop to scroll, keeping a
-     baseline so it never resets to zero. */
-  var seal = lerp(auto, RETAIN + (1 - RETAIN) * scrollProg, dockP);
-
-  var op = MOBILE ? lerp(1, 0.10, dockP) : lerp(1, 0.44, dockP);
-  op = Math.round(op * 100) / 100;
-  if(op !== lastOpacity){ cv.style.opacity = op; lastOpacity = op; }
-
-  paintCards(scrollY);
-  draw(seal, dockP, dt);
-  readouts(seal, dt, dockP > 0.02 || auto > 0);
-
-  var railOn = dockP > 0.55;
-  if(railOn !== lastRail){ rail.classList.toggle('on', railOn); lastRail = railOn; }
-
-  var active = clamp(Math.round(scrollY / CARD_H), 0, N - 1);
-  if(active !== lastActive){
-    for(var i=0;i<N;i++){ marks[i].classList.toggle('on', i === active); }
-    upBtn.disabled = active === 0;
-    dnBtn.disabled = active === N - 1;
-    lastActive = active;
-  }
-
-  if(reduce.matches){ ticking = false; return; }
   requestAnimationFrame(frame);
 }
 
-function staticFrame(){
-  var dockP = dockTargetNow();
-  dock = dockP;
-  var scrollProg = sealTargetNow();
-  var seal = lerp(0, RETAIN + (1 - RETAIN) * scrollProg, dockP);
-  var op = MOBILE ? lerp(1, 0.10, dockP) : lerp(1, 0.44, dockP);
-  cv.style.opacity = Math.round(op * 100) / 100;
-  paintCards(scrollY);
-  draw(seal, dockP, 16);
-  readouts(seal, 0, false);
-  var active = clamp(Math.round(scrollY / CARD_H), 0, N - 1);
-  for(var i=0;i<N;i++){ marks[i].classList.toggle('on', i === active); }
-  upBtn.disabled = active === 0;
-  dnBtn.disabled = active === N - 1;
-  rail.classList.toggle('on', dockP > 0.55);
-}
-
 /* ============================================================
-   Rail
+   START. One rAF loop drives both pieces.
    ============================================================ */
-var marks = [];
-for(var m=0;m<N;m++){
-  (function(i){
-    var b = document.createElement('button');
-    b.className = 'mk';
-    b.type = 'button';
-    b.setAttribute('aria-label', 'Go to ' + cards[i].dataset.label);
-    b.innerHTML = '<span class="mk-l">' + cards[i].dataset.label + '</span>' +
-                  '<span class="mk-n">' + String(i).padStart(2,'0') + '</span>' +
-                  '<span class="mk-d"></span>';
-    b.addEventListener('click', function(){ goTo(i); });
-    rail.appendChild(b);
-    marks.push(b);
-  })(m);
-}
+var heroNet = makeHero(heroCanvas, { density:2, speed:1 });
+function sizeHero(){ heroNet.size(); heroNet.build(); }
 
-/* ============================================================
-   Navigation. One goTo for every affordance.
-   ============================================================ */
-var tweenId = 0;
+measureDock();
+applyScroll();
+sizeHero();
+requestAnimationFrame(frame);
 
-function goTo(index){
-  /* The cards are sticky, so a stuck card reports its stuck offset
-     rather than its layout position. Deriving the target from the
-     stack geometry is the only thing that survives a backward jump. */
-  var target = Math.min(index * CARD_H, document.documentElement.scrollHeight - H);
-  target = Math.max(0, target);
-  tweenTo(target);
-}
-
-function tweenTo(target){
-  var id = ++tweenId;
-  var start = window.pageYOffset;
-  var dist = Math.abs(target - start);
-  if(dist < 2) return;
-  var dur = Math.min(900, 260 + dist * 0.35);
-  var t0 = 0, fired = false;
-
-  /* Native smooth scrolling proved unreliable in embedded views.
-     The easing is a bonus, the landing is guaranteed by this guard. */
-  var guard = setTimeout(function(){
-    if(!fired && id === tweenId){ tweenId++; window.scrollTo(0, target); snapOn(); }
-  }, 110);
-
-  snapOff();
-  function step(ts){
-    if(id !== tweenId){ clearTimeout(guard); return; }
-    fired = true;
-    if(!t0) t0 = ts;
-    var p = Math.min(1, (ts - t0) / dur);
-    window.scrollTo(0, start + (target - start) * easeInOutCubic(p));
-    if(p < 1){ requestAnimationFrame(step); }
-    else { clearTimeout(guard); snapOn(); }
-  }
-  requestAnimationFrame(step);
-}
-
-/* Mandatory snap fights a programmatic tween, so it stands down
-   for the duration of one. */
-var snapT = 0;
-function snapOff(){ clearTimeout(snapT); document.documentElement.classList.add('no-snap'); }
-function snapOn(){ clearTimeout(snapT); snapT = setTimeout(function(){ document.documentElement.classList.remove('no-snap'); }, 60); }
-
-document.addEventListener('click', function(e){
-  var el = e.target.closest ? e.target.closest('[data-go]') : null;
-  if(!el) return;
-  e.preventDefault();
-  goTo(parseInt(el.getAttribute('data-go'), 10));
+var rz;
+addEventListener('resize', function(){
+  clearTimeout(rz);
+  rz = setTimeout(function(){
+    lastP = -1; measureDock(); applyScroll(); sizeHero();
+    if(ovOpen){ net.size(); layout(); }
+  }, 140);
 });
-upBtn.addEventListener('click', function(){ goTo(clamp(Math.round(scrollY / CARD_H) - 1, 0, N - 1)); });
-dnBtn.addEventListener('click', function(){ goTo(clamp(Math.round(scrollY / CARD_H) + 1, 0, N - 1)); });
-
-window.addEventListener('keydown', function(e){
-  if(e.key === 'PageDown'){ e.preventDefault(); goTo(clamp(Math.round(scrollY / CARD_H) + 1, 0, N - 1)); }
-  else if(e.key === 'PageUp'){ e.preventDefault(); goTo(clamp(Math.round(scrollY / CARD_H) - 1, 0, N - 1)); }
-  else if(e.key === 'Home'){ e.preventDefault(); goTo(0); }
-  else if(e.key === 'End'){ e.preventDefault(); goTo(N - 1); }
-});
-
-/* ============================================================
-   Scroll and resize
-   ============================================================ */
-function onScroll(){
-  scrollY = window.pageYOffset;
-  if(reduce.matches && !ticking){
-    ticking = true;
-    requestAnimationFrame(function(){ ticking = false; staticFrame(); });
-  }
-}
-window.addEventListener('scroll', onScroll, { passive:true });
-
-var rzT = 0;
-function scheduleRemeasure(){
-  clearTimeout(rzT);
-  rzT = setTimeout(remeasure, 120);
-}
-window.addEventListener('resize', scheduleRemeasure);
-
-/* resize does not always fire when a background tab is first shown, so watch
-   the element itself rather than polling innerHeight inside the frame loop. */
-if(window.ResizeObserver){
-  var ro = new ResizeObserver(function(){
-    if(window.innerHeight !== H || window.innerWidth !== W) scheduleRemeasure();
-  });
-  ro.observe(document.documentElement);
-}
-document.addEventListener('visibilitychange', function(){
-  if(document.visibilityState === 'visible') scheduleRemeasure();
-});
-
-/* ============================================================
-   Start
-   ============================================================ */
-measure();
-scrollY = window.pageYOffset;
-if(reduce.matches){ staticFrame(); }
-else{ requestAnimationFrame(frame); }
+addEventListener('scroll', function(){ if(!ovOpen) applyScroll(); }, { passive:true });
+window.__syn = { layout:layout, open:openOverlay, close:closeOverlay, page:showPanel,
+                 net:net, hero:heroNet, stage:stage, hover:hoverSys, follow:follow };
+setTimeout(function(){ document.getElementById('sticky').classList.add('on'); }, 900);
 })();
 </script>
 </body>
