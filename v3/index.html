@@ -205,10 +205,10 @@ p{ margin:0; text-wrap:pretty; }
    passes. It rides a pseudo element rather than the row, so it never competes
    with the background the press state sets. */
 @keyframes row-glow{
-  0%{   box-shadow:0 0 0 0 rgba(206,138,82,0);      background-color:rgba(206,138,82,0); }
-  9%{   box-shadow:0 0 18px 1px rgba(206,138,82,0.22); background-color:rgba(206,138,82,0.05); }
-  22%,
-  100%{ box-shadow:0 0 0 0 rgba(206,138,82,0);      background-color:rgba(206,138,82,0); }
+  0%{   box-shadow:0 0 0 0 rgba(206,138,82,0);         background-color:rgba(206,138,82,0); }
+  10%{  box-shadow:0 0 18px 1px rgba(206,138,82,0.22); background-color:rgba(206,138,82,0.05); }
+  26%,
+  100%{ box-shadow:0 0 0 0 rgba(206,138,82,0);         background-color:rgba(206,138,82,0); }
 }
 
 /* Once the rows have arrived the arrows nudge, one after another: the cue
@@ -420,13 +420,15 @@ html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp
   @media (prefers-reduced-motion: no-preference){
     html.js-rv #p-1.in .srow::after{
       content:''; position:absolute; inset:-1px; border-radius:2px;
-      pointer-events:none; animation:row-glow 5.6s var(--ease) infinite;
+      pointer-events:none; animation:row-glow 7.84s var(--ease) infinite;
     }
-    /* Held past the entrance and the arrow nudge, then 0.5s apart down the list. */
-    html.js-rv #p-1.in .srow:nth-child(1)::after{ animation-delay:1.6s; }
-    html.js-rv #p-1.in .srow:nth-child(2)::after{ animation-delay:2.1s; }
-    html.js-rv #p-1.in .srow:nth-child(3)::after{ animation-delay:2.6s; }
-    html.js-rv #p-1.in .srow:nth-child(4)::after{ animation-delay:3.1s; }
+    /* Held past the entrance and the arrow nudge, then 0.7s apart down the
+       list. Each row stays lit about 2s, so a row is still fading as the next
+       two come up and the pass reads as one travelling wave. */
+    html.js-rv #p-1.in .srow:nth-child(1)::after{ animation-delay:2.24s; }
+    html.js-rv #p-1.in .srow:nth-child(2)::after{ animation-delay:2.94s; }
+    html.js-rv #p-1.in .srow:nth-child(3)::after{ animation-delay:3.64s; }
+    html.js-rv #p-1.in .srow:nth-child(4)::after{ animation-delay:4.34s; }
   }
   .lead{ line-height:1.45; }
   #p-1 .two{ gap:8px; }
