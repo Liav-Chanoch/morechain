@@ -200,6 +200,17 @@ p{ margin:0; text-wrap:pretty; }
 .srow:active .srow__t{ color:var(--amber); }
 .srow:active .srow__go{ border-color:var(--amber); color:var(--amber); transform:translateX(4px); }
 
+/* A phone has no hover to give, so the rows announce themselves: a soft amber
+   pass down the list, one at a time, on a long cycle with a rest between
+   passes. It rides a pseudo element rather than the row, so it never competes
+   with the background the press state sets. */
+@keyframes row-glow{
+  0%{   box-shadow:0 0 0 0 rgba(206,138,82,0);      background-color:rgba(206,138,82,0); }
+  9%{   box-shadow:0 0 18px 1px rgba(206,138,82,0.22); background-color:rgba(206,138,82,0.05); }
+  22%,
+  100%{ box-shadow:0 0 0 0 rgba(206,138,82,0);      background-color:rgba(206,138,82,0); }
+}
+
 /* Once the rows have arrived the arrows nudge, one after another: the cue
    that these go somewhere, on a phone where nothing hovers. No fill mode, so
    it leaves nothing behind for the press and hover states to fight. */
@@ -404,6 +415,19 @@ html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp
 @media (max-width:760px){
   .screen{ padding:88px 20px 58px; gap:9px; }
   .srow{ padding:clamp(8px,1.15svh,18px) 2px; }
+  /* Reduced motion is handled by the query, not by the global 1ms override:
+     that would turn an infinite animation into a strobe. */
+  @media (prefers-reduced-motion: no-preference){
+    html.js-rv #p-1.in .srow::after{
+      content:''; position:absolute; inset:-1px; border-radius:2px;
+      pointer-events:none; animation:row-glow 5.6s var(--ease) infinite;
+    }
+    /* Held past the entrance and the arrow nudge, then 0.5s apart down the list. */
+    html.js-rv #p-1.in .srow:nth-child(1)::after{ animation-delay:1.6s; }
+    html.js-rv #p-1.in .srow:nth-child(2)::after{ animation-delay:2.1s; }
+    html.js-rv #p-1.in .srow:nth-child(3)::after{ animation-delay:2.6s; }
+    html.js-rv #p-1.in .srow:nth-child(4)::after{ animation-delay:3.1s; }
+  }
   .lead{ line-height:1.45; }
   #p-1 .two{ gap:8px; }
   /* Screen 02 has to seat four rows and the risk statement clear of the
