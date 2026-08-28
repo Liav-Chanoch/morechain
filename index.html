@@ -27,8 +27,8 @@
   --ink:#EFE7DA;
   --body:#CBBFB0;
   --muted:#9A8D80;
-  --dim:#786C61;
-  --dimmer:#6B6057;
+  --dim:#948779;
+  --dimmer:#8E8175;
   --accent:#9B4A32;
   --accent-hi:#B25940;
   --amber:#CE8A52;
@@ -175,7 +175,7 @@ p{ margin:0; text-wrap:pretty; }
 .rows{ display:flex; flex-direction:column; }
 .srow{
   position:relative;
-  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(14px,2vw,30px);
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(12px,1.35vw,20px);
   width:100%; text-align:left; padding:clamp(14px,2.2svh,26px) 2px;
   border-top:1px solid var(--hair); min-height:44px;
   transition:padding-left .32s var(--ease), background-color .32s var(--ease);
@@ -189,7 +189,7 @@ p{ margin:0; text-wrap:pretty; }
 }
 .srow:last-child{ border-bottom:1px solid var(--hair); }
 .srow__t{ font-weight:600; color:var(--ink); font-size:clamp(19px,min(2.6vw,4.8svh),41px); letter-spacing:-.032em; transition:color .32s var(--ease); }
-.srow__go{ width:30px; height:30px; border-radius:999px; border:1px solid var(--hair-2); display:grid; place-items:center; color:var(--muted); transition:border-color .32s var(--ease), color .32s var(--ease); }
+.srow__go{ width:30px; height:30px; border-radius:999px; border:1px solid var(--hair-3); display:grid; place-items:center; color:var(--muted); transition:border-color .32s var(--ease), color .32s var(--ease); }
 .srow__go{ font-size:13px; line-height:1; }
 .srow__go{ transition:border-color .32s var(--ease), color .32s var(--ease), background-color .32s var(--ease), transform .32s var(--exp); }
 @media (hover:hover){
@@ -224,6 +224,36 @@ html.js-rv #p-1.in .srow__go{
   animation-delay:calc(var(--i,0) * 70ms + 620ms);
 }
 
+/* Screens 01 and 02, desktop refinement.
+   The id is needed to scope these, which outranks the phone block below, so
+   they are fenced in a query the phone can never match. */
+@media (min-width:761px){
+  /* The headline runs four lines against the paragraph's five, which left the
+     right column short. A little more width on the left evens the two. */
+  #p-1 .two{ grid-template-columns:1.1fr 0.9fr; }
+  /* The list label belongs to the list. On the flat screen gap it sat the same
+     distance from the paragraph above as from the rows below, and read as
+     floating between them. */
+  #p-1 > .mono{ margin-bottom:calc(-1 * clamp(11px,1.9svh,20px)); }
+  /* A 30px circle read as a faint dot beside a 33px title. The row title
+     still sets the row height at this size, so nothing moves. */
+  #p-1 .srow__go{ width:34px; height:34px; font-size:14px; }
+  /* The steps column carries four titles and four paragraphs against a
+     headline and one paragraph, and outran the left column by 108px. */
+  #p-2 .two{ grid-template-columns:0.9fr 1.1fr; }
+  /* A name pinned to the left of a 371px box read as an empty input. Centred
+     in its own plaque it reads as a roster, and the grid still holds three by
+     two at every width rather than orphaning a cell onto its own row. */
+  #p-4 .clients .card{
+    align-items:center; text-align:center;
+    padding-top:clamp(17px,2.3svh,24px); padding-bottom:clamp(17px,2.3svh,24px);
+    /* The accent left border marks a card you can open on screen 03. Nothing
+       opens here, and against centred text it read as a stray tick, so the
+       plaque takes one even hairline. */
+    border-left-color:var(--hair);
+  }
+}
+
 /* ---------- 02 steps ---------- */
 .steps{ display:flex; flex-direction:column; }
 .step{ border-top:1px solid var(--hair); padding:clamp(9px,1.5svh,16px) 0; }
@@ -231,11 +261,11 @@ html.js-rv #p-1.in .srow__go{
 /* The button owns the row grid. Making it display:contents dissolved it into
    the parent and scattered the index, title and body across the tracks. */
 .step__btn{
-  display:grid; grid-template-columns:22px minmax(0,1fr) auto;
+  display:grid; grid-template-columns:18px minmax(0,1fr) auto;
   gap:clamp(10px,1.2vw,18px); align-items:start;
-  width:100%; text-align:left;
+  width:100%; text-align:left; padding:0;
 }
-.step__body{ padding-left:calc(22px + clamp(10px,1.2vw,18px)); margin-top:4px; }
+.step__body{ padding-left:calc(18px + clamp(10px,1.2vw,18px)); margin-top:4px; }
 .step__body p{ font-size:clamp(12.5px,min(1.02vw,2.05svh),16px); line-height:1.5; }
 .step__h{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 /* Desktop renders all four steps open with no toggle: the plus and minus mark
@@ -246,7 +276,7 @@ html.js-rv #p-1.in .srow__go{
 .risk{ display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; border-top:1px solid rgba(155,74,50,0.45); padding-top:clamp(14px,2.2svh,24px); }
 .risk__tail{ color:var(--muted); font-weight:400; }
 .risk__sq{ width:6px; height:6px; background:var(--accent); margin-top:.5em; }
-.risk p{ color:var(--ink); font-weight:600; font-size:clamp(16px,min(1.7vw,3.3svh),25px); line-height:1.4; letter-spacing:-.02em; }
+.risk p{ color:var(--ink); font-weight:600; font-size:clamp(16px,min(1.7vw,3.3svh),25px); line-height:1.4; letter-spacing:-.02em; max-width:37em; }
 
 /* ---------- shared card ---------- */
 .card{
@@ -266,7 +296,7 @@ html.js-rv #p-1.in .srow__go{
    a tap. Desktop has the room, so it shows everything and offers no toggle. */
 .card__btn{
   display:grid; grid-template-columns:minmax(0,1fr) auto; gap:14px;
-  align-items:start; width:100%; text-align:left;
+  align-items:start; width:100%; text-align:left; padding:0;
 }
 .card__head{ display:flex; flex-direction:column; gap:clamp(6px,1svh,10px); min-width:0; }
 .card__sign{ display:none; }
@@ -304,16 +334,17 @@ html.js-rv #p-1.in .srow__go{
 .field{ display:flex; flex-direction:column; gap:5px; }
 .field > label{
   font-family:var(--m); font-weight:500; text-transform:uppercase;
-  font-size:10.5px; letter-spacing:.14em; color:var(--dim);
+  font-size:11px; letter-spacing:.14em; color:var(--dim);
 }
 .field__wrap{ position:relative; }
 .field input, .field textarea{
   width:100%; background:transparent; border:0; border-radius:0;
   border-bottom:1px solid var(--hair-2);
   padding:5px 0 9px; margin:0;
-  font-family:var(--f); font-size:clamp(15px,1.15vw,17px); line-height:1.5;
+  font-family:var(--f); font-size:clamp(15.5px,1.3vw,18px); line-height:1.5;
   color:var(--ink);
 }
+.field input{ min-height:44px; }
 .field textarea{ resize:vertical; min-height:74px; }
 .field__wrap::after{
   content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
@@ -492,6 +523,9 @@ html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp
   #contact .form{ gap:11px; }
   #contact .field textarea{ min-height:62px; }
   #contact .form__alt{ margin-top:12px; padding-top:11px; font-size:13.5px; }
+  /* 17px of link is not a tap target. The row is already scrolling on a phone,
+     so the height this adds costs nothing. */
+  #contact .form__alt a{ display:inline-flex; align-items:center; min-height:44px; }
   #contact .form__status{ font-size:13.5px; }
   .two{ grid-template-columns:minmax(0,1fr); gap:24px; }
   h1{ font-size:34px; }
