@@ -353,14 +353,32 @@ html.js-rv #p-1.in .srow__go{
 }
 .field__wrap:focus-within::after{ transform:scaleX(1); }
 .field input::placeholder, .field textarea::placeholder{ color:var(--dimmer); }
+/* Chrome paints autofilled inputs with its own pale blue, which reads as a
+   block on a dark ground. The long transition outruns that paint without
+   filling a flat colour over the body's gradient. */
+.field input:-webkit-autofill,
+.field input:-webkit-autofill:hover,
+.field input:-webkit-autofill:focus{
+  -webkit-text-fill-color:var(--ink);
+  caret-color:var(--ink);
+  transition:background-color 100000s ease-in-out 0s;
+}
 /* Off screen rather than hidden, so a bot fills it and a screen reader skips it. */
 .hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 .form__send{ align-self:flex-start; min-height:44px; }
 .form__send[disabled]{ opacity:.55; cursor:default; }
-.form__status{ font-size:14px; line-height:1.5; color:var(--body); margin:0; }
+.form__status{
+  display:grid; grid-template-columns:6px 1fr; gap:11px; align-items:start;
+  font-size:14.5px; line-height:1.5; color:var(--body); margin:0;
+}
 .form__status:empty{ display:none; }
+.form__status::before{
+  content:''; width:6px; height:6px; margin-top:.5em; background:var(--muted);
+}
 .form__status[data-state="err"]{ color:var(--amber); }
-.form__status[data-state="ok"]{ color:var(--ink); }
+.form__status[data-state="err"]::before{ background:var(--amber); }
+.form__status[data-state="ok"]{ color:var(--ink); font-weight:500; }
+.form__status[data-state="ok"]::before{ background:var(--accent); }
 .form__alt{
   display:flex; flex-wrap:wrap; align-items:center; gap:8px 20px;
   margin-top:clamp(14px,2.2svh,20px); padding-top:clamp(12px,2svh,18px);
@@ -740,7 +758,7 @@ html.js-rv .screen.in .eyebrow-row::after{ animation:rv-line .72s .08s var(--exp
           <label for="cf-message">What you want to automate</label>
           <div class="field__wrap"><textarea id="cf-message" name="message" rows="3" required></textarea></div>
         </div>
-        <div class="hp"><label for="cf-company">Company</label><input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off"></div>
+        <div class="hp" aria-hidden="true"><label for="cf-botcheck">Leave this field empty</label><input id="cf-botcheck" name="botcheck" type="checkbox" tabindex="-1" autocomplete="off"></div>
         <button class="cta form__send" type="submit" id="cf-send"><span class="cta__sq" aria-hidden="true"></span><span id="cf-send-label">Send request</span></button>
         <p class="form__status" id="cf-status" role="status" aria-live="polite"></p>
       </form>
@@ -884,7 +902,9 @@ STEPS.forEach(function(st, i){
 
   form.addEventListener('submit', function(e){
     e.preventDefault();
-    if(el['company'].value) return;                  /* honeypot: a person never fills this */
+    /* Honeypot. A checkbox, because a text field named company gets autofilled
+       by the browser and then a real person is silently treated as a bot. */
+    if(el['botcheck'].checked) return;
 
     var data = {
       name:    el['name'].value.trim(),
@@ -908,7 +928,7 @@ STEPS.forEach(function(st, i){
     }
 
     send.disabled = true; label.textContent = 'Sending';
-    say('');
+    say('Sending the request.');
     fetch(ENDPOINT, {
       method:'POST',
       headers:{ 'Content-Type':'application/json', 'Accept':'application/json' },
